@@ -22,7 +22,7 @@ export default function QuickAccessSection() {
   const cards = [
     {
       title: "Horários dos Cultos",
-      description: `Domingo: EBD 09h | Celebração 18h. Quarta: Oração e Doutrina 19h30.`,
+      description: `Domingo: 8h30, EBD 10h e 18h. Quarta: Oração 19h.`,
       icon: Clock,
     },
     {

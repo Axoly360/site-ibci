@@ -70,10 +70,10 @@ export default function ContatoPage() {
                     Horários das Reuniões
                   </h3>
                   <p className="text-sm text-text-neutral/80">
-                    Domingos: EBD às 09h | Culto de Celebração às 18h
+                    Domingos: Culto Matinal 8h30 | EBD 10h | Culto Noturno 18h
                   </p>
                   <p className="text-sm text-text-neutral/80">
-                    Quartas-feiras: Oração e Doutrina às 19h30
+                    Quartas-feiras: Culto de Oração às 19h
                   </p>
                 </div>
               </div>

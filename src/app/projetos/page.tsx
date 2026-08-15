@@ -21,7 +21,7 @@ const projects = [
     icon: BookOpen,
     title: "Escola Bíblica Dominical (EBD)",
     description:
-      "Formação cristã para todas as idades — crianças, jovens e adultos — todos os domingos às 09h, com estudo bíblico em classes.",
+      "Formação cristã para todas as idades — crianças, jovens e adultos — todos os domingos às 10h, com estudo bíblico em classes.",
   },
   {
     icon: Globe,
