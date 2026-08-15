@@ -173,6 +173,8 @@ export const navLinks: NavLink[] = [
   { label: "A Igreja", href: "/quem-somos" },
   { label: "Ministérios", href: "/quem-somos#ministerios" },
   { label: "Mensagens", href: "/#mensagens" },
+  { label: "Projetos", href: "/projetos" },
+  { label: "Central do Membro", href: "/central-do-membro" },
   { label: "Contribua", href: "/contribuicoes" },
   { label: "Contato", href: "/contato" },
 ];

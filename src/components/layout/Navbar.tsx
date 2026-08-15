@@ -24,12 +24,12 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-6 lg:flex">
+        <div className="hidden items-center gap-4 xl:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-white/90 transition-colors hover:text-secondary"
+              className="whitespace-nowrap text-sm font-medium text-white/90 transition-colors hover:text-secondary"
             >
               {link.label}
             </Link>
@@ -47,7 +47,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="text-white lg:hidden"
+          className="text-white xl:hidden"
           onClick={() => setOpen((prev) => !prev)}
           aria-label={open ? "Fechar menu" : "Abrir menu"}
         >
@@ -56,7 +56,7 @@ export default function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t border-white/10 bg-primary lg:hidden">
+        <div className="border-t border-white/10 bg-primary xl:hidden">
           <div className="flex flex-col gap-1 px-4 py-4">
             {navLinks.map((link) => (
               <Link
