@@ -163,7 +163,7 @@ export const churchInfo: ChurchInfo = {
     whatsappNumber: "5581988953552",
   },
   contact: {
-    email: "contato@ibcirecife.org.br",
+    email: "contato.ibci@gmail.com",
     phone: "(81) 98895-3552",
   },
 };
