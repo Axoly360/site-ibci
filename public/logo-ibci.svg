@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="100%" height="100%">
+  <g fill="#F5F2E9">
+    <!-- Arco Superior -->
+    <path d="M 50,150 A 100,100 0 0,1 250,150" fill="none" stroke="#F5F2E9" stroke-width="10" stroke-linecap="round"/>
+
+    <!-- Cruz Central -->
+    <rect x="142" y="70" width="16" height="80" rx="2" />
+    <rect x="120" y="90" width="60" height="16" rx="2" />
+
+    <!-- Silhueta da Família -->
+    <circle cx="125" cy="118" r="9" />
+    <circle cx="150" cy="110" r="11" />
+    <circle cx="175" cy="118" r="9" />
+    <path d="M 105,145 C 110,128 120,128 130,138 C 140,125 160,125 170,138 C 180,128 190,128 195,145 Z" />
+
+    <!-- Bíblia Aberta (Base) -->
+    <path d="M 60,165 C 105,160 145,170 150,178 C 155,170 195,160 240,165 L 235,182 C 195,177 155,185 150,192 C 145,185 105,177 65,182 Z" />
+    <rect x="60" y="185" width="180" height="8" rx="2" />
+
+    <!-- Texto IBCI -->
+    <text x="150" y="240" text-anchor="middle" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="42" font-weight="900" letter-spacing="4">IBCI</text>
+  </g>
+</svg>

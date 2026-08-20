@@ -14,13 +14,20 @@ export default function Navbar() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="font-heading text-lg font-bold text-white sm:text-xl"
+          className="flex items-center gap-3"
           onClick={() => setOpen(false)}
         >
-          IBCI
-          <span className="hidden font-body text-xs font-normal text-white/70 sm:inline">
-            {" "}
-            — {churchInfo.fullName}
+          <img
+            src="/logo-ibci.svg"
+            alt="Logo IBCI"
+            className="h-11 w-11 shrink-0 sm:h-12 sm:w-12"
+          />
+          <span className="font-heading text-lg font-bold text-white sm:text-xl">
+            IBCI
+            <span className="hidden font-body text-xs font-normal text-white/70 sm:inline">
+              {" "}
+              — {churchInfo.fullName}
+            </span>
           </span>
         </Link>
 

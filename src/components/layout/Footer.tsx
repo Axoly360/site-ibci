@@ -9,9 +9,16 @@ export default function Footer() {
     <footer className="bg-dark-accent text-white/80">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
-          <h3 className="font-heading text-lg font-bold text-white">
-            IBCI - {churchInfo.fullName}
-          </h3>
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo-ibci.svg"
+              alt="Logo IBCI"
+              className="h-12 w-12 shrink-0"
+            />
+            <h3 className="font-heading text-lg font-bold text-white">
+              IBCI - {churchInfo.fullName}
+            </h3>
+          </div>
           <p className="mt-3 text-sm leading-relaxed">
             Uma família para pertencer, um lugar para servir. Venha fazer
             parte da nossa comunidade de fé em Recife.

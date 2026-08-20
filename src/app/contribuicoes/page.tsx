@@ -26,7 +26,7 @@ export default async function ContribuicoesPage() {
     margin: 1,
     width: 320,
     color: {
-      dark: "#0F2C59",
+      dark: "#123B2C",
       light: "#FFFFFF",
     },
   });
