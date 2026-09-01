@@ -30,29 +30,28 @@ export default function HeroSection() {
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {heroBanners.map((banner) =>
-          banner.src ? (
+          banner.srcDesktop && banner.srcMobile ? (
             <div
               key={banner.id}
               className="relative aspect-[390/546] w-full shrink-0 snap-start overflow-hidden sm:aspect-[1360/460]"
             >
-              {/* Mobile: quadro 390x546 — imagem inteira, sem corte (a proporção não bate com a arte atual). */}
+              {/* Mobile: arte própria 390x546. */}
               <Image
-                src={banner.src}
+                src={banner.srcMobile}
                 alt={banner.alt ?? ""}
                 fill
                 priority
                 sizes="100vw"
-                className="object-contain sm:hidden"
+                className="object-cover sm:hidden"
               />
-              {/* Desktop/tablet: quadro 1360x460 — corte focado no texto mais acionável (horários/selo "ao vivo"). */}
+              {/* Desktop/tablet: arte própria 1360x460. */}
               <Image
-                src={banner.src}
+                src={banner.srcDesktop}
                 alt={banner.alt ?? ""}
                 fill
                 priority
                 sizes="100vw"
                 className="hidden object-cover sm:block"
-                style={{ objectPosition: banner.objectPosition ?? "center" }}
               />
             </div>
           ) : (
