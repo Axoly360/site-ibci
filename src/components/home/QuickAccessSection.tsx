@@ -61,7 +61,7 @@ export default function QuickAccessSection() {
         </p>
       </div>
 
-      <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
         {cards.map((card) => {
           const Icon = card.icon;
           const content = (
@@ -90,7 +90,7 @@ export default function QuickAccessSection() {
                 href={card.href}
                 target={card.external ? "_blank" : undefined}
                 rel={card.external ? "noopener noreferrer" : undefined}
-                className="block h-full"
+                className="block h-full w-64 shrink-0 snap-start sm:w-auto sm:shrink"
               >
                 {content}
               </a>
@@ -102,7 +102,7 @@ export default function QuickAccessSection() {
               key={card.title}
               type="button"
               onClick={card.onClick}
-              className="block h-full text-left"
+              className="block h-full w-64 shrink-0 snap-start text-left sm:w-auto sm:shrink"
             >
               {content}
             </button>
