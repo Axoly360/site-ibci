@@ -2,6 +2,7 @@
 
 import { useRef, useState, type UIEvent } from "react";
 import Image from "next/image";
+import { Construction } from "lucide-react";
 import { heroBanners } from "@/data/heroBanners";
 
 export default function HeroSection() {
@@ -28,33 +29,38 @@ export default function HeroSection() {
         onScroll={handleScroll}
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {heroBanners.map((banner) => (
-          <div key={banner.id} className="w-full shrink-0 snap-start">
-            {/* Mobile: recorte focado nos horários/selo "ao vivo" — texto mais acionável; nome da igreja e foto do pastor já aparecem no header e no restante da home. */}
-            <div className="relative h-56 w-full overflow-hidden sm:hidden">
+        {heroBanners.map((banner) =>
+          banner.src ? (
+            <div
+              key={banner.id}
+              className="relative aspect-[16/9] w-full shrink-0 snap-start overflow-hidden"
+            >
+              {/* Quadro fixo 1920x1080 (16:9) — o corte usa objectPosition pra manter o texto mais acionável (horários/selo "ao vivo") visível. */}
               <Image
                 src={banner.src}
-                alt={banner.alt}
+                alt={banner.alt ?? ""}
                 fill
                 priority
                 sizes="100vw"
                 className="object-cover"
-                style={{ objectPosition: banner.mobileObjectPosition ?? "center" }}
+                style={{ objectPosition: banner.objectPosition ?? "center" }}
               />
             </div>
-
-            {/* Tablet/desktop: banner inteiro, sem corte. */}
-            <Image
-              src={banner.src}
-              alt={banner.alt}
-              width={banner.width}
-              height={banner.height}
-              priority
-              sizes="100vw"
-              className="hidden h-auto w-full sm:block"
-            />
-          </div>
-        ))}
+          ) : (
+            <div
+              key={banner.id}
+              className="relative flex aspect-[16/9] w-full shrink-0 snap-start flex-col items-center justify-center gap-2 border border-dashed border-white/20 bg-primary text-center"
+            >
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white/70">
+                <Construction className="h-6 w-6" />
+              </span>
+              <p className="font-heading text-lg font-semibold text-white/70">
+                {banner.placeholderTitle}
+              </p>
+              <p className="text-sm text-white/50">Em breve</p>
+            </div>
+          )
+        )}
       </div>
 
       {heroBanners.length > 1 && (
