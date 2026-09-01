@@ -61,7 +61,7 @@ export default function ContatoPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 border-t border-black/5 pt-6">
+              <div id="horario" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
                   <Clock className="h-5 w-5" />
                 </span>
@@ -78,7 +78,7 @@ export default function ContatoPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 border-t border-black/5 pt-6">
+              <div id="email" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
                   <Mail className="h-5 w-5" />
                 </span>
@@ -90,7 +90,7 @@ export default function ContatoPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 border-t border-black/5 pt-6">
+              <div id="telefone" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
                   <Phone className="h-5 w-5" />
                 </span>
@@ -104,14 +104,16 @@ export default function ContatoPage() {
                 </div>
               </div>
 
-              <Button
-                href={churchInfo.social.whatsapp}
-                external
-                variant="secondary"
-                className="w-full"
-              >
-                Falar no WhatsApp
-              </Button>
+              <div id="whatsapp" className="scroll-mt-24">
+                <Button
+                  href={churchInfo.social.whatsapp}
+                  external
+                  variant="secondary"
+                  className="w-full"
+                >
+                  Falar no WhatsApp
+                </Button>
+              </div>
 
               <div className="flex items-center justify-center gap-3 border-t border-black/5 pt-6">
                 <a
@@ -152,18 +154,20 @@ export default function ContatoPage() {
           </div>
 
           {/* Coluna 2: Formulário */}
-          <Card className="p-8">
-            <h2 className="font-heading text-2xl font-bold text-primary">
-              Envie uma Mensagem
-            </h2>
-            <p className="mt-2 text-sm text-text-neutral/70">
-              Preencha o formulário abaixo — sua mensagem será enviada
-              diretamente para o nosso WhatsApp.
-            </p>
-            <div className="mt-6">
-              <ContatoForm />
-            </div>
-          </Card>
+          <div id="formulario" className="scroll-mt-24">
+            <Card className="p-8">
+              <h2 className="font-heading text-2xl font-bold text-primary">
+                Envie uma Mensagem
+              </h2>
+              <p className="mt-2 text-sm text-text-neutral/70">
+                Preencha o formulário abaixo — sua mensagem será enviada
+                diretamente para o nosso WhatsApp.
+              </p>
+              <div className="mt-6">
+                <ContatoForm />
+              </div>
+            </Card>
+          </div>
         </div>
 
         {/* Mapa */}

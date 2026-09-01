@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Tv, Camera, MessageCircle, MapPin } from "lucide-react";
-import { churchInfo, navLinks } from "@/data/churchInfo";
+import { churchInfo, footerLinks } from "@/data/churchInfo";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -34,7 +34,7 @@ export default function Footer() {
             Links Rápidos
           </h4>
           <ul className="mt-4 space-y-2 text-sm">
-            {navLinks.map((link) => (
+            {footerLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="hover:text-secondary">
                   {link.label}

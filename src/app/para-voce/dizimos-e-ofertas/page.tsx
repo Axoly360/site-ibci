@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     "Contribua com dízimos e ofertas para a Igreja Batista Central do Ibura via PIX ou transferência bancária.",
 };
 
-export default async function ContribuicoesPage() {
+export default async function DizimosEOfertasPage() {
   // Payload estático BR Code (EMV) do Banco Central — o app do banco
   // reconhece automaticamente o recebedor institucional ao escanear.
   const pixPayload = generatePixPayload({

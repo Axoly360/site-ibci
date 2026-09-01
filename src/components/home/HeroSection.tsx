@@ -1,40 +1,77 @@
-import { PlayCircle, HeartHandshake } from "lucide-react";
-import { churchInfo } from "@/data/churchInfo";
-import Button from "@/components/ui/Button";
+"use client";
+
+import { useRef, useState, type UIEvent } from "react";
+import Image from "next/image";
+import { heroBanners } from "@/data/heroBanners";
 
 export default function HeroSection() {
-  return (
-    <section className="relative overflow-hidden bg-primary text-white">
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 20% 20%, #D4AF37 0%, transparent 45%), radial-gradient(circle at 80% 60%, #D4AF37 0%, transparent 40%)",
-        }}
-      />
-      <div className="relative mx-auto flex max-w-5xl flex-col items-center px-4 py-24 text-center sm:px-6 sm:py-32 lg:px-8">
-        <span className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-secondary">
-          {churchInfo.fullName}
-        </span>
-        <h1 className="mt-6 font-heading text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
-          Uma família para pertencer,
-          <br className="hidden sm:block" /> um lugar para servir.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg text-white/80">
-          Bem-vindo à Igreja Batista Central do Ibura.
-        </p>
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
 
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <Button href={churchInfo.social.youtube} external variant="primary" size="lg">
-            <PlayCircle className="h-5 w-5" />
-            Assistir Ao Vivo
-          </Button>
-          <Button href="/quem-somos" variant="outline" size="lg">
-            <HeartHandshake className="h-5 w-5" />
-            Sou Novo Aqui
-          </Button>
-        </div>
+  const goTo = (index: number) => {
+    const el = trackRef.current;
+    if (!el) return;
+    el.scrollTo({ left: index * el.clientWidth, behavior: "smooth" });
+    setActive(index);
+  };
+
+  const handleScroll = (e: UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (el.clientWidth === 0) return;
+    setActive(Math.round(el.scrollLeft / el.clientWidth));
+  };
+
+  return (
+    <section className="relative bg-primary">
+      <div
+        ref={trackRef}
+        onScroll={handleScroll}
+        className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {heroBanners.map((banner) => (
+          <div key={banner.id} className="w-full shrink-0 snap-start">
+            {/* Mobile: recorte focado nos horários/selo "ao vivo" — texto mais acionável; nome da igreja e foto do pastor já aparecem no header e no restante da home. */}
+            <div className="relative h-56 w-full overflow-hidden sm:hidden">
+              <Image
+                src={banner.src}
+                alt={banner.alt}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
+                style={{ objectPosition: banner.mobileObjectPosition ?? "center" }}
+              />
+            </div>
+
+            {/* Tablet/desktop: banner inteiro, sem corte. */}
+            <Image
+              src={banner.src}
+              alt={banner.alt}
+              width={banner.width}
+              height={banner.height}
+              priority
+              sizes="100vw"
+              className="hidden h-auto w-full sm:block"
+            />
+          </div>
+        ))}
       </div>
+
+      {heroBanners.length > 1 && (
+        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+          {heroBanners.map((banner, index) => (
+            <button
+              key={banner.id}
+              type="button"
+              onClick={() => goTo(index)}
+              aria-label={`Ir para o banner ${index + 1}`}
+              className={`h-2.5 w-2.5 rounded-full transition-colors ${
+                index === active ? "bg-secondary" : "bg-white/50"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

@@ -47,7 +47,7 @@ const shortcuts = [
     description:
       "Acesse a chave PIX da igreja e contribua de forma rápida e segura com a obra de Deus.",
     cta: "Ir para Contribuições",
-    href: "/contribuicoes",
+    href: "/para-voce/dizimos-e-ofertas",
     external: false,
   },
   {

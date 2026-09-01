@@ -88,14 +88,14 @@ export const churchInfo: ChurchInfo = {
   fullName: "Igreja Batista Central do Ibura",
   seniorPastor: "Pr. Márcio Severino",
   address: {
-    street: "Rua Pintor Antônio de Albuquerque, 48",
-    neighborhood: "Ibura",
+    street: "Av. Rio Grande, 72",
+    neighborhood: "COHAB",
     city: "Recife",
     state: "PE",
-    zip: "51220-100",
-    full: "Rua Pintor Antônio de Albuquerque, 48 - Ibura, Recife - PE, 51220-100",
+    zip: "51280-030",
+    full: "Av. Rio Grande, 72 - COHAB, Recife - PE, 51280-030",
     mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Rua+Pintor+Ant%C3%B4nio+de+Albuquerque%2C+48+-+Ibura%2C+Recife+-+PE%2C+51220-100",
+      "https://www.google.com/maps/search/?api=1&query=Av.+Rio+Grande%2C+72+-+COHAB%2C+Recife+-+PE%2C+51280-030",
   },
   serviceTimes: [
     {
@@ -203,13 +203,77 @@ export const churchInfo: ChurchInfo = {
   },
 };
 
+/**
+ * Árvore oficial de navegação (aprovada). "Início" foi removido de propósito —
+ * a logo no cabeçalho já leva para a Home. "Central do Membro" e "Culto Ao
+ * Vivo" não têm submenu por design: o primeiro é a porta de entrada da área
+ * restrita, o segundo é sempre um CTA isolado.
+ */
 export const navLinks: NavLink[] = [
-  { label: "Início", href: "/" },
-  { label: "A Igreja", href: "/quem-somos" },
-  { label: "Ministérios", href: "/quem-somos#ministerios" },
-  { label: "Mensagens", href: "/#mensagens" },
-  { label: "Projetos", href: "/projetos" },
   { label: "Central do Membro", href: "/central-do-membro" },
-  { label: "Contribua", href: "/contribuicoes" },
+  {
+    label: "A Igreja",
+    href: "/a-igreja",
+    children: [
+      { label: "Nossa História", href: "/a-igreja/nossa-historia" },
+      { label: "Em que Cremos", href: "/a-igreja/em-que-cremos" },
+      { label: "Liderança", href: "/a-igreja/lideranca" },
+      { label: "Missão, Valores e Visão", href: "/a-igreja/missao-valores-e-visao" },
+      { label: "Nossa Congregação", href: "/a-igreja/nossa-congregacao" },
+      { label: "Memorial IBCI", href: "/a-igreja/memorial-ibci" },
+    ],
+  },
+  {
+    label: "Ministérios",
+    href: "/ministerios",
+    children: [
+      { label: "Pastoral", href: "/ministerios/pastoral" },
+      { label: "Diaconal", href: "/ministerios/diaconal" },
+      { label: "Louvor", href: "/ministerios/louvor" },
+      { label: "Infantil", href: "/ministerios/infantil" },
+      { label: "Jovens", href: "/ministerios/jovens" },
+      { label: "Mulheres", href: "/ministerios/mulheres" },
+      { label: "Homens", href: "/ministerios/homens" },
+      { label: "Educação Cristã", href: "/ministerios/educacao-crista" },
+      { label: "Ação Social", href: "/ministerios/acao-social" },
+      { label: "Família", href: "/ministerios/familia" },
+    ],
+  },
+  {
+    label: "Para você",
+    href: "/para-voce",
+    children: [
+      { label: "Dízimos e Ofertas", href: "/para-voce/dizimos-e-ofertas" },
+      { label: "Servir", href: "/para-voce/servir" },
+      { label: "Eventos", href: "/para-voce/eventos" },
+      { label: "Pedidos de Oração", href: "/para-voce/pedidos-de-oracao" },
+      { label: "Mensagens", href: "/para-voce/mensagens" },
+      { label: "Cursos", href: "/para-voce/cursos" },
+      { label: "IBCI News", href: "/para-voce/ibci-news" },
+      { label: "Projeto PEPE", href: "/para-voce/projeto-pepe" },
+      { label: "Programações", href: "/para-voce/programacoes" },
+      { label: "Fale Conosco", href: "/contato#formulario" },
+      { label: "Privacidade", href: "/para-voce/privacidade" },
+    ],
+  },
+  {
+    label: "Contato",
+    href: "/contato",
+    children: [
+      { label: "Telefone", href: "/contato#telefone" },
+      { label: "WhatsApp", href: "/contato#whatsapp" },
+      { label: "Email", href: "/contato#email" },
+      { label: "Horário de Atendimento", href: "/contato#horario" },
+      { label: "Fale Conosco", href: "/contato#formulario" },
+    ],
+  },
+];
+
+/** Links curados do rodapé — não precisa replicar a árvore inteira do header. */
+export const footerLinks: NavLink[] = [
+  { label: "A Igreja", href: "/a-igreja" },
+  { label: "Ministérios", href: "/ministerios" },
+  { label: "Para você", href: "/para-voce" },
   { label: "Contato", href: "/contato" },
+  { label: "Central do Membro", href: "/central-do-membro" },
 ];

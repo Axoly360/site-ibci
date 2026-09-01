@@ -68,6 +68,8 @@ export interface ChurchInfo {
 export interface NavLink {
   label: string;
   href: string;
+  external?: boolean;
+  children?: NavLink[];
 }
 
 export interface QuickAccessCard {
