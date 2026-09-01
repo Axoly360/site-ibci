@@ -33,23 +33,32 @@ export default function HeroSection() {
           banner.src ? (
             <div
               key={banner.id}
-              className="relative aspect-[16/9] w-full shrink-0 snap-start overflow-hidden"
+              className="relative aspect-[390/546] w-full shrink-0 snap-start overflow-hidden sm:aspect-[1360/460]"
             >
-              {/* Quadro fixo 1920x1080 (16:9) — o corte usa objectPosition pra manter o texto mais acionável (horários/selo "ao vivo") visível. */}
+              {/* Mobile: quadro 390x546 — imagem inteira, sem corte (a proporção não bate com a arte atual). */}
               <Image
                 src={banner.src}
                 alt={banner.alt ?? ""}
                 fill
                 priority
                 sizes="100vw"
-                className="object-cover"
+                className="object-contain sm:hidden"
+              />
+              {/* Desktop/tablet: quadro 1360x460 — corte focado no texto mais acionável (horários/selo "ao vivo"). */}
+              <Image
+                src={banner.src}
+                alt={banner.alt ?? ""}
+                fill
+                priority
+                sizes="100vw"
+                className="hidden object-cover sm:block"
                 style={{ objectPosition: banner.objectPosition ?? "center" }}
               />
             </div>
           ) : (
             <div
               key={banner.id}
-              className="relative flex aspect-[16/9] w-full shrink-0 snap-start flex-col items-center justify-center gap-2 border border-dashed border-white/20 bg-primary text-center"
+              className="relative flex aspect-[390/546] w-full shrink-0 snap-start flex-col items-center justify-center gap-2 border border-dashed border-white/20 bg-primary text-center sm:aspect-[1360/460]"
             >
               <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white/70">
                 <Construction className="h-6 w-6" />
