@@ -1,14 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X, PlayCircle, ChevronDown } from "lucide-react";
+import { Menu, X, PlayCircle, ChevronDown, UserRound } from "lucide-react";
 import { navLinks, churchInfo } from "@/data/churchInfo";
 import Button from "@/components/ui/Button";
+
+interface Session {
+  name: string;
+  email: string;
+}
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/sessao")
+      .then((res) => res.json())
+      .then((data) => setSession(data.session))
+      .catch(() => setSession(null));
+  }, []);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/sair", { method: "POST" });
+    setSession(null);
+    window.location.href = "/";
+  };
 
   const toggleSection = (label: string) => {
     setOpenSections((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -83,6 +102,25 @@ export default function Navbar() {
             <PlayCircle className="h-4 w-4" />
             Culto Ao Vivo
           </Button>
+          {session ? (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="ml-2 flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-white/90 hover:text-secondary"
+              title={session.email}
+            >
+              <UserRound className="h-4 w-4" />
+              Sair
+            </button>
+          ) : (
+            <Link
+              href="/entrar"
+              className="ml-2 flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-white/90 hover:text-secondary"
+            >
+              <UserRound className="h-4 w-4" />
+              Entrar
+            </Link>
+          )}
         </div>
 
         <button
@@ -161,6 +199,25 @@ export default function Navbar() {
               <PlayCircle className="h-4 w-4" />
               Culto Ao Vivo
             </Button>
+            {session ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-white/90 hover:bg-white/5"
+              >
+                <UserRound className="h-4 w-4" />
+                Sair ({session.email})
+              </button>
+            ) : (
+              <Link
+                href="/entrar"
+                onClick={closeAll}
+                className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-white/90 hover:bg-white/5"
+              >
+                <UserRound className="h-4 w-4" />
+                Entrar
+              </Link>
+            )}
           </div>
         </div>
       )}
