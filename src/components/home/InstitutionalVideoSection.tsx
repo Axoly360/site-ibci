@@ -1,6 +1,4 @@
-import { PlayCircle } from "lucide-react";
-
-/** Vídeo institucional da igreja — aguardando arquivo ou link do YouTube. */
+/** Vídeo institucional da igreja. */
 export default function InstitutionalVideoSection() {
   return (
     <section className="bg-primary/[0.03] py-20">
@@ -12,10 +10,14 @@ export default function InstitutionalVideoSection() {
           Aqui vamos usar um vídeo institucional da igreja.
         </p>
 
-        <div className="mx-auto mt-10 flex aspect-video w-full items-center justify-center rounded-2xl border border-dashed border-primary/20 bg-primary/5">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <PlayCircle className="h-7 w-7" />
-          </span>
+        <div className="mx-auto mt-10 aspect-video w-full overflow-hidden rounded-2xl">
+          <iframe
+            className="h-full w-full"
+            src="https://www.youtube.com/embed/6QYUSWm85gY"
+            title="Conferência de Aniversário 57 Anos | 2º Dia | SÁBADO | 23/05/2026"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
         </div>
       </div>
     </section>
