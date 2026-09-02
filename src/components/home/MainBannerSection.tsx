@@ -1,17 +1,17 @@
-import { Construction } from "lucide-react";
+import Image from "next/image";
 
-/** Banner principal de destaque — aguardando imagem, texto e link. */
+/** Banner principal de destaque em largura total. */
 export default function MainBannerSection() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-primary/20 bg-primary/5 px-6 py-16 text-center">
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <Construction className="h-6 w-6" />
-        </span>
-        <h3 className="font-heading text-lg font-semibold text-primary">
-          Banner Principal
-        </h3>
-        <p className="text-sm text-text-neutral/50">Em breve</p>
+      <div className="relative aspect-[1600/500] w-full overflow-hidden rounded-2xl">
+        <Image
+          src="/banner-principal.png"
+          alt="Congresso de Casais — 12 e 13 de setembro, das 10h às 12h, no Hotel Porto da Serra, Gravatá. Inscrições com Maurício e Gineide. Investimento R$ 350,00 por casal."
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
       </div>
     </section>
   );

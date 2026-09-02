@@ -24,11 +24,15 @@ export const heroBanners: HeroBanner[] = [
     alt: "Igreja Batista Central do Ibura — Uma família para pertencer. Transmissão ao vivo às quartas-feiras 19h e domingos 8h30–19h00.",
   },
   {
-    id: "banner-2",
-    placeholderTitle: "Banner 2",
+    id: "congresso-de-casais",
+    srcDesktop: "/hero-2-desktop.png",
+    srcMobile: "/hero-2-mobile.png",
+    alt: "Congresso de Casais — 12 e 13 de setembro, das 10h às 12h, no Hotel Porto da Serra, Gravatá. Inscrições com Maurício e Gineide. Investimento R$ 350,00 por casal.",
   },
   {
-    id: "banner-3",
-    placeholderTitle: "Banner 3",
+    id: "conferencia-aniversario-57-anos",
+    srcDesktop: "/hero-3-desktop.png",
+    srcMobile: "/hero-3-mobile.png",
+    alt: "Conferência de Aniversário — 57 Anos. Preletoras: Solange Paiva, Evily Menezes e Nivânia Gonçalves.",
   },
 ];

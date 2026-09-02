@@ -219,6 +219,7 @@ export const navLinks: NavLink[] = [
       { label: "Em que Cremos", href: "/a-igreja/em-que-cremos" },
       { label: "Liderança", href: "/a-igreja/lideranca" },
       { label: "Missão, Valores e Visão", href: "/a-igreja/missao-valores-e-visao" },
+      { label: "Estatuto IBCI", href: "/a-igreja/estatuto-ibci" },
       { label: "Nossa Congregação", href: "/a-igreja/nossa-congregacao" },
       { label: "Memorial IBCI", href: "/a-igreja/memorial-ibci" },
     ],

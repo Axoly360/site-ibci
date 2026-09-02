@@ -30,6 +30,11 @@ const items = [
     description: "Os pilares que orientam tudo o que fazemos como igreja.",
   },
   {
+    title: "Estatuto IBCI",
+    href: "/a-igreja/estatuto-ibci",
+    description: "Em breve.",
+  },
+  {
     title: "Nossa Congregação",
     href: "/a-igreja/nossa-congregacao",
     description: "Em breve.",
