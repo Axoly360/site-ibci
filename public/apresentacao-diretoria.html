@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Portal do Membro IBCI — Apresentação à Diretoria</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+  :root{
+    --bg: #F6F1E3;
+    --bg-soft: #EFE8D4;
+    --surface: #FFFDF6;
+    --surface-2: #FBF5E7;
+    --ink: #16281E;
+    --ink-soft: rgba(22,40,30,.66);
+    --ink-faint: rgba(22,40,30,.42);
+    --primary: #123B2C;
+    --primary-dark: #0A2620;
+    --gold: #A9821F;
+    --gold-deep: #8A6A17;
+    --gold-soft: #E7D6A0;
+    --line: rgba(18,59,44,.16);
+    --line-soft: rgba(18,59,44,.09);
+    --live: #1F6B49;
+    --live-bg: #E3EFE5;
+    --planned-bg: #F3E9CC;
+    --shadow: 0 1px 2px rgba(22,40,30,.04), 0 8px 24px -12px rgba(22,40,30,.18);
+    color-scheme: light;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+
+  h1,h2,h3, .display{
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    text-wrap: balance;
+    color: var(--primary);
+    margin: 0;
+  }
+
+  .wrap{ max-width: 920px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- background texture ---------- */
+  .paper{
+    position: fixed; inset: 0; z-index: -1;
+    background:
+      radial-gradient(1100px 500px at 12% -8%, rgba(169,130,31,.10), transparent 60%),
+      radial-gradient(900px 480px at 110% 8%, rgba(18,59,44,.08), transparent 55%),
+      var(--bg);
+  }
+  .paper::after{
+    content:"";
+    position:absolute; inset:0;
+    opacity:.5;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/></svg>");
+  }
+
+  /* ---------- masthead ---------- */
+  header.masthead{
+    padding: 64px 0 40px;
+    text-align: center;
+  }
+  .emblem{ margin: 0 auto 22px; width: 54px; height: 54px; display:block; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size: 12.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 18px;
+  }
+  .eyebrow::before, .eyebrow::after{ content:""; width:22px; height:1px; background: var(--gold); opacity:.6; }
+  h1.title{ font-size: clamp(2.1rem, 5.2vw, 3.4rem); line-height: 1.08; }
+  .subtitle{
+    max-width: 640px; margin: 20px auto 0;
+    font-size: 1.1rem; color: var(--ink-soft);
+  }
+  .meta-line{
+    margin-top: 28px; font-size: 13px; color: var(--ink-faint);
+    display:flex; justify-content:center; gap: 10px; flex-wrap:wrap;
+  }
+  .meta-line b{ color: var(--ink-soft); font-weight: 600; }
+
+  .quicknav{
+    display:flex; flex-wrap:wrap; justify-content:center; gap: 8px;
+    margin-top: 26px;
+  }
+  .quicknav a{
+    font-size: 12.5px; font-weight: 600; color: var(--primary);
+    text-decoration:none; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface);
+  }
+  .quicknav a:hover{ background: var(--surface-2); }
+
+  hr.rule{
+    border:0; height:1px;
+    background: linear-gradient(90deg, transparent, var(--line) 20%, var(--line) 80%, transparent);
+    margin: 0;
+  }
+  .rule-orn{
+    display:flex; align-items:center; justify-content:center; gap: 14px;
+    margin: 56px 0 0;
+  }
+  .rule-orn .l, .rule-orn .r{ height:1px; flex:1; background: var(--line); max-width: 220px; }
+  .rule-orn svg{ flex-shrink:0; opacity:.7; }
+
+  section{ padding: 56px 0; }
+  section.tight{ padding-top: 44px; padding-bottom: 44px; }
+
+  .section-head{ text-align:center; max-width: 640px; margin: 0 auto 40px; }
+  .section-head h2{ font-size: clamp(1.6rem, 3.4vw, 2.1rem); }
+  .section-head p{ margin-top: 12px; color: var(--ink-soft); font-size: 1.02rem; }
+
+  /* ---------- today / channels ---------- */
+  .channels{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
+    max-width: 620px; margin: 0 auto;
+  }
+  .chip{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 9px 16px; border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    font-size: .9rem; color: var(--ink-soft);
+  }
+  .chip svg{ width:15px; height:15px; opacity:.7; }
+
+  .convergence{
+    display:flex; flex-direction:column; align-items:center; gap: 10px;
+    margin: 34px 0;
+  }
+  .convergence svg{ width: 100%; max-width: 420px; height: auto; }
+  .convergence-label{
+    font-size: 12.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color: var(--ink-faint);
+  }
+
+  .portal-callout{
+    text-align:center; max-width: 560px; margin: 0 auto;
+    padding: 28px 32px; border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+  .portal-callout h3{ font-size: 1.35rem; }
+  .portal-callout p{ margin: 10px 0 0; color: var(--ink-soft); }
+
+  /* ---------- toggle ---------- */
+  .toggle-row{
+    display:flex; align-items:center; justify-content:center; gap: 12px;
+    margin: 0 0 34px;
+    font-size: .92rem; color: var(--ink-soft);
+  }
+  .switch{
+    position: relative; width: 44px; height: 25px; flex-shrink:0;
+  }
+  .switch input{ position:absolute; inset:0; opacity:0; margin:0; cursor:pointer; }
+  .switch .track{
+    position:absolute; inset:0; border-radius: 999px;
+    background: var(--gold-soft);
+    border: 1px solid var(--line);
+    transition: background .2s ease;
+  }
+  .switch .thumb{
+    position:absolute; top:2px; left:2px; width:19px; height:19px; border-radius:50%;
+    background: var(--surface);
+    box-shadow: 0 1px 3px rgba(0,0,0,.25);
+    transition: transform .2s ease;
+  }
+  .switch input:checked + .track{ background: var(--primary); }
+  .switch input:checked + .track + .thumb{ transform: translateX(19px); }
+  .switch input:focus-visible + .track{ outline: 2px solid var(--gold-deep); outline-offset:2px; }
+
+  /* ---------- inventory (o que o site já entrega) ---------- */
+  .inventory{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 22px 28px;
+    max-width: 840px; margin: 0 auto;
+    padding: 26px 30px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--surface-2);
+  }
+  @media (max-width: 760px){ .inventory{ grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 520px){ .inventory{ grid-template-columns: 1fr; padding: 22px; } }
+  .inv-group h4{
+    font-family: 'Karla', sans-serif; font-weight: 700; font-size: 12px;
+    letter-spacing: .09em; text-transform: uppercase; color: var(--gold-deep);
+    margin: 0 0 7px;
+  }
+  .inv-group p{ margin:0; font-size: .86rem; color: var(--ink-soft); line-height: 1.5; }
+
+  /* ---------- pillars ---------- */
+  .pillars{
+    display:grid; grid-template-columns: repeat(2, 1fr); gap: 26px;
+  }
+  @media (max-width: 760px){ .pillars{ grid-template-columns: 1fr; } }
+
+  .pillar{
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 34px 30px 30px;
+    box-shadow: var(--shadow);
+    display:flex; flex-direction:column;
+  }
+  .pillar-eyebrow{
+    font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--gold-deep); margin-bottom: 14px;
+  }
+  .pillar-icon{
+    width: 48px; height:48px; border-radius: 14px;
+    background: var(--primary);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 16px;
+  }
+  .pillar-icon svg{ width: 25px; height:25px; stroke: var(--gold-soft); }
+  .pillar h3{ font-size: 1.4rem; margin-bottom: 10px; }
+  .pillar > p.desc{ color: var(--ink-soft); font-size: .96rem; margin: 0 0 24px; }
+
+  .flow{ list-style:none; margin: 0; padding: 0; display:flex; flex-direction:column; gap: 18px; }
+  .flow li{ display:flex; gap: 14px; transition: opacity .25s ease; }
+  .flow .n{
+    flex-shrink:0; width: 28px; height: 28px; border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:600; font-size: .82rem;
+    background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-faint);
+  }
+  .flow li[data-status="live"] .n{ background: var(--live-bg); color: var(--live); border-color: transparent; }
+  .flow li[data-status="planned"] .n{ background: var(--planned-bg); color: var(--gold-deep); border-color: transparent; }
+  .flow h4{ margin: 3px 0 3px; font-family:'Fraunces',serif; font-weight:600; font-size: .98rem; color: var(--ink); }
+  .flow p{ margin:0; font-size: .85rem; color: var(--ink-soft); }
+
+  body.filter-live .flow li[data-status="planned"]{ opacity: .32; }
+
+  .note{
+    display:flex; gap: 10px; align-items:flex-start;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 13px;
+    padding: 13px 15px; margin: 22px 0 0; font-size: .84rem; color: var(--ink-soft); line-height:1.45;
+  }
+  .note svg{ flex-shrink:0; width:16px; height:16px; margin-top: 2px; }
+  .note b{ color: var(--ink); }
+
+  .legend{
+    display:flex; justify-content:center; gap: 22px; margin: 34px 0 0;
+    font-size: 12.5px; color: var(--ink-faint); flex-wrap:wrap;
+  }
+  .legend span{ display:inline-flex; align-items:center; gap:7px; }
+  .legend .dot{ width:8px; height:8px; border-radius:50%; }
+  .legend .dot.live{ background: var(--live); }
+  .legend .dot.planned{ background: var(--gold); }
+
+  /* ---------- benefits ---------- */
+  .benefits{
+    display:grid; grid-template-columns: repeat(2,1fr); gap: 20px 32px;
+    max-width: 720px; margin: 0 auto;
+  }
+  @media (max-width: 620px){ .benefits{ grid-template-columns: 1fr; } }
+  .benefit{ display:flex; gap: 14px; align-items:flex-start; }
+  .benefit .num{
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.5rem; color: var(--gold-deep);
+    line-height:1; flex-shrink:0; width: 34px;
+  }
+  .benefit p{ margin:0; font-size: .95rem; color: var(--ink-soft); }
+  .benefit strong{ color: var(--ink); font-weight:700; display:block; margin-bottom:3px; font-size:1rem;}
+
+  /* ---------- roadmap ---------- */
+  .roadmap{ max-width: 680px; margin: 0 auto; }
+  .stage{
+    display:grid; grid-template-columns: 132px 1fr; gap: 22px;
+    padding: 22px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  .stage:first-child{ border-top:none; }
+  .stage-when{ text-align:right; }
+  .stage-when .tag{
+    display:inline-block; font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding: 4px 10px; border-radius: 999px;
+    margin-bottom: 6px;
+  }
+  .stage[data-state="live"] .stage-when .tag{ background: var(--live-bg); color: var(--live); }
+  .stage[data-state="next"] .stage-when .tag{ background: var(--planned-bg); color: var(--gold-deep); }
+  .stage[data-state="future"] .stage-when .tag{ background: var(--surface-2); color: var(--ink-faint); border:1px solid var(--line); }
+  .stage-when .etapa{ font-size: 12px; color: var(--ink-faint); }
+  .stage h4{ margin:0 0 6px; font-family:'Fraunces',serif; font-weight:600; font-size:1.08rem; color: var(--ink); }
+  .stage p{ margin:0; font-size: .92rem; color: var(--ink-soft); }
+  @media (max-width: 560px){
+    .stage{ grid-template-columns: 1fr; gap: 6px; }
+    .stage-when{ text-align:left; display:flex; gap:8px; align-items:center; }
+  }
+
+  /* ---------- approval cards ---------- */
+  .approval-grid{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+  }
+  @media (max-width: 760px){ .approval-grid{ grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 540px){ .approval-grid{ grid-template-columns: 1fr; } }
+  .approval-card{
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 20px 20px 18px;
+    box-shadow: var(--shadow);
+  }
+  .approval-card .a-icon{
+    width: 36px; height:36px; border-radius: 10px;
+    background: var(--planned-bg);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 13px;
+  }
+  .approval-card .a-icon svg{ width:19px; height:19px; stroke: var(--gold-deep); }
+  .approval-card h4{
+    font-family:'Fraunces',serif; font-weight:600; font-size: 1rem; color: var(--ink); margin: 0 0 6px;
+  }
+  .approval-card p{ margin:0; font-size: .85rem; color: var(--ink-soft); line-height:1.5; }
+  .approval-card .highlight{
+    display:inline-block; margin-top:10px; font-family:'Fraunces',serif; font-weight:600;
+    font-size: 1.05rem; color: var(--gold-deep);
+  }
+
+  /* ---------- needs / pending content ---------- */
+  .needs{ display:flex; flex-direction:column; gap: 16px; }
+  .needs-group{
+    display:grid; grid-template-columns: 200px 1fr; gap: 20px;
+    padding: 18px 22px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  }
+  @media (max-width: 620px){ .needs-group{ grid-template-columns: 1fr; gap: 8px; } }
+  .needs-group h4{
+    font-family:'Fraunces',serif; font-weight:600; font-size: 1.02rem; color: var(--primary);
+    margin: 0;
+  }
+  .needs-group .count{
+    display:block; margin-top: 4px; font-size: 11.5px; color: var(--ink-faint);
+    text-transform: uppercase; letter-spacing: .06em; font-weight:700;
+  }
+  .needs-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap: 8px; }
+  .needs-list li{
+    display:flex; align-items:flex-start; gap: 9px;
+    font-size: .89rem; color: var(--ink);
+  }
+  .needs-list li::before{
+    content:""; flex-shrink:0; width:7px; height:7px; margin-top:6px; border-radius:2px;
+    background: var(--gold);
+  }
+
+  /* ---------- collect (material a coletar) ---------- */
+  .collect-grid{
+    display:grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+  }
+  @media (max-width: 700px){ .collect-grid{ grid-template-columns: 1fr; } }
+  .collect-card{
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 22px 24px 20px;
+    box-shadow: var(--shadow);
+  }
+  .collect-card .head{ display:flex; align-items:center; gap: 12px; margin-bottom: 14px; }
+  .collect-card .a-icon{
+    width: 38px; height:38px; border-radius: 10px; flex-shrink:0;
+    background: var(--live-bg);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .collect-card .a-icon svg{ width:20px; height:20px; stroke: var(--live); }
+  .collect-card h4{ font-family:'Fraunces',serif; font-weight:600; font-size: 1.05rem; color: var(--ink); margin:0; }
+
+  /* ---------- agenda ---------- */
+  .agenda{ list-style:none; margin: 26px 0 0; padding:0; text-align:left; display:flex; flex-direction:column; gap: 16px; }
+  .agenda li{ display:flex; gap: 14px; }
+  .agenda .n{
+    flex-shrink:0; width: 26px; height: 26px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:600; font-size:.82rem;
+    background: rgba(246,241,227,.14); color: var(--gold-soft);
+  }
+  .agenda p{ margin:0; font-size: .95rem; color: rgba(246,241,227,.9); line-height:1.5; }
+  .agenda b{ color: var(--gold-soft); }
+
+  /* ---------- closing ---------- */
+  .closing{
+    text-align:center; max-width: 700px; margin: 0 auto;
+    padding: 40px 40px 44px;
+    border-radius: 20px;
+    background: var(--primary);
+    color: var(--bg);
+    box-shadow: var(--shadow);
+  }
+  .closing h2{ color: var(--gold-soft); font-size: clamp(1.5rem, 3vw, 1.9rem); }
+  .closing p{ color: rgba(246,241,227,.82); margin: 14px 0 0; font-size: 1rem; }
+  .closing .ask{
+    margin-top: 24px; padding-top:22px; border-top: 1px solid rgba(246,241,227,.18);
+    font-size: .92rem; color: rgba(246,241,227,.75);
+  }
+  .closing .ask b{ color: var(--gold-soft); }
+
+  footer{
+    text-align:center; padding: 40px 0 60px;
+    font-size: 12.5px; color: var(--ink-faint);
+  }
+
+  [data-reveal]{ opacity:0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+  [data-reveal].in{ opacity:1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce){
+    [data-reveal]{ opacity:1; transform:none; transition:none; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="paper"></div>
+
+<header class="masthead wrap">
+  <svg class="emblem" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="27" cy="27" r="25.5" stroke="#A9821F" stroke-width="1.4"/>
+    <path d="M27 12v11M27 23l7 7M27 23l-7 7" stroke="#123B2C" stroke-width="2" stroke-linecap="round"/>
+    <path d="M17 34c3.5 4 6.7 6 10 6s6.5-2 10-6" stroke="#123B2C" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+  <div class="eyebrow">IBCI &middot; Apresentação à presidência</div>
+  <h1 class="title">Um só lugar<br>para toda a igreja</h1>
+  <p class="subtitle">O site da IBCI já reúne história, ministérios, mensagens e contato em um só lugar. Esta apresentação foca nos dois recursos que mais transformam o dia a dia da igreja: a Área de Membros e a aba de Eventos.</p>
+  <div class="meta-line">
+    <span>Portal do Membro IBCI</span><span>&middot;</span><span>Domínio proposto: <b>www.ibcibura.com.br</b></span>
+  </div>
+  <nav class="quicknav">
+    <a href="#aprovacoes">O que depende da diretoria</a>
+    <a href="#entregas">O que a igreja precisa entregar</a>
+    <a href="#material">Material a coletar</a>
+    <a href="#pauta">Pauta da reunião</a>
+  </nav>
+</header>
+
+<main>
+
+  <section data-reveal>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Hoje, tudo vive espalhado</h2>
+        <p>Cadastro, avisos de evento e comunicados de liderança passam por canais diferentes — e se perdem com facilidade.</p>
+      </div>
+      <div class="channels">
+        <span class="chip">Grupos de WhatsApp</span>
+        <span class="chip">Avisos no culto</span>
+        <span class="chip">Papel e mural físico</span>
+        <span class="chip">Redes sociais</span>
+        <span class="chip">Boca a boca</span>
+      </div>
+
+      <div class="convergence" aria-hidden="true">
+        <svg viewBox="0 0 420 90">
+          <g stroke="#A9821F" stroke-width="1.4" opacity=".55" fill="none">
+            <path d="M20 12 C 140 12, 180 45, 205 45"/>
+            <path d="M20 45 C 120 45, 160 45, 205 45"/>
+            <path d="M20 78 C 140 78, 180 45, 205 45"/>
+            <path d="M40 4 C 150 30, 180 40, 205 45"/>
+            <path d="M40 86 C 150 60, 180 50, 205 45"/>
+          </g>
+          <circle cx="205" cy="45" r="7" fill="#123B2C"/>
+          <path d="M215 45 H 400" stroke="#123B2C" stroke-width="1.6"/>
+          <path d="M392 38 L 400 45 L 392 52" stroke="#123B2C" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="convergence-label">Convergindo em um só portal</span>
+      </div>
+
+      <div class="portal-callout">
+        <h3>Portal do Membro IBCI</h3>
+        <p>Um endereço único, acessível pelo celular ou computador, para cadastro, eventos e informações oficiais da igreja.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="rule-orn">
+    <span class="l"></span>
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 2v18M2 11h18" stroke="#A9821F" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <span class="r"></span>
+  </div></div>
+
+  <section data-reveal>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Tudo o que o site já entrega</h2>
+        <p>Além dos dois focos desta apresentação, o site já publica todo o conteúdo institucional da igreja — organizado por categoria.</p>
+      </div>
+      <div class="inventory">
+        <div class="inv-group">
+          <h4>Página inicial</h4>
+          <p>Transmissão ao vivo em destaque, acesso rápido (horários, localização, PIX, pedido de oração), mensagens em vídeo e programação da semana.</p>
+        </div>
+        <div class="inv-group">
+          <h4>A Igreja</h4>
+          <p>Nossa História, Em que Cremos, Liderança, Missão &amp; Visão, Estatuto IBCI, Nossa Congregação, Memorial IBCI.</p>
+        </div>
+        <div class="inv-group">
+          <h4>Ministérios</h4>
+          <p>Pastoral, Diaconal, Louvor, Infantil, Jovens, Mulheres, Homens, Educação Cristã, Ação Social, Família.</p>
+        </div>
+        <div class="inv-group">
+          <h4>Para Você</h4>
+          <p>Dízimos e Ofertas, Servir, Pedidos de Oração, Mensagens, Cursos, IBCI News, Projeto PEPE, Programações.</p>
+        </div>
+        <div class="inv-group">
+          <h4>Contato</h4>
+          <p>Telefone, WhatsApp, e-mail, horário de atendimento e formulário de fale conosco.</p>
+        </div>
+        <div class="inv-group">
+          <h4>Redes sociais</h4>
+          <p>YouTube, Instagram e WhatsApp oficiais, integrados direto no rodapé do site.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="rule-orn">
+    <span class="l"></span>
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 2v18M2 11h18" stroke="#A9821F" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <span class="r"></span>
+  </div></div>
+
+  <section data-reveal>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Os dois focos estratégicos</h2>
+        <p>São dois cadastros independentes, cada um com seu próprio ritual: participar de um evento não exige ser membro validado, e ser membro não depende de nenhum evento.</p>
+      </div>
+
+      <div class="toggle-row">
+        <span>Ver tudo</span>
+        <label class="switch">
+          <input type="checkbox" id="liveToggle" aria-describedby="toggleHelp">
+          <span class="track"></span>
+          <span class="thumb"></span>
+        </label>
+        <span id="toggleHelp">Mostrar só o que já está no ar</span>
+      </div>
+
+      <div class="pillars">
+
+        <article class="pillar">
+          <div class="pillar-eyebrow">Foco estratégico 1</div>
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><circle cx="17.5" cy="9" r="2.4"/><path d="M15.5 20c.2-2.8 1.9-4.7 4-4.9"/></svg>
+          </div>
+          <h3>Área de Membros</h3>
+          <p class="desc">Um cadastro próprio e com acesso controlado: ninguém entra sozinho. Só passa a ter conta de membro quem for validado pela diretoria — separado de qualquer inscrição em evento.</p>
+
+          <ol class="flow">
+            <li data-status="live"><span class="n">1</span><div><h4>Pedido de cadastro</h4><p>A pessoa preenche nome e e-mail no site.</p></div></li>
+            <li data-status="planned"><span class="n">2</span><div><h4>Validação pela diretoria</h4><p>A liderança confere e aprova quem recebe acesso.</p></div></li>
+            <li data-status="live"><span class="n">3</span><div><h4>Confirmação por e-mail</h4><p>Conta liberada, com link de confirmação — sem senha para lembrar.</p></div></li>
+            <li data-status="planned"><span class="n">4</span><div><h4>Conteúdo exclusivo</h4><p>Acesso a páginas e materiais reservados a membros validados.</p></div></li>
+          </ol>
+
+          <div class="note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8A6A17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></svg>
+            <span><b>Cadastro independente:</b> essa conta é só para ser reconhecido como membro — não tem relação com se inscrever em eventos.</span>
+          </div>
+        </article>
+
+        <article class="pillar">
+          <div class="pillar-eyebrow">Foco estratégico 2</div>
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v4M16 3v4"/><path d="M8 13.5h2M8 16.8h2"/></svg>
+          </div>
+          <h3>Eventos</h3>
+          <p class="desc">Cada evento — congressos, conferências, encontros — ganha uma página própria, com inscrição aberta e independente da Área de Membros, controle de vagas e, em breve, pagamento do ingresso direto pelo site.</p>
+
+          <ol class="flow">
+            <li data-status="live"><span class="n">1</span><div><h4>Página do evento</h4><p>Data, local, descrição e vagas disponíveis, em um só lugar.</p></div></li>
+            <li data-status="live"><span class="n">2</span><div><h4>Cadastro para o evento</h4><p>Nome e e-mail próprios daquela inscrição — sem depender de ser membro validado.</p></div></li>
+            <li data-status="planned"><span class="n">3</span><div><h4>Pagamento do ingresso</h4><p>Quando o evento é pago, o pagamento acontece direto pelo site.</p></div></li>
+            <li data-status="live"><span class="n">4</span><div><h4>Confirmação por e-mail</h4><p>A pessoa recebe a confirmação da inscrição automaticamente.</p></div></li>
+          </ol>
+
+          <div class="note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8A6A17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v1H4v-1z"/><path d="M5.5 8.5v8M18.5 8.5v8"/><path d="M9 8.5v8M15 8.5v8"/><path d="M3.5 19h17"/></svg>
+            <span><b>Cadastro independente:</b> qualquer pessoa se inscreve num evento, mesmo sem ser membro validado. O Congresso de Casais já usa essa estrutura.</span>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="legend">
+        <span><i class="dot live"></i> Já está no ar</span>
+        <span><i class="dot planned"></i> Próxima etapa</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="rule-orn">
+    <span class="l"></span>
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 2v18M2 11h18" stroke="#A9821F" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <span class="r"></span>
+  </div></div>
+
+  <section data-reveal>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Por que isso importa</h2>
+        <p>Ganhos concretos para quem participa da igreja e para quem lidera.</p>
+      </div>
+      <div class="benefits">
+        <div class="benefit">
+          <span class="num">＋</span>
+          <p><strong>Acesso sob controle da diretoria</strong>Ninguém entra na Área de Membros sozinho — cada conta passa pela validação da liderança.</p>
+        </div>
+        <div class="benefit">
+          <span class="num">＋</span>
+          <p><strong>Menos informação perdida</strong>Um endereço único substitui o vaivém de grupos de WhatsApp e recados verbais.</p>
+        </div>
+        <div class="benefit">
+          <span class="num">＋</span>
+          <p><strong>Inscrição e pagamento em um só lugar</strong>Cada evento organiza vagas, confirmação e, em breve, o pagamento do ingresso.</p>
+        </div>
+        <div class="benefit">
+          <span class="num">＋</span>
+          <p><strong>Acesso simples, do celular</strong>Sem instalar aplicativo: quem tem conta aprovada entra pelo navegador com o e-mail.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="rule-orn">
+    <span class="l"></span>
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 2v18M2 11h18" stroke="#A9821F" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <span class="r"></span>
+  </div></div>
+
+  <section data-reveal>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Onde estamos</h2>
+        <p>Um caminho em etapas — nada precisa estar pronto de uma vez.</p>
+      </div>
+      <div class="roadmap">
+        <div class="stage" data-state="live">
+          <div class="stage-when"><span class="tag">No ar</span><div class="etapa">Etapa 1</div></div>
+          <div><h4>Inscrição em eventos gratuitos</h4><p>Cadastro simples por e-mail para se inscrever em eventos, com confirmação automática, já publicado no site.</p></div>
+        </div>
+        <div class="stage" data-state="next">
+          <div class="stage-when"><span class="tag">Próxima etapa</span><div class="etapa">Etapa 2</div></div>
+          <div><h4>Validação de cadastro pela diretoria</h4><p>A liderança passa a aprovar cada novo cadastro de membro antes da conta ser liberada — independente dos cadastros de evento.</p></div>
+        </div>
+        <div class="stage" data-state="next">
+          <div class="stage-when"><span class="tag">Próxima etapa</span><div class="etapa">Etapa 3</div></div>
+          <div><h4>Pagamento de ingressos</h4><p>Pagamento do evento direto pelo site, sem depender de conta de membro.</p></div>
+        </div>
+        <div class="stage" data-state="next">
+          <div class="stage-when"><span class="tag">Próxima etapa</span><div class="etapa">Etapa 4</div></div>
+          <div><h4>Conteúdo exclusivo de membro</h4><p>Primeira área de conteúdo reservada a quem tem cadastro de membro validado.</p></div>
+        </div>
+        <div class="stage" data-state="future">
+          <div class="stage-when"><span class="tag">Próxima fase</span><div class="etapa">Etapa 5</div></div>
+          <div><h4>Conselhos da Igreja</h4><p>Categoria própria para o Conselho Fiscal e demais conselhos, com atas e comunicados oficiais.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="rule-orn">
+    <span class="l"></span>
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 2v18M2 11h18" stroke="#A9821F" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <span class="r"></span>
+  </div></div>
+
+  <section id="aprovacoes" data-reveal>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Antes de lançar o site no ar</h2>
+        <p>Seis decisões da diretoria para destravar o lançamento definitivo em <b>www.ibcibura.com.br</b>.</p>
+      </div>
+      <div class="approval-grid">
+
+        <div class="approval-card">
+          <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 14l9 5 9-5"/></svg></div>
+          <h4>Plataforma final do site</h4>
+          <p>Confirmar se o site continua em Next.js/Vercel (já pronto e no ar) ou migra para WordPress/Hostinger — recomeçando o que já foi construído.</p>
+        </div>
+
+        <div class="approval-card">
+          <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+          <h4>Validação da estrutura</h4>
+          <p>Aprovar o mapa final de categorias e páginas — A Igreja, Ministérios, Para Você, Contato, Eventos e a futura Área de Membros.</p>
+        </div>
+
+        <div class="approval-card">
+          <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h4>Política de cadastro de membros</h4>
+          <p>Definir quem na diretoria valida cada cadastro, o prazo de resposta e o critério de aprovação.</p>
+        </div>
+
+        <div class="approval-card">
+          <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 10-2.5 5.8"/><path d="M20 7v5h-5"/></svg></div>
+          <h4>Ajustes periódicos</h4>
+          <p>Combinar quem aciona pedidos de mudança no site depois do lançamento e com que frequência eles são atendidos.</p>
+        </div>
+
+        <div class="approval-card">
+          <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg></div>
+          <h4>Custo de manutenção mensal</h4>
+          <p>Orçamento recorrente para manter hospedagem, banco de dados e envio de e-mail no ar.</p>
+          <span class="highlight">R$ 100,00 / mês</span>
+        </div>
+
+        <div class="approval-card">
+          <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2"/><path d="M4 12h16M12 3.8c2.6 2.4 2.6 14 0 16.4M12 3.8c-2.6 2.4-2.6 14 0 16.4"/></svg></div>
+          <h4>Registro do domínio</h4>
+          <p>Aprovar o registro e a manutenção anual de <b style="color:var(--ink)">www.ibcibura.com.br</b>, o endereço oficial do site.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="rule-orn">
+    <span class="l"></span>
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 2v18M2 11h18" stroke="#A9821F" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <span class="r"></span>
+  </div></div>
+
+  <section id="entregas" data-reveal>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>O que a igreja precisa entregar</h2>
+        <p>A estrutura das páginas já existe — falta o conteúdo real de cada uma. Nada é publicado sem essa informação chegar da igreja.</p>
+      </div>
+      <div class="needs">
+
+        <div class="needs-group">
+          <div><h4>A Igreja</h4><span class="count">3 páginas pendentes</span></div>
+          <ul class="needs-list">
+            <li>Documento oficial do Estatuto IBCI</li>
+            <li>Texto e fotos da Nossa Congregação (Congregação Milagres)</li>
+            <li>Conteúdo do Memorial IBCI</li>
+          </ul>
+        </div>
+
+        <div class="needs-group">
+          <div><h4>Ministérios</h4><span class="count">8 de 10 pendentes</span></div>
+          <ul class="needs-list">
+            <li>Descrição, liderança e fotos de: Pastoral, Diaconal, Louvor, Infantil, Jovens, Mulheres, Homens e Família</li>
+          </ul>
+        </div>
+
+        <div class="needs-group">
+          <div><h4>Para Você</h4><span class="count">3 páginas pendentes</span></div>
+          <ul class="needs-list">
+            <li>Conteúdo de Cursos</li>
+            <li>Conteúdo do IBCI News</li>
+            <li>Briefing e arte definitiva do Projeto PEPE</li>
+          </ul>
+        </div>
+
+        <div class="needs-group">
+          <div><h4>Página inicial</h4><span class="count">Ajustes pendentes</span></div>
+          <ul class="needs-list">
+            <li>Definição do banner "Evento Principal"</li>
+            <li>Vídeo institucional definitivo (hoje usa um vídeo provisório da Conferência de Aniversário)</li>
+            <li>Confirmar o título de uma mensagem já publicada no carrossel</li>
+          </ul>
+        </div>
+
+        <div class="needs-group">
+          <div><h4>Eventos</h4><span class="count">Calendário</span></div>
+          <ul class="needs-list">
+            <li>Calendário dos próximos eventos e o briefing de cada um (data, local, valor, responsáveis)</li>
+          </ul>
+        </div>
+
+        <div class="needs-group">
+          <div><h4>Conselhos da Igreja</h4><span class="count">Categoria nova</span></div>
+          <ul class="needs-list">
+            <li>Definir quais conselhos existem e quem participa de cada um</li>
+            <li>Primeiras atas e comunicados a publicar</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="rule-orn">
+    <span class="l"></span>
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 2v18M2 11h18" stroke="#A9821F" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <span class="r"></span>
+  </div></div>
+
+  <section id="material" data-reveal>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Material a coletar</h2>
+        <p>A mesma lista da seção anterior, agora organizada por tipo de material — para dividir entre quem escreve, quem fotografa e quem organiza documentos.</p>
+      </div>
+      <div class="collect-grid">
+
+        <div class="collect-card">
+          <div class="head">
+            <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 12h5M9.5 15.5h5M9.5 8.5h2"/></svg></div>
+            <h4>Textos</h4>
+          </div>
+          <ul class="needs-list">
+            <li>Descrição dos 8 ministérios sem conteúdo (Pastoral, Diaconal, Louvor, Infantil, Jovens, Mulheres, Homens, Família)</li>
+            <li>Texto sobre a Nossa Congregação (Congregação Milagres)</li>
+            <li>Conteúdo do Memorial IBCI</li>
+            <li>Conteúdo de Cursos e do IBCI News</li>
+            <li>Briefing do Projeto PEPE</li>
+          </ul>
+        </div>
+
+        <div class="collect-card">
+          <div class="head">
+            <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.5"/><circle cx="12" cy="13.5" r="2.5"/><path d="M9.7 20.5l.8-2.8M13.5 20.5l-.8-2.8"/></svg></div>
+            <h4>Documentos oficiais</h4>
+          </div>
+          <ul class="needs-list">
+            <li>Estatuto IBCI em PDF</li>
+            <li>Atas e comunicados oficiais dos Conselhos</li>
+            <li>Critério formal de validação de cadastro de membros, se houver</li>
+          </ul>
+        </div>
+
+        <div class="collect-card">
+          <div class="head">
+            <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 9.7l1 2.1 2.1.3-1.6 1.4.4 2.1-1.9-1-1.9 1 .4-2.1-1.6-1.4 2.1-.3z"/></svg></div>
+            <h4>Logos e identidade visual</h4>
+          </div>
+          <ul class="needs-list">
+            <li>Logo oficial em alta resolução (SVG ou PNG, fundo transparente)</li>
+            <li>Variações da marca — colorida, monocromática e para fundo escuro</li>
+          </ul>
+        </div>
+
+        <div class="collect-card">
+          <div class="head">
+            <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><circle cx="8.3" cy="9.3" r="1.4"/><path d="M21 15.5l-5.3-5-6.7 6.5"/></svg></div>
+            <h4>Fotos e imagens</h4>
+          </div>
+          <ul class="needs-list">
+            <li>Fotos da liderança e dos responsáveis por cada ministério</li>
+            <li>Fotos de cada ministério em atividade</li>
+            <li>Fotos da Congregação Milagres (fachada e atividades)</li>
+            <li>Arte definitiva do banner "Evento Principal"</li>
+          </ul>
+        </div>
+
+        <div class="collect-card">
+          <div class="head">
+            <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10.3 9.3l5 2.7-5 2.7z"/></svg></div>
+            <h4>Vídeos</h4>
+          </div>
+          <ul class="needs-list">
+            <li>Vídeo institucional definitivo da igreja (hoje usa um vídeo provisório)</li>
+            <li>Gravações de próximos eventos para o carrossel de mensagens</li>
+          </ul>
+        </div>
+
+        <div class="collect-card">
+          <div class="head">
+            <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v4M16 3v4"/><path d="M8 14h3M8 17h5"/></svg></div>
+            <h4>Informações de contato e agenda</h4>
+          </div>
+          <ul class="needs-list">
+            <li>Nome, cargo e contato de cada líder de ministério</li>
+            <li>Calendário de eventos do ano (data, local, valor)</li>
+            <li>Confirmação do título de uma mensagem já publicada</li>
+          </ul>
+        </div>
+
+        <div class="collect-card">
+          <div class="head">
+            <div class="a-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2.6"/><circle cx="16" cy="8" r="2.6"/><path d="M3.3 19.2c0-3 2.1-5.3 4.7-5.3s4.7 2.3 4.7 5.3"/><path d="M11.3 19.2c0-3 2.1-5.3 4.7-5.3s4.7 2.3 4.7 5.3"/></svg></div>
+            <h4>Material dos Conselhos</h4>
+          </div>
+          <ul class="needs-list">
+            <li>Lista de quais conselhos existem e quem participa de cada um</li>
+            <li>Primeiras atas e documentos a publicar</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="rule-orn">
+    <span class="l"></span>
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 2v18M2 11h18" stroke="#A9821F" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <span class="r"></span>
+  </div></div>
+
+  <section id="pauta" data-reveal>
+    <div class="wrap">
+      <div class="closing">
+        <h2>Pauta para uma única reunião</h2>
+        <p>Tudo o que precisa de decisão da diretoria, reunido em uma só pauta.</p>
+        <ol class="agenda">
+          <li><span class="n">1</span><p>Confirmar a <b>plataforma final</b> do site — Next.js/Vercel (já pronto) ou WordPress/Hostinger.</p></li>
+          <li><span class="n">2</span><p>Aprovar a <b>estrutura de páginas e categorias</b>, incluindo a futura Área de Membros e os Conselhos da Igreja.</p></li>
+          <li><span class="n">3</span><p>Definir a <b>política de validação de cadastro</b> de membros: quem aprova e com que critério.</p></li>
+          <li><span class="n">4</span><p>Aprovar o <b>custo de manutenção mensal de R$ 100,00</b>.</p></li>
+          <li><span class="n">5</span><p>Aprovar o <b>registro do domínio www.ibcibura.com.br</b>.</p></li>
+          <li><span class="n">6</span><p>Distribuir entre os responsáveis a <b>coleta do conteúdo pendente</b> — A Igreja, Ministérios, Para Você, Eventos e Conselhos.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Igreja Batista Central do Ibura &middot; Portal do Membro &middot; Apresentação à presidência</footer>
+
+<script>
+  var toggle = document.getElementById('liveToggle');
+  toggle.addEventListener('change', function(){
+    document.body.classList.toggle('filter-live', toggle.checked);
+  });
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    var els = document.querySelectorAll('[data-reveal]');
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('[data-reveal]').forEach(function(el){ el.classList.add('in'); });
+  }
+</script>
+</body>
+</html>
