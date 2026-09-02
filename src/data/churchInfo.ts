@@ -94,8 +94,7 @@ export const churchInfo: ChurchInfo = {
     state: "PE",
     zip: "51280-030",
     full: "Av. Rio Grande, 72 - COHAB, Recife - PE, 51280-030",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Av.+Rio+Grande%2C+72+-+COHAB%2C+Recife+-+PE%2C+51280-030",
+    mapsUrl: "https://maps.app.goo.gl/FLToSDAYoKsqYJ656",
   },
   serviceTimes: [
     {

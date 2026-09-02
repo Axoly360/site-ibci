@@ -28,12 +28,8 @@ export default function Navbar() {
             alt="Logo IBCI"
             className="h-11 w-11 shrink-0 sm:h-12 sm:w-12"
           />
-          <span className="font-heading text-lg font-bold text-white sm:text-xl">
-            IBCI
-            <span className="hidden font-body text-xs font-normal text-white/70 sm:inline">
-              {" "}
-              — {churchInfo.fullName}
-            </span>
+          <span className="font-heading text-sm font-bold leading-tight text-white sm:text-lg md:text-xl">
+            {churchInfo.fullName}
           </span>
         </Link>
 
