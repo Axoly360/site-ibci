@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
   if (admin.status !== "ativo") {
     return NextResponse.json(
-      { error: "Este acesso ainda não foi ativado." },
+      { error: "Este acesso está desativado." },
       { status: 403 }
     );
   }
