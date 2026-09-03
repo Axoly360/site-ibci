@@ -9,6 +9,11 @@ export default function AdminNav({ session }: { session: AdminSessionPayload }) 
         <Link href="/admin" className="text-primary hover:underline">
           Painel
         </Link>
+        {session.permissions.includes("membros") && (
+          <Link href="/admin/membros" className="text-primary hover:underline">
+            Membros
+          </Link>
+        )}
         {session.permissions.includes("admins") && (
           <Link href="/admin/administradores" className="text-primary hover:underline">
             Administradores

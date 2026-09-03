@@ -6,6 +6,7 @@ import {
   UserRoundCheck,
   FileText,
   ArrowRight,
+  UserPlus,
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
@@ -23,6 +24,15 @@ function waLink(message: string) {
 }
 
 const shortcuts = [
+  {
+    icon: UserPlus,
+    title: "Torne-se Membro",
+    description:
+      "Ainda não é membro da IBCI? Faça seu cadastro — ele passa pela validação da diretoria antes de ser confirmado.",
+    cta: "Fazer cadastro",
+    href: "/central-do-membro/cadastro",
+    external: false,
+  },
   {
     icon: Heart,
     title: "Pedido de Oração",

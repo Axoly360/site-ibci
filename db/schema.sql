@@ -46,3 +46,22 @@ create table if not exists admin_users (
   status text not null default 'ativo',
   created_at timestamptz not null default now()
 );
+
+-- Marca quem já é membro validado pela diretoria (separado de eventos).
+alter table members add column if not exists is_validated_member boolean not null default false;
+
+-- Pedidos de cadastro de membro, aguardando validação da diretoria.
+create table if not exists membership_requests (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id) on delete cascade,
+  phone text,
+  cpf text,
+  birthdate text,
+  address text,
+  time_at_church text,
+  note text,
+  status text not null default 'pendente',
+  requested_at timestamptz not null default now(),
+  decided_at timestamptz,
+  decided_by uuid references admin_users(id)
+);
