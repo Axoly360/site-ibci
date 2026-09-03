@@ -2,43 +2,68 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 
 export const ADMIN_COOKIE = "ibci_admin";
+const SESSION_MAX_AGE_SECONDS = 60 * 60 * 12; // 12 horas
+
+export const PERMISSIONS = {
+  banners: "Banners",
+  paginas: "Páginas & Textos",
+  eventos: "Eventos",
+  membros: "Membros (aprovar cadastros)",
+  admins: "Gerenciar administradores",
+} as const;
+
+export type Permission = keyof typeof PERMISSIONS;
+
+export const ROLES: Record<string, Permission[]> = {
+  "Administrador geral": ["banners", "paginas", "eventos", "membros", "admins"],
+  "Editor de Conteúdo": ["banners", "paginas"],
+  "Gestor de Eventos": ["eventos"],
+  "Validador de Cadastros": ["membros"],
+};
+
+export interface AdminSessionPayload {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  permissions: Permission[];
+}
 
 /**
- * Autenticação mínima para o teste real do painel: uma senha única
- * (ADMIN_PASSWORD), sem cadastro de usuários ainda. Serve para validar o
- * fluxo de edição de conteúdo antes de construir login/funções por admin.
+ * Chave de assinatura do cookie de sessão. Reaproveita ADMIN_PASSWORD (já
+ * configurado) enquanto ADMIN_SESSION_SECRET não existir, para não exigir
+ * uma nova variável de ambiente nesta migração.
  */
-function getPassword(): string {
-  const password = process.env.ADMIN_PASSWORD;
-  if (!password) {
-    throw new Error("ADMIN_PASSWORD não configurado.");
+function getSecret(): string {
+  const secret = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD;
+  if (!secret) {
+    throw new Error("ADMIN_SESSION_SECRET (ou ADMIN_PASSWORD) não configurado.");
   }
-  return password;
+  return secret;
 }
 
-function sign(value: string, secret: string): string {
-  return createHmac("sha256", secret).update(value).digest("hex");
+function sign(value: string): string {
+  return createHmac("sha256", getSecret()).update(value).digest("hex");
 }
 
-export function checkAdminPassword(input: string): boolean {
-  const password = getPassword();
-  const a = Buffer.from(input);
-  const b = Buffer.from(password);
-  return a.length === b.length && timingSafeEqual(a, b);
+export function createAdminCookieValue(payload: AdminSessionPayload): string {
+  const data = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  return `${data}.${sign(data)}`;
 }
 
-export function createAdminCookieValue(): string {
-  return sign("admin-ok", getPassword());
-}
+export function verifyAdminCookieValue(value: string): AdminSessionPayload | null {
+  const [data, signature] = value.split(".");
+  if (!data || !signature) return null;
 
-export function verifyAdminCookieValue(value: string): boolean {
+  const expected = sign(data);
+  const a = Buffer.from(signature);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
+
   try {
-    const expected = createAdminCookieValue();
-    const a = Buffer.from(value);
-    const b = Buffer.from(expected);
-    return a.length === b.length && timingSafeEqual(a, b);
+    return JSON.parse(Buffer.from(data, "base64url").toString("utf8"));
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -47,12 +72,19 @@ export const adminCookieOptions = {
   secure: true,
   sameSite: "lax" as const,
   path: "/",
-  maxAge: 60 * 60 * 12, // 12 horas
+  maxAge: SESSION_MAX_AGE_SECONDS,
 };
 
-export async function isAdmin(): Promise<boolean> {
+export async function getAdminSession(): Promise<AdminSessionPayload | null> {
   const cookieStore = await cookies();
   const value = cookieStore.get(ADMIN_COOKIE)?.value;
-  if (!value) return false;
+  if (!value) return null;
   return verifyAdminCookieValue(value);
+}
+
+export function hasPermission(
+  session: AdminSessionPayload | null,
+  permission: Permission
+): boolean {
+  return Boolean(session?.permissions.includes(permission));
 }

@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { isAdmin } from "@/lib/admin-session";
+import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { setContent } from "@/lib/content";
 
 export async function POST(request: NextRequest) {
-  if (!(await isAdmin())) {
-    return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+  const session = await getAdminSession();
+  if (!hasPermission(session, "paginas")) {
+    return NextResponse.json({ error: "Sem permissão." }, { status: 403 });
   }
 
   const body = await request.json().catch(() => null);

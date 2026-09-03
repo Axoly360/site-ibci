@@ -34,3 +34,15 @@ create table if not exists site_content (
   value text not null,
   updated_at timestamptz not null default now()
 );
+
+-- Contas de quem acessa o painel administrativo (/admin), com função e permissões.
+create table if not exists admin_users (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null unique,
+  password_hash text not null,
+  role text not null,
+  permissions text[] not null default '{}',
+  status text not null default 'ativo',
+  created_at timestamptz not null default now()
+);

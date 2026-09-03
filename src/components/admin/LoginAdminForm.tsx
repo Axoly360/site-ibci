@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 
 export default function LoginAdminForm() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,7 +19,7 @@ export default function LoginAdminForm() {
     const res = await fetch("/api/admin/entrar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ email, password }),
     });
     if (res.ok) {
       router.push("/admin");
@@ -33,9 +34,17 @@ export default function LoginAdminForm() {
   return (
     <form onSubmit={handleSubmit} className="mx-auto flex max-w-sm flex-col gap-3">
       <input
+        type="email"
+        required
+        placeholder="Seu e-mail"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm text-text-neutral outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+      />
+      <input
         type="password"
         required
-        placeholder="Senha de administrador"
+        placeholder="Senha"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm text-text-neutral outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
