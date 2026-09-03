@@ -5,7 +5,13 @@ import { Clock, MapPin, Heart, Gift, X, Copy, Check } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
 
-export default function QuickAccessSection() {
+interface QuickAccessSectionProps {
+  subtitle?: string;
+}
+
+export default function QuickAccessSection({
+  subtitle = "Tudo o que você precisa saber sobre a nossa igreja, em um só lugar.",
+}: QuickAccessSectionProps) {
   const [pixOpen, setPixOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -56,9 +62,7 @@ export default function QuickAccessSection() {
         <h2 className="font-heading text-3xl font-bold text-primary sm:text-4xl">
           Acesso Rápido
         </h2>
-        <p className="mt-3 text-text-neutral/80">
-          Tudo o que você precisa saber sobre a nossa igreja, em um só lugar.
-        </p>
+        <p className="mt-3 text-text-neutral/80">{subtitle}</p>
       </div>
 
       <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 lg:grid-cols-4">

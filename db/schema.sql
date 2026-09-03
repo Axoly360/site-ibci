@@ -27,3 +27,10 @@ create table if not exists registrations (
   created_at timestamptz not null default now(),
   unique (event_slug, member_id)
 );
+
+-- Textos do site editáveis pelo painel de administração (chave/valor simples).
+create table if not exists site_content (
+  key text primary key,
+  value text not null,
+  updated_at timestamptz not null default now()
+);
