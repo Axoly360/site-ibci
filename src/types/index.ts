@@ -62,6 +62,8 @@ export interface ChurchInfo {
   contact: {
     email: string;
     phone: string;
+    whatsapp: string;
+    businessHours: string;
   };
 }
 
