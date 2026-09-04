@@ -61,27 +61,42 @@ export default function ContatoPage() {
                 </div>
               </div>
 
-              <div id="horario" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
+              <div id="telefone" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
-                  <Clock className="h-5 w-5" />
+                  <Phone className="h-5 w-5" />
                 </span>
                 <div>
                   <h3 className="font-semibold text-text-neutral">
-                    Horários das Reuniões
-                  </h3>
-                  <p className="text-sm text-text-neutral/80">
-                    Domingos: Culto Matinal 8h30 | EBD 10h | Culto Noturno 18h
-                  </p>
-                  <p className="text-sm text-text-neutral/80">
-                    Quartas-feiras: Culto de Oração às 19h
-                  </p>
-                  <h3 className="mt-3 font-semibold text-text-neutral">
-                    Horário de Atendimento
+                    Telefone
                   </h3>
                   <p className="text-sm italic text-text-neutral/80">
-                    {churchInfo.contact.businessHours}
+                    {churchInfo.contact.phone}
                   </p>
                 </div>
+              </div>
+
+              <div id="whatsapp" className="border-t border-black/5 pt-6 scroll-mt-24">
+                <div className="flex items-start gap-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
+                    <Phone className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <h3 className="font-semibold text-text-neutral">
+                      WhatsApp
+                    </h3>
+                    <p className="text-sm italic text-text-neutral/80">
+                      {churchInfo.contact.whatsapp}
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  href={churchInfo.social.whatsapp}
+                  external
+                  variant="secondary"
+                  className="mt-4 w-full"
+                >
+                  Falar no WhatsApp
+                </Button>
               </div>
 
               <div id="email" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
@@ -96,35 +111,27 @@ export default function ContatoPage() {
                 </div>
               </div>
 
-              <div id="telefone" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
+              <div id="horario" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
-                  <Phone className="h-5 w-5" />
+                  <Clock className="h-5 w-5" />
                 </span>
                 <div>
                   <h3 className="font-semibold text-text-neutral">
-                    Telefone
+                    Horário de Atendimento
                   </h3>
                   <p className="text-sm italic text-text-neutral/80">
-                    {churchInfo.contact.phone}
+                    {churchInfo.contact.businessHours}
                   </p>
                   <h3 className="mt-3 font-semibold text-text-neutral">
-                    WhatsApp
+                    Horários das Reuniões
                   </h3>
-                  <p className="text-sm italic text-text-neutral/80">
-                    {churchInfo.contact.whatsapp}
+                  <p className="text-sm text-text-neutral/80">
+                    Domingos: Culto Matinal 8h30 | EBD 10h | Culto Noturno 18h
+                  </p>
+                  <p className="text-sm text-text-neutral/80">
+                    Quartas-feiras: Culto de Oração às 19h
                   </p>
                 </div>
-              </div>
-
-              <div id="whatsapp" className="scroll-mt-24">
-                <Button
-                  href={churchInfo.social.whatsapp}
-                  external
-                  variant="secondary"
-                  className="w-full"
-                >
-                  Falar no WhatsApp
-                </Button>
               </div>
 
               <div className="flex items-center justify-center gap-3 border-t border-black/5 pt-6">

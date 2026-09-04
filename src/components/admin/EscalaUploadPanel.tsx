@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Send } from "lucide-react";
+import { CheckCircle2, Send } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 
@@ -11,13 +11,18 @@ export default function EscalaUploadPanel({ currentUrl }: { currentUrl: string }
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [done, setDone] = useState(false);
 
   const handleUpload = async () => {
     const file = inputRef.current?.files?.[0];
-    if (!file) return;
+    setError("");
+    setDone(false);
+    if (!file) {
+      setError("Escolha um arquivo antes de enviar.");
+      return;
+    }
 
     setLoading(true);
-    setError("");
     const formData = new FormData();
     formData.append("file", file);
 
@@ -25,10 +30,12 @@ export default function EscalaUploadPanel({ currentUrl }: { currentUrl: string }
     setLoading(false);
     if (res.ok) {
       if (inputRef.current) inputRef.current.value = "";
+      setDone(true);
       router.refresh();
+      setTimeout(() => setDone(false), 3000);
     } else {
       const data = await res.json().catch(() => null);
-      setError(data?.error ?? "Não foi possível enviar o arquivo.");
+      setError(data?.error ?? `Não foi possível enviar o arquivo (${res.status}).`);
     }
   };
 
@@ -57,6 +64,12 @@ export default function EscalaUploadPanel({ currentUrl }: { currentUrl: string }
         </Button>
       </div>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {done && (
+        <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-primary">
+          <CheckCircle2 className="h-4 w-4" />
+          Escala atualizada
+        </p>
+      )}
     </Card>
   );
 }

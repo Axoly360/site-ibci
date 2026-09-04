@@ -262,10 +262,14 @@ export const navLinks: NavLink[] = [
     label: "Contato",
     href: "/contato",
     children: [
-      { label: "Telefone", href: "/contato#telefone" },
-      { label: "WhatsApp", href: "/contato#whatsapp" },
-      { label: "Email", href: "/contato#email" },
-      { label: "Horário de Atendimento", href: "/contato#horario" },
+      { label: "Telefone", href: "/contato#telefone", value: "(81) 3475-1778" },
+      { label: "WhatsApp", href: "/contato#whatsapp", value: "(81) 98895-3552" },
+      { label: "Email", href: "/contato#email", value: "contato.ibci@gmail.com" },
+      {
+        label: "Horário de Atendimento",
+        href: "/contato#horario",
+        value: "Segunda a Sexta das 8h às 17h",
+      },
       { label: "Fale Conosco", href: "/contato#formulario" },
     ],
   },

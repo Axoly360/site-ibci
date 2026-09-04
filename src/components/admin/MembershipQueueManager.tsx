@@ -224,9 +224,12 @@ function ValidatedMemberCard({
 
   const uploadFile = async () => {
     const file = fileInputRef.current?.files?.[0];
-    if (!file) return;
-    setUploading(true);
     setUploadError("");
+    if (!file) {
+      setUploadError("Escolha um arquivo antes de anexar.");
+      return;
+    }
+    setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
     const res = await fetch(`/api/admin/membros/${member.id}/arquivos`, {
@@ -239,7 +242,7 @@ function ValidatedMemberCard({
       router.refresh();
     } else {
       const data = await res.json().catch(() => null);
-      setUploadError(data?.error ?? "Não foi possível enviar o arquivo.");
+      setUploadError(data?.error ?? `Não foi possível enviar o arquivo (${res.status}).`);
     }
   };
 

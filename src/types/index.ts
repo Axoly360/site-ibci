@@ -72,6 +72,8 @@ export interface NavLink {
   href: string;
   external?: boolean;
   children?: NavLink[];
+  /** Valor exibido junto do rótulo no menu (ex.: o telefone abaixo de "Telefone"). */
+  value?: string;
 }
 
 export interface QuickAccessCard {

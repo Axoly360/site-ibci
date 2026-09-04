@@ -78,6 +78,11 @@ export default function Navbar() {
                       role="menuitem"
                     >
                       {child.label}
+                      {child.value && (
+                        <span className="mt-0.5 block text-xs font-normal italic text-text-neutral/60">
+                          {child.value}
+                        </span>
+                      )}
                     </Link>
                   ))}
                 </div>
@@ -173,6 +178,11 @@ export default function Navbar() {
                           onClick={closeAll}
                         >
                           {child.label}
+                          {child.value && (
+                            <span className="mt-0.5 block text-xs italic text-white/50">
+                              {child.value}
+                            </span>
+                          )}
                         </Link>
                       ))}
                     </div>
