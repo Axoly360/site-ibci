@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
     typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
   const eventSlug =
     typeof body?.eventSlug === "string" ? body.eventSlug : undefined;
+  const next = typeof body?.next === "string" ? body.next : undefined;
 
   if (!name || !email || !email.includes("@")) {
     return NextResponse.json(
@@ -37,8 +38,8 @@ export async function POST(request: NextRequest) {
   const expiresAt = new Date(Date.now() + TOKEN_TTL_MS).toISOString();
 
   await sql`
-    insert into login_tokens (token, member_id, event_slug, expires_at)
-    values (${token}, ${member.id}, ${eventSlug ?? null}, ${expiresAt})
+    insert into login_tokens (token, member_id, event_slug, next_path, expires_at)
+    values (${token}, ${member.id}, ${eventSlug ?? null}, ${next ?? null}, ${expiresAt})
   `;
 
   const confirmUrl = new URL("/api/auth/confirmar", request.url);

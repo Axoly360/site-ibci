@@ -15,10 +15,13 @@ create table if not exists login_tokens (
   token text primary key,
   member_id uuid not null references members(id) on delete cascade,
   event_slug text,
+  next_path text,
   expires_at timestamptz not null,
   used_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+alter table login_tokens add column if not exists next_path text;
 
 create table if not exists registrations (
   id uuid primary key default gen_random_uuid(),

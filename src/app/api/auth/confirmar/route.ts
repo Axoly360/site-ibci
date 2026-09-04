@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
   }
 
   const [row] = await sql`
-    select login_tokens.member_id, login_tokens.event_slug, login_tokens.expires_at,
-           login_tokens.used_at, members.name, members.email
+    select login_tokens.member_id, login_tokens.event_slug, login_tokens.next_path,
+           login_tokens.expires_at, login_tokens.used_at, members.name, members.email
     from login_tokens
     join members on members.id = login_tokens.member_id
     where login_tokens.token = ${token}
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     where id = ${row.member_id}
   `;
 
-  let destination = new URL("/para-voce/eventos", request.url);
+  let destination = new URL(row.next_path || "/para-voce/eventos", request.url);
   destination.searchParams.set("confirmado", "1");
 
   if (row.event_slug) {

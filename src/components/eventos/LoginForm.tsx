@@ -6,9 +6,10 @@ import Button from "@/components/ui/Button";
 
 interface LoginFormProps {
   session: { name: string; email: string } | null;
+  next?: string;
 }
 
-export default function LoginForm({ session }: LoginFormProps) {
+export default function LoginForm({ session, next }: LoginFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "sent" | "error">(
@@ -40,7 +41,7 @@ export default function LoginForm({ session }: LoginFormProps) {
     const res = await fetch("/api/auth/solicitar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email }),
+      body: JSON.stringify({ name, email, next }),
     });
     if (res.ok) {
       setStatus("sent");
