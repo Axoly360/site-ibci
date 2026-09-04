@@ -6,10 +6,12 @@ import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
 
 interface QuickAccessSectionProps {
+  title?: string;
   subtitle?: string;
 }
 
 export default function QuickAccessSection({
+  title = "Acesso Rápido",
   subtitle = "Tudo o que você precisa saber sobre a nossa igreja, em um só lugar.",
 }: QuickAccessSectionProps) {
   const [pixOpen, setPixOpen] = useState(false);
@@ -60,7 +62,7 @@ export default function QuickAccessSection({
     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="font-heading text-3xl font-bold text-primary sm:text-4xl">
-          Acesso Rápido
+          {title}
         </h2>
         <p className="mt-3 text-text-neutral/80">{subtitle}</p>
       </div>

@@ -4,18 +4,24 @@ import Card from "@/components/ui/Card";
 import Carousel from "@/components/ui/Carousel";
 import { events } from "@/data/events";
 
+interface EventsOfMonthSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
 /** Eventos do mês — carrossel na home, logo abaixo de Últimas Mensagens. */
-export default function EventsOfMonthSection() {
+export default function EventsOfMonthSection({
+  title = "Eventos do Mês",
+  subtitle = "Fique por dentro dos próximos eventos da nossa igreja.",
+}: EventsOfMonthSectionProps) {
   return (
     <section className="bg-primary/[0.03] py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-heading text-3xl font-bold text-primary sm:text-4xl">
-            Eventos do Mês
+            {title}
           </h2>
-          <p className="mt-3 text-text-neutral/80">
-            Fique por dentro dos próximos eventos da nossa igreja.
-          </p>
+          <p className="mt-3 text-text-neutral/80">{subtitle}</p>
         </div>
 
         <div className="mt-10">

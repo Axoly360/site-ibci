@@ -4,17 +4,23 @@ import { sermonVideos } from "@/data/sermonVideos";
 import Button from "@/components/ui/Button";
 import Carousel from "@/components/ui/Carousel";
 
-export default function LatestSermonSection() {
+interface LatestSermonSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export default function LatestSermonSection({
+  title = "Últimas Mensagens",
+  subtitle = "Assista às transmissões mais recentes da nossa igreja.",
+}: LatestSermonSectionProps) {
   return (
     <section id="mensagens" className="bg-primary/[0.03] py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-heading text-3xl font-bold text-primary sm:text-4xl">
-            Últimas Mensagens
+            {title}
           </h2>
-          <p className="mt-3 text-text-neutral/80">
-            Assista às transmissões mais recentes da nossa igreja.
-          </p>
+          <p className="mt-3 text-text-neutral/80">{subtitle}</p>
         </div>
 
         <div className="mt-10">

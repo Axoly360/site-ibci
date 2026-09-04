@@ -6,18 +6,12 @@ import EventsOfMonthSection from "@/components/home/EventsOfMonthSection";
 import MainBannerSection from "@/components/home/MainBannerSection";
 import WeeklyScheduleSection from "@/components/home/WeeklyScheduleSection";
 import InstitutionalVideoSection from "@/components/home/InstitutionalVideoSection";
-import { getContent } from "@/lib/content";
+import { getAllContent } from "@/lib/content";
 import { getContentBlocks } from "@/lib/contentBlocks";
 import { heroBanners } from "@/data/heroBanners";
 
-const ACESSO_RAPIDO_SUBTITLE_FALLBACK =
-  "Tudo o que você precisa saber sobre a nossa igreja, em um só lugar.";
-
 export default async function Home() {
-  const [acessoRapidoSubtitle, blocks] = await Promise.all([
-    getContent("home.acessoRapido.subtitle", ACESSO_RAPIDO_SUBTITLE_FALLBACK),
-    getContentBlocks(),
-  ]);
+  const [texts, blocks] = await Promise.all([getAllContent(), getContentBlocks()]);
 
   const mergedHeroBanners = heroBanners.map((banner) => {
     const override = blocks[banner.id];
@@ -56,13 +50,29 @@ export default async function Home() {
   return (
     <>
       <HeroSection banners={mergedHeroBanners} />
-      <QuickAccessSection subtitle={acessoRapidoSubtitle} />
+      <QuickAccessSection
+        title={texts["home.acessoRapido.title"]}
+        subtitle={texts["home.acessoRapido.subtitle"]}
+      />
       <HighlightBannersSection pepe={pepe} eventoPrincipal={eventoPrincipal} />
-      <LatestSermonSection />
-      <EventsOfMonthSection />
+      <LatestSermonSection
+        title={texts["home.ultimasMensagens.title"]}
+        subtitle={texts["home.ultimasMensagens.subtitle"]}
+      />
+      <EventsOfMonthSection
+        title={texts["home.eventosDoMes.title"]}
+        subtitle={texts["home.eventosDoMes.subtitle"]}
+      />
       <MainBannerSection {...mainBanner} />
-      <WeeklyScheduleSection />
-      <InstitutionalVideoSection videoUrl={institutionalVideoUrl} />
+      <WeeklyScheduleSection
+        title={texts["home.programacaoSemana.title"]}
+        subtitle={texts["home.programacaoSemana.subtitle"]}
+      />
+      <InstitutionalVideoSection
+        title={texts["home.conhecaIbci.title"]}
+        subtitle={texts["home.conhecaIbci.subtitle"]}
+        videoUrl={institutionalVideoUrl}
+      />
     </>
   );
 }
