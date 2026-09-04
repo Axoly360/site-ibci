@@ -82,6 +82,19 @@ create table if not exists member_files (
   uploaded_at timestamptz not null default now()
 );
 
+-- Banners/blocos de conteúdo editáveis pelo painel (imagem, título, link,
+-- vídeo). Uma linha por "slot" do site (ex.: hero-2, banner-principal).
+create table if not exists content_blocks (
+  key text primary key,
+  title text,
+  subtitle text,
+  image_url text,
+  image_mobile_url text,
+  video_url text,
+  link_url text,
+  updated_at timestamptz not null default now()
+);
+
 -- Pedidos de cadastro de membro, aguardando validação da diretoria.
 create table if not exists membership_requests (
   id uuid primary key default gen_random_uuid(),

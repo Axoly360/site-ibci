@@ -1,5 +1,15 @@
+import { extractYouTubeId } from "@/lib/youtube";
+
+interface InstitutionalVideoSectionProps {
+  videoUrl?: string;
+}
+
 /** Vídeo institucional da igreja. */
-export default function InstitutionalVideoSection() {
+export default function InstitutionalVideoSection({
+  videoUrl = "https://www.youtube.com/watch?v=6QYUSWm85gY",
+}: InstitutionalVideoSectionProps) {
+  const videoId = extractYouTubeId(videoUrl);
+
   return (
     <section className="bg-primary/[0.03] py-20">
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
@@ -13,8 +23,8 @@ export default function InstitutionalVideoSection() {
         <div className="mx-auto mt-10 aspect-video w-full overflow-hidden rounded-2xl">
           <iframe
             className="h-full w-full"
-            src="https://www.youtube.com/embed/6QYUSWm85gY"
-            title="Conferência de Aniversário 57 Anos | 2º Dia | SÁBADO | 23/05/2026"
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title="Vídeo institucional da IBCI"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />

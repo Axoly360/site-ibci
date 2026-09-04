@@ -4,12 +4,14 @@ import { useRef, useState, type UIEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Construction } from "lucide-react";
-import { heroBanners, type HeroBanner } from "@/data/heroBanners";
+import type { HeroBanner } from "@/data/heroBanners";
 
 const SLIDE_CLASS =
   "relative aspect-[390/546] w-full shrink-0 snap-start overflow-hidden sm:aspect-[1360/460]";
 
 function BannerImages({ banner }: { banner: HeroBanner }) {
+  const desktopRemote = banner.srcDesktop!.startsWith("http");
+  const mobileRemote = banner.srcMobile!.startsWith("http");
   return (
     <>
       {/* Mobile: arte própria 390x546. */}
@@ -18,6 +20,7 @@ function BannerImages({ banner }: { banner: HeroBanner }) {
         alt={banner.alt ?? ""}
         fill
         priority
+        unoptimized={mobileRemote}
         sizes="100vw"
         className="object-cover sm:hidden"
       />
@@ -27,6 +30,7 @@ function BannerImages({ banner }: { banner: HeroBanner }) {
         alt={banner.alt ?? ""}
         fill
         priority
+        unoptimized={desktopRemote}
         sizes="100vw"
         className="hidden object-cover sm:block"
       />
@@ -34,7 +38,7 @@ function BannerImages({ banner }: { banner: HeroBanner }) {
   );
 }
 
-export default function HeroSection() {
+export default function HeroSection({ banners }: { banners: HeroBanner[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -58,7 +62,7 @@ export default function HeroSection() {
         onScroll={handleScroll}
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {heroBanners.map((banner) => {
+        {banners.map((banner) => {
           if (!(banner.srcDesktop && banner.srcMobile)) {
             return (
               <div
@@ -92,9 +96,9 @@ export default function HeroSection() {
         })}
       </div>
 
-      {heroBanners.length > 1 && (
+      {banners.length > 1 && (
         <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-          {heroBanners.map((banner, index) => (
+          {banners.map((banner, index) => (
             <button
               key={banner.id}
               type="button"
