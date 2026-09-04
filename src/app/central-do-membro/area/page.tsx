@@ -41,7 +41,7 @@ const baseShortcuts = [
     description:
       "Veja a programação da semana — cultos, EBD e encontros — e fique por dentro dos avisos da liderança.",
     cta: "Ver programação",
-    href: "/#cultos",
+    href: "/central-do-membro/programacao",
     external: false,
   },
   {
