@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, ChevronDown, Lock, X } from "lucide-react";
+import { Check, ChevronDown, FileText, Lock, Send, Trash2, X } from "lucide-react";
 import Card from "@/components/ui/Card";
 
 export interface MembershipRequestRow {
@@ -19,11 +19,23 @@ export interface MembershipRequestRow {
   status: string;
 }
 
+export interface MemberFileRow {
+  id: string;
+  file_name: string;
+  file_url: string;
+  uploaded_at: string;
+}
+
 export interface ValidatedMemberRow {
   id: string;
   name: string;
   email: string;
+  is_leadership: boolean;
+  church_role: string | null;
+  files: MemberFileRow[];
 }
+
+const CHURCH_ROLES = ["Pastor", "Diácono", "Professor", "Líder"];
 
 export default function MembershipQueueManager({
   pendentes,
@@ -168,25 +180,178 @@ export default function MembershipQueueManager({
             <p className="text-sm text-text-neutral/60">Nenhum membro validado ainda.</p>
           )}
           {validados.map((m) => (
-            <Card key={m.id} className="flex items-center justify-between gap-4 p-4">
-              <div>
-                <p className="font-semibold text-text-neutral">{m.name}</p>
-                <p className="text-sm text-text-neutral/60">{m.email}</p>
-              </div>
-              <button
-                type="button"
-                disabled={loadingId === m.id}
-                onClick={() => revoke(m.id)}
-                className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
-              >
-                <Lock className="h-4 w-4" />
-                Revogar validação
-              </button>
-            </Card>
+            <ValidatedMemberCard
+              key={m.id}
+              member={m}
+              loading={loadingId === m.id}
+              onRevoke={() => revoke(m.id)}
+              onSaveLeadership={async (isLeadership, churchRole) => {
+                setLoadingId(m.id);
+                await fetch(`/api/admin/membros/lideranca/${m.id}`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ isLeadership, churchRole }),
+                });
+                setLoadingId(null);
+                router.refresh();
+              }}
+            />
           ))}
         </div>
       </div>
     </div>
+  );
+}
+
+function ValidatedMemberCard({
+  member,
+  loading,
+  onRevoke,
+  onSaveLeadership,
+}: {
+  member: ValidatedMemberRow;
+  loading: boolean;
+  onRevoke: () => void;
+  onSaveLeadership: (isLeadership: boolean, churchRole: string) => void;
+}) {
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [isLeadership, setIsLeadership] = useState(member.is_leadership);
+  const [churchRole, setChurchRole] = useState(member.church_role ?? "");
+  const dirty = isLeadership !== member.is_leadership || churchRole !== (member.church_role ?? "");
+
+  const uploadFile = async () => {
+    const file = fileInputRef.current?.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setUploadError("");
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch(`/api/admin/membros/${member.id}/arquivos`, {
+      method: "POST",
+      body: formData,
+    });
+    setUploading(false);
+    if (res.ok) {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      router.refresh();
+    } else {
+      const data = await res.json().catch(() => null);
+      setUploadError(data?.error ?? "Não foi possível enviar o arquivo.");
+    }
+  };
+
+  const removeFile = async (fileId: string) => {
+    await fetch(`/api/admin/membros/${member.id}/arquivos/${fileId}`, {
+      method: "DELETE",
+    });
+    router.refresh();
+  };
+
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <p className="font-semibold text-text-neutral">{member.name}</p>
+          <p className="text-sm text-text-neutral/60">{member.email}</p>
+        </div>
+        <button
+          type="button"
+          disabled={loading}
+          onClick={onRevoke}
+          className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
+        >
+          <Lock className="h-4 w-4" />
+          Revogar validação
+        </button>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-black/5 pt-3">
+        <label className="flex items-center gap-2 text-sm text-text-neutral">
+          <input
+            type="checkbox"
+            checked={isLeadership}
+            onChange={(e) => setIsLeadership(e.target.checked)}
+            className="h-4 w-4"
+          />
+          Liderança (acesso à escala de serviços)
+        </label>
+        <select
+          value={churchRole}
+          onChange={(e) => setChurchRole(e.target.value)}
+          disabled={!isLeadership}
+          className="rounded-lg border border-black/10 bg-white px-2 py-1.5 text-sm disabled:opacity-50"
+        >
+          <option value="">Cargo...</option>
+          {CHURCH_ROLES.map((r) => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
+        </select>
+        {dirty && (
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => onSaveLeadership(isLeadership, churchRole)}
+            className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-white hover:bg-primary-dark disabled:opacity-50"
+          >
+            Salvar
+          </button>
+        )}
+        {member.is_leadership && !dirty && (
+          <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+            {member.church_role || "Liderança"}
+          </span>
+        )}
+      </div>
+
+      <div className="mt-3 border-t border-black/5 pt-3">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-neutral/50">
+          Arquivos do membro
+        </p>
+        {member.files.length > 0 && (
+          <ul className="mb-3 flex flex-col gap-1.5">
+            {member.files.map((f) => (
+              <li key={f.id} className="flex items-center justify-between gap-3 text-sm">
+                <a
+                  href={f.file_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 truncate text-secondary hover:underline"
+                >
+                  <FileText className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{f.file_name}</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => removeFile(f.id)}
+                  className="shrink-0 text-text-neutral/40 hover:text-red-600"
+                  aria-label={`Remover ${f.file_name}`}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="flex flex-wrap items-center gap-2">
+          <input ref={fileInputRef} type="file" className="max-w-[220px] text-xs" />
+          <button
+            type="button"
+            disabled={uploading}
+            onClick={uploadFile}
+            className="flex items-center gap-1.5 rounded-full border border-black/10 px-3 py-1.5 text-xs font-semibold text-text-neutral hover:bg-black/5 disabled:opacity-50"
+          >
+            <Send className="h-3.5 w-3.5" />
+            {uploading ? "Enviando..." : "Anexar"}
+          </button>
+        </div>
+        {uploadError && <p className="mt-1 text-xs text-red-600">{uploadError}</p>}
+      </div>
+    </Card>
   );
 }
 

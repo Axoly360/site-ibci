@@ -57,6 +57,21 @@ alter table members add column if not exists is_validated_member boolean not nul
 -- se cadastrou em um evento (login por link, sem senha).
 alter table members add column if not exists password_hash text;
 
+-- Marca lideranças (Pastores, Diáconos, Professores, Líderes) com acesso a
+-- conteúdo restrito extra, como a escala mensal de serviços.
+alter table members add column if not exists is_leadership boolean not null default false;
+alter table members add column if not exists church_role text;
+
+-- Arquivos/documentos anexados a um membro pelo responsável no painel.
+create table if not exists member_files (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id) on delete cascade,
+  file_name text not null,
+  file_url text not null,
+  uploaded_by uuid references admin_users(id),
+  uploaded_at timestamptz not null default now()
+);
+
 -- Pedidos de cadastro de membro, aguardando validação da diretoria.
 create table if not exists membership_requests (
   id uuid primary key default gen_random_uuid(),

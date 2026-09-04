@@ -7,6 +7,7 @@ import {
   UserRoundCheck,
   FileText,
   ArrowRight,
+  CalendarDays,
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
@@ -24,7 +25,7 @@ function waLink(message: string) {
   )}`;
 }
 
-const shortcuts = [
+const baseShortcuts = [
   {
     icon: Heart,
     title: "Pedido de Oração",
@@ -78,9 +79,24 @@ export default async function AreaDoMembroPage() {
   if (!session) redirect("/central-do-membro");
 
   const [member] = await sql`
-    select is_validated_member from members where id = ${session.memberId}
+    select is_validated_member, is_leadership, church_role
+    from members where id = ${session.memberId}
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");
+
+  const shortcuts = member.is_leadership
+    ? [
+        {
+          icon: CalendarDays,
+          title: "Escala de Serviços",
+          description: `Escala mensal de cultos — acesso restrito a lideranças (${member.church_role || "liderança"}).`,
+          cta: "Ver escala do mês",
+          href: "/central-do-membro/escala",
+          external: false,
+        },
+        ...baseShortcuts,
+      ]
+    : baseShortcuts;
 
   return (
     <div className="bg-bg-light">
@@ -93,11 +109,11 @@ export default async function AreaDoMembroPage() {
             Olá, {session.name}! Atalhos e serviços práticos para facilitar sua
             participação e comunhão na IBCI.
           </p>
-          <form action="/api/auth/sair" method="POST" className="mt-4">
+          <form action="/api/auth/sair" method="POST" className="mt-6">
             <input type="hidden" name="next" value="/central-do-membro" />
             <button
               type="submit"
-              className="text-sm font-semibold text-white/70 underline-offset-2 hover:text-white hover:underline"
+              className="rounded-full bg-secondary px-6 py-2.5 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-secondary-light"
             >
               Sair
             </button>

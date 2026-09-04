@@ -12,6 +12,7 @@
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/montserrat": "^5.3.0",
     "@neondatabase/serverless": "^0.10.4",
+    "@vercel/blob": "^0.27.1",
     "lucide-react": "^1.31.0",
     "next": "16.3.1",
     "qrcode": "^1.5.4",

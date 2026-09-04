@@ -3,8 +3,10 @@ import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import MembershipQueueManager from "@/components/admin/MembershipQueueManager";
+import EscalaUploadPanel from "@/components/admin/EscalaUploadPanel";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
+import { getContent } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Membros | Painel IBCI",
@@ -42,10 +44,28 @@ export default async function AdminMembrosPage() {
   `;
 
   const validados = await sql`
-    select id, name, email from members
+    select id, name, email, is_leadership, church_role from members
     where is_validated_member = true
     order by name asc
   `;
+
+  const arquivos = await sql`
+    select id, member_id, file_name, file_url, uploaded_at
+    from member_files
+    order by uploaded_at desc
+  `;
+  const arquivosPorMembro = new Map<string, typeof arquivos>();
+  for (const arquivo of arquivos) {
+    const lista = arquivosPorMembro.get(arquivo.member_id) ?? [];
+    lista.push(arquivo);
+    arquivosPorMembro.set(arquivo.member_id, lista);
+  }
+  const validadosComArquivos = validados.map((m) => ({
+    ...m,
+    files: arquivosPorMembro.get(m.id) ?? [],
+  }));
+
+  const escalaImageUrl = await getContent("escala.image_url", "/escala-setembro-2026.jpeg");
 
   return (
     <div className="bg-bg-light">
@@ -55,11 +75,14 @@ export default async function AdminMembrosPage() {
         description="Cadastros de membro aguardando a validação da diretoria."
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-        <MembershipQueueManager
-          pendentes={pendentes}
-          recentes={recentes}
-          validados={validados}
-        />
+        <EscalaUploadPanel currentUrl={escalaImageUrl} />
+        <div className="mt-10">
+          <MembershipQueueManager
+            pendentes={pendentes}
+            recentes={recentes}
+            validados={validadosComArquivos}
+          />
+        </div>
       </div>
     </div>
   );

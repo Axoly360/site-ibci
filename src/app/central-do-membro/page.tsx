@@ -18,7 +18,7 @@ function SairButton() {
       <input type="hidden" name="next" value="/central-do-membro" />
       <button
         type="submit"
-        className="text-sm font-semibold text-text-neutral/60 underline-offset-2 hover:text-text-neutral hover:underline"
+        className="rounded-full bg-secondary px-6 py-2.5 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-secondary-light"
       >
         Sair
       </button>
