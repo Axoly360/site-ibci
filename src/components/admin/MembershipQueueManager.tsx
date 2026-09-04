@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, ChevronDown, X } from "lucide-react";
+import { Check, ChevronDown, Lock, X } from "lucide-react";
 import Card from "@/components/ui/Card";
 
 export interface MembershipRequestRow {
@@ -19,16 +19,34 @@ export interface MembershipRequestRow {
   status: string;
 }
 
+export interface ValidatedMemberRow {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export default function MembershipQueueManager({
   pendentes,
   recentes,
+  validados,
 }: {
   pendentes: MembershipRequestRow[];
   recentes: MembershipRequestRow[];
+  validados: ValidatedMemberRow[];
 }) {
   const router = useRouter();
   const [openId, setOpenId] = useState<string | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  const revoke = async (memberId: string) => {
+    if (!confirm("Revogar a validação deste membro? Ele perde o acesso à área do membro.")) {
+      return;
+    }
+    setLoadingId(memberId);
+    await fetch(`/api/admin/membros/revogar/${memberId}`, { method: "POST" });
+    setLoadingId(null);
+    router.refresh();
+  };
 
   const decide = async (id: string, decision: "aprovado" | "recusado") => {
     setLoadingId(id);
@@ -136,6 +154,34 @@ export default function MembershipQueueManager({
               >
                 {r.status === "aprovado" ? "Aprovado" : "Recusado"}
               </span>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 className="font-heading text-lg font-semibold text-primary">
+          Membros validados ({validados.length})
+        </h2>
+        <div className="mt-4 flex flex-col gap-2">
+          {validados.length === 0 && (
+            <p className="text-sm text-text-neutral/60">Nenhum membro validado ainda.</p>
+          )}
+          {validados.map((m) => (
+            <Card key={m.id} className="flex items-center justify-between gap-4 p-4">
+              <div>
+                <p className="font-semibold text-text-neutral">{m.name}</p>
+                <p className="text-sm text-text-neutral/60">{m.email}</p>
+              </div>
+              <button
+                type="button"
+                disabled={loadingId === m.id}
+                onClick={() => revoke(m.id)}
+                className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
+              >
+                <Lock className="h-4 w-4" />
+                Revogar validação
+              </button>
             </Card>
           ))}
         </div>

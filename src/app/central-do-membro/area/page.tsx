@@ -93,6 +93,15 @@ export default async function AreaDoMembroPage() {
             Olá, {session.name}! Atalhos e serviços práticos para facilitar sua
             participação e comunhão na IBCI.
           </p>
+          <form action="/api/auth/sair" method="POST" className="mt-4">
+            <input type="hidden" name="next" value="/central-do-membro" />
+            <button
+              type="submit"
+              className="text-sm font-semibold text-white/70 underline-offset-2 hover:text-white hover:underline"
+            >
+              Sair
+            </button>
+          </form>
         </div>
       </section>
 

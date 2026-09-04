@@ -41,6 +41,12 @@ export default async function AdminMembrosPage() {
     limit 10
   `;
 
+  const validados = await sql`
+    select id, name, email from members
+    where is_validated_member = true
+    order by name asc
+  `;
+
   return (
     <div className="bg-bg-light">
       <AdminNav session={session} />
@@ -49,7 +55,11 @@ export default async function AdminMembrosPage() {
         description="Cadastros de membro aguardando a validação da diretoria."
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-        <MembershipQueueManager pendentes={pendentes} recentes={recentes} />
+        <MembershipQueueManager
+          pendentes={pendentes}
+          recentes={recentes}
+          validados={validados}
+        />
       </div>
     </div>
   );
