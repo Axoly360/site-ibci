@@ -2,8 +2,37 @@
 
 import { useRef, useState, type UIEvent } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Construction } from "lucide-react";
-import { heroBanners } from "@/data/heroBanners";
+import { heroBanners, type HeroBanner } from "@/data/heroBanners";
+
+const SLIDE_CLASS =
+  "relative aspect-[390/546] w-full shrink-0 snap-start overflow-hidden sm:aspect-[1360/460]";
+
+function BannerImages({ banner }: { banner: HeroBanner }) {
+  return (
+    <>
+      {/* Mobile: arte própria 390x546. */}
+      <Image
+        src={banner.srcMobile!}
+        alt={banner.alt ?? ""}
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover sm:hidden"
+      />
+      {/* Desktop/tablet: arte própria 1360x460. */}
+      <Image
+        src={banner.srcDesktop!}
+        alt={banner.alt ?? ""}
+        fill
+        priority
+        sizes="100vw"
+        className="hidden object-cover sm:block"
+      />
+    </>
+  );
+}
 
 export default function HeroSection() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -29,46 +58,38 @@ export default function HeroSection() {
         onScroll={handleScroll}
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {heroBanners.map((banner) =>
-          banner.srcDesktop && banner.srcMobile ? (
-            <div
-              key={banner.id}
-              className="relative aspect-[390/546] w-full shrink-0 snap-start overflow-hidden sm:aspect-[1360/460]"
-            >
-              {/* Mobile: arte própria 390x546. */}
-              <Image
-                src={banner.srcMobile}
-                alt={banner.alt ?? ""}
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover sm:hidden"
-              />
-              {/* Desktop/tablet: arte própria 1360x460. */}
-              <Image
-                src={banner.srcDesktop}
-                alt={banner.alt ?? ""}
-                fill
-                priority
-                sizes="100vw"
-                className="hidden object-cover sm:block"
-              />
+        {heroBanners.map((banner) => {
+          if (!(banner.srcDesktop && banner.srcMobile)) {
+            return (
+              <div
+                key={banner.id}
+                className={`${SLIDE_CLASS} flex flex-col items-center justify-center gap-2 border border-dashed border-white/20 text-center`}
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white/70">
+                  <Construction className="h-6 w-6" />
+                </span>
+                <p className="font-heading text-lg font-semibold text-white/70">
+                  {banner.placeholderTitle}
+                </p>
+                <p className="text-sm text-white/50">Em breve</p>
+              </div>
+            );
+          }
+
+          if (banner.href) {
+            return (
+              <Link key={banner.id} href={banner.href} className={SLIDE_CLASS}>
+                <BannerImages banner={banner} />
+              </Link>
+            );
+          }
+
+          return (
+            <div key={banner.id} className={SLIDE_CLASS}>
+              <BannerImages banner={banner} />
             </div>
-          ) : (
-            <div
-              key={banner.id}
-              className="relative flex aspect-[390/546] w-full shrink-0 snap-start flex-col items-center justify-center gap-2 border border-dashed border-white/20 bg-primary text-center sm:aspect-[1360/460]"
-            >
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white/70">
-                <Construction className="h-6 w-6" />
-              </span>
-              <p className="font-heading text-lg font-semibold text-white/70">
-                {banner.placeholderTitle}
-              </p>
-              <p className="text-sm text-white/50">Em breve</p>
-            </div>
-          )
-        )}
+          );
+        })}
       </div>
 
       {heroBanners.length > 1 && (

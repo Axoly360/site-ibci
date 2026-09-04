@@ -2,6 +2,7 @@ import HeroSection from "@/components/home/HeroSection";
 import QuickAccessSection from "@/components/home/QuickAccessSection";
 import HighlightBannersSection from "@/components/home/HighlightBannersSection";
 import LatestSermonSection from "@/components/home/LatestSermonSection";
+import EventsOfMonthSection from "@/components/home/EventsOfMonthSection";
 import MainBannerSection from "@/components/home/MainBannerSection";
 import WeeklyScheduleSection from "@/components/home/WeeklyScheduleSection";
 import InstitutionalVideoSection from "@/components/home/InstitutionalVideoSection";
@@ -22,6 +23,7 @@ export default async function Home() {
       <QuickAccessSection subtitle={acessoRapidoSubtitle} />
       <HighlightBannersSection />
       <LatestSermonSection />
+      <EventsOfMonthSection />
       <MainBannerSection />
       <WeeklyScheduleSection />
       <InstitutionalVideoSection />

@@ -4,6 +4,8 @@ export interface HeroBanner {
   srcDesktop?: string;
   srcMobile?: string;
   alt?: string;
+  /** Para onde o banner leva ao ser clicado. Ausente = não clicável. */
+  href?: string;
   /** Título curto mostrado no slide placeholder, quando não há imagem. */
   placeholderTitle?: string;
 }
@@ -28,6 +30,7 @@ export const heroBanners: HeroBanner[] = [
     srcDesktop: "/hero-2-desktop.png",
     srcMobile: "/hero-2-mobile.png",
     alt: "Congresso de Casais — 12 e 13 de setembro, das 10h às 12h, no Hotel Porto da Serra, Gravatá. Inscrições com Maurício e Gineide. Investimento R$ 350,00 por casal.",
+    href: "/para-voce/eventos/congresso-de-casais",
   },
   {
     id: "conferencia-aniversario-57-anos",

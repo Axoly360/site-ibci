@@ -75,6 +75,12 @@ export default function ContatoPage() {
                   <p className="text-sm text-text-neutral/80">
                     Quartas-feiras: Culto de Oração às 19h
                   </p>
+                  <h3 className="mt-3 font-semibold text-text-neutral">
+                    Horário de Atendimento
+                  </h3>
+                  <p className="text-sm italic text-text-neutral/80">
+                    {churchInfo.contact.businessHours}
+                  </p>
                 </div>
               </div>
 
@@ -84,7 +90,7 @@ export default function ContatoPage() {
                 </span>
                 <div>
                   <h3 className="font-semibold text-text-neutral">E-mail</h3>
-                  <p className="text-sm text-text-neutral/80">
+                  <p className="text-sm italic text-text-neutral/80">
                     {churchInfo.contact.email}
                   </p>
                 </div>
@@ -98,8 +104,14 @@ export default function ContatoPage() {
                   <h3 className="font-semibold text-text-neutral">
                     Telefone
                   </h3>
-                  <p className="text-sm text-text-neutral/80">
+                  <p className="text-sm italic text-text-neutral/80">
                     {churchInfo.contact.phone}
+                  </p>
+                  <h3 className="mt-3 font-semibold text-text-neutral">
+                    WhatsApp
+                  </h3>
+                  <p className="text-sm italic text-text-neutral/80">
+                    {churchInfo.contact.whatsapp}
                   </p>
                 </div>
               </div>

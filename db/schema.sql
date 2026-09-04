@@ -62,6 +62,16 @@ alter table members add column if not exists password_hash text;
 alter table members add column if not exists is_leadership boolean not null default false;
 alter table members add column if not exists church_role text;
 
+-- Perfil do membro, editável por ele mesmo depois de validado.
+alter table members add column if not exists phone text;
+alter table members add column if not exists cpf text;
+alter table members add column if not exists birthdate text;
+alter table members add column if not exists address text;
+alter table members add column if not exists time_at_church text;
+alter table members add column if not exists photo_url text;
+alter table members add column if not exists baptism_date text;
+alter table members add column if not exists arrival_date text;
+
 -- Arquivos/documentos anexados a um membro pelo responsável no painel.
 create table if not exists member_files (
   id uuid primary key default gen_random_uuid(),

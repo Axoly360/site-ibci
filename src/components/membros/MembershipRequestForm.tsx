@@ -3,6 +3,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { CheckCircle2, Send } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { formatCPF, formatDateBR } from "@/lib/masks";
 
 const initial = {
   name: "",
@@ -25,6 +26,12 @@ export default function MembershipRequestForm() {
   const set = (field: keyof typeof initial) => (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
+
+  const setCPF = (e: ChangeEvent<HTMLInputElement>) =>
+    setForm((prev) => ({ ...prev, cpf: formatCPF(e.target.value) }));
+
+  const setBirthdate = (e: ChangeEvent<HTMLInputElement>) =>
+    setForm((prev) => ({ ...prev, birthdate: formatDateBR(e.target.value) }));
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -105,16 +112,20 @@ export default function MembershipRequestForm() {
         />
         <input
           placeholder="CPF"
+          inputMode="numeric"
+          maxLength={14}
           value={form.cpf}
-          onChange={set("cpf")}
+          onChange={setCPF}
           className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <input
-          placeholder="Data de nascimento"
+          placeholder="Data de nascimento (dd/mm/aaaa)"
+          inputMode="numeric"
+          maxLength={10}
           value={form.birthdate}
-          onChange={set("birthdate")}
+          onChange={setBirthdate}
           className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
         <input

@@ -8,6 +8,7 @@ import {
   FileText,
   ArrowRight,
   CalendarDays,
+  UserRound,
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
@@ -26,6 +27,15 @@ function waLink(message: string) {
 }
 
 const baseShortcuts = [
+  {
+    icon: UserRound,
+    title: "Meu Cadastro",
+    description:
+      "Atualize seus dados, foto, data de batismo e há quanto tempo você chegou na igreja.",
+    cta: "Editar cadastro",
+    href: "/central-do-membro/perfil",
+    external: false,
+  },
   {
     icon: Heart,
     title: "Pedido de Oração",

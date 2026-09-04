@@ -198,7 +198,9 @@ export const churchInfo: ChurchInfo = {
   },
   contact: {
     email: "contato.ibci@gmail.com",
-    phone: "(81) 98895-3552",
+    phone: "(81) 3475-1778",
+    whatsapp: "(81) 98895-3552",
+    businessHours: "Segunda a Sexta das 8h às 17h",
   },
 };
 
