@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X, PlayCircle, ChevronDown, UserRound } from "lucide-react";
-import { navLinks, churchInfo } from "@/data/churchInfo";
+import { navLinks as staticNavLinks, churchInfo } from "@/data/churchInfo";
 import Button from "@/components/ui/Button";
+import type { NavLink } from "@/types";
 
 interface Session {
   name: string;
@@ -15,12 +16,20 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [session, setSession] = useState<Session | null>(null);
+  const [navLinks, setNavLinks] = useState<NavLink[]>(staticNavLinks);
 
   useEffect(() => {
     fetch("/api/auth/sessao")
       .then((res) => res.json())
       .then((data) => setSession(data.session))
       .catch(() => setSession(null));
+
+    fetch("/api/nav")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.tree) && data.tree.length > 0) setNavLinks(data.tree);
+      })
+      .catch(() => {});
   }, []);
 
   const handleLogout = async () => {

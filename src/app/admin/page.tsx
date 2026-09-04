@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Camera, FileText, UserRound, Lock } from "lucide-react";
+import { Camera, FileText, Menu, UserRound, Lock } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
@@ -31,6 +31,13 @@ export default async function AdminPage() {
       icon: FileText,
       title: "Textos",
       description: "Título e subtítulo de cada seção da home.",
+      show: hasPermission(session, "paginas"),
+    },
+    {
+      href: "/admin/menu",
+      icon: Menu,
+      title: "Menu",
+      description: "Categorias e subcategorias do menu do site.",
       show: hasPermission(session, "paginas"),
     },
     {
