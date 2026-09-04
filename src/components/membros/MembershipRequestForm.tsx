@@ -7,6 +7,8 @@ import Button from "@/components/ui/Button";
 const initial = {
   name: "",
   email: "",
+  password: "",
+  confirmPassword: "",
   phone: "",
   cpf: "",
   birthdate: "",
@@ -26,6 +28,11 @@ export default function MembershipRequestForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (form.password !== form.confirmPassword) {
+      setError("As senhas não são iguais.");
+      setStatus("error");
+      return;
+    }
     setStatus("loading");
     setError("");
     const res = await fetch("/api/membros/solicitar", {
@@ -69,6 +76,26 @@ export default function MembershipRequestForm() {
         onChange={set("email")}
         className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <input
+          required
+          type="password"
+          minLength={6}
+          placeholder="Crie uma senha"
+          value={form.password}
+          onChange={set("password")}
+          className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+        />
+        <input
+          required
+          type="password"
+          minLength={6}
+          placeholder="Confirme a senha"
+          value={form.confirmPassword}
+          onChange={set("confirmPassword")}
+          className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+        />
+      </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <input
           placeholder="Telefone / WhatsApp"

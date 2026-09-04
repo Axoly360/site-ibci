@@ -53,6 +53,10 @@ create table if not exists admin_users (
 -- Marca quem já é membro validado pela diretoria (separado de eventos).
 alter table members add column if not exists is_validated_member boolean not null default false;
 
+-- Senha da Central do Membro (login por e-mail+senha). Nulo para quem só
+-- se cadastrou em um evento (login por link, sem senha).
+alter table members add column if not exists password_hash text;
+
 -- Pedidos de cadastro de membro, aguardando validação da diretoria.
 create table if not exists membership_requests (
   id uuid primary key default gen_random_uuid(),

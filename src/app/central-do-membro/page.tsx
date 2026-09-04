@@ -3,13 +3,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
-import LoginForm from "@/components/eventos/LoginForm";
+import MemberLoginForm from "@/components/membros/MemberLoginForm";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Central do Membro | IBCI - Igreja Batista Central do Ibura",
-  description: "Entre com seu e-mail ou cadastre-se para acessar a Central do Membro.",
+  description: "Entre com e-mail e senha ou cadastre-se para acessar a Central do Membro.",
 };
 
 export default async function CentralDoMembroPage() {
@@ -28,7 +28,7 @@ export default async function CentralDoMembroPage() {
     <div className="bg-bg-light">
       <PageBanner
         title="Central do Membro"
-        description="Entre com seu e-mail — sem senha — para acessar a área do membro."
+        description="Entre com e-mail e senha para acessar a área do membro."
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         {session ? (
@@ -39,7 +39,7 @@ export default async function CentralDoMembroPage() {
           </p>
         ) : (
           <>
-            <LoginForm session={null} next="/central-do-membro/area" />
+            <MemberLoginForm />
             <p className="mt-8 text-center text-sm text-text-neutral/70">
               Ainda não é membro?{" "}
               <Link

@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
+import { hashPassword } from "@/lib/password";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   const name = typeof body?.name === "string" ? body.name.trim() : "";
   const email =
     typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
+  const password = typeof body?.password === "string" ? body.password : "";
   const phone = typeof body?.phone === "string" ? body.phone.trim() : "";
   const cpf = typeof body?.cpf === "string" ? body.cpf.trim() : "";
   const birthdate = typeof body?.birthdate === "string" ? body.birthdate.trim() : "";
@@ -20,11 +22,20 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+  if (password.length < 6) {
+    return NextResponse.json(
+      { error: "A senha precisa ter pelo menos 6 caracteres." },
+      { status: 400 }
+    );
+  }
+
+  const passwordHash = await hashPassword(password);
 
   const [member] = await sql`
-    insert into members (name, email)
-    values (${name}, ${email})
-    on conflict (email) do update set name = excluded.name
+    insert into members (name, email, password_hash)
+    values (${name}, ${email}, ${passwordHash})
+    on conflict (email) do update
+      set name = excluded.name, password_hash = excluded.password_hash
     returning id, is_validated_member
   `;
 
