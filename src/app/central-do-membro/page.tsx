@@ -1,11 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Lock } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import MemberLoginForm from "@/components/membros/MemberLoginForm";
+import Card from "@/components/ui/Card";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
+
+function AdminAccessCard() {
+  return (
+    <Link href="/admin/entrar" className="mt-10 block">
+      <Card className="flex items-center gap-4 p-5">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <Lock className="h-5 w-5" />
+        </span>
+        <div>
+          <h2 className="font-heading text-base font-semibold text-primary">
+            É administrador?
+          </h2>
+          <p className="text-sm text-text-neutral/70">
+            Acesse o painel administrativo com seu e-mail e senha.
+          </p>
+        </div>
+        <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-secondary" />
+      </Card>
+    </Link>
+  );
+}
 
 export const metadata: Metadata = {
   title: "Central do Membro | IBCI - Igreja Batista Central do Ibura",
@@ -83,6 +105,7 @@ export default async function CentralDoMembroPage() {
             </div>
           )}
           <SairButton />
+          <AdminAccessCard />
         </div>
       </div>
     );
@@ -106,6 +129,7 @@ export default async function CentralDoMembroPage() {
             <ArrowRight className="h-4 w-4" />
           </Link>
         </p>
+        <AdminAccessCard />
       </div>
     </div>
   );
