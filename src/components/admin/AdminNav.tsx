@@ -29,6 +29,11 @@ export default function AdminNav({ session }: { session: AdminSessionPayload }) 
             Membros
           </Link>
         )}
+        {session.permissions.includes("financeiro") && (
+          <Link href="/admin/financeiro" className="text-primary hover:underline">
+            Financeiro
+          </Link>
+        )}
         {session.permissions.includes("admins") && (
           <Link href="/admin/administradores" className="text-primary hover:underline">
             Administradores

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Camera, FileText, Menu, UserRound, Lock } from "lucide-react";
+import { Camera, FileText, Menu, UserRound, Lock, Building2 } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
@@ -46,6 +46,13 @@ export default async function AdminPage() {
       title: "Membros",
       description: "Validar cadastros, arquivos e a escala de serviços.",
       show: hasPermission(session, "membros"),
+    },
+    {
+      href: "/admin/financeiro",
+      icon: Building2,
+      title: "Financeiro",
+      description: "Comprovantes de dízimos e ofertas enviados pelos membros.",
+      show: hasPermission(session, "financeiro"),
     },
     {
       href: "/admin/administradores",

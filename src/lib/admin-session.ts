@@ -9,16 +9,18 @@ export const PERMISSIONS = {
   paginas: "Páginas & Textos",
   eventos: "Eventos",
   membros: "Membros (aprovar cadastros)",
+  financeiro: "Financeiro (dízimos, ofertas e comprovantes)",
   admins: "Gerenciar administradores",
 } as const;
 
 export type Permission = keyof typeof PERMISSIONS;
 
 export const ROLES: Record<string, Permission[]> = {
-  "Administrador geral": ["banners", "paginas", "eventos", "membros", "admins"],
+  "Administrador geral": ["banners", "paginas", "eventos", "membros", "financeiro", "admins"],
   "Editor de Conteúdo": ["banners", "paginas"],
   "Gestor de Eventos": ["eventos"],
   "Validador de Cadastros": ["membros"],
+  "Financeiro": ["financeiro"],
 };
 
 export interface AdminSessionPayload {
