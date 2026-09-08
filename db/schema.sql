@@ -156,6 +156,30 @@ insert into nav_items (id, parent_id, label, href, value, position) values
   ('d0000000-0000-0000-0000-000000000005', 'd0000000-0000-0000-0000-000000000000', 'Fale Conosco', '/contato#formulario', null, 4)
 on conflict (id) do nothing;
 
+-- Comprovantes de dízimos/ofertas enviados pelo próprio membro validado.
+create table if not exists contribution_receipts (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id) on delete cascade,
+  file_name text not null,
+  file_url text not null,
+  note text,
+  created_at timestamptz not null default now()
+);
+
+-- Solicitações de agendamento (casamentos, cultos de ação de graças etc.),
+-- feitas por qualquer pessoa com conta, aguardando aprovação da diretoria.
+create table if not exists booking_requests (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id) on delete cascade,
+  event_type text not null,
+  desired_date text,
+  message text,
+  status text not null default 'pendente',
+  requested_at timestamptz not null default now(),
+  decided_at timestamptz,
+  decided_by uuid references admin_users(id)
+);
+
 -- Pedidos de cadastro de membro, aguardando validação da diretoria.
 create table if not exists membership_requests (
   id uuid primary key default gen_random_uuid(),

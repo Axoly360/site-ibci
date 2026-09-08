@@ -55,6 +55,15 @@ const baseShortcuts = [
     external: false,
   },
   {
+    icon: CalendarDays,
+    title: "Eventos",
+    description:
+      "Solicite agendamento e disponibilidade para casamentos, cultos de ação de graças e outros eventos especiais.",
+    cta: "Solicitar agendamento",
+    href: "/central-do-membro/agendamentos",
+    external: false,
+  },
+  {
     icon: Gift,
     title: "Dízimos e Ofertas",
     description:

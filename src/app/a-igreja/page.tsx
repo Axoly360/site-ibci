@@ -20,7 +20,7 @@ const items = [
     description: "Nossa declaração de fé, alicerçada na tradição batista.",
   },
   {
-    title: "Liderança",
+    title: "Diretoria Estatutária",
     href: "/a-igreja/lideranca",
     description: "Conheça quem conduz o rebanho da IBCI.",
   },
@@ -42,6 +42,11 @@ const items = [
   {
     title: "Memorial IBCI",
     href: "/a-igreja/memorial-ibci",
+    description: "Galeria dos pastores presidentes que já conduziram a IBCI.",
+  },
+  {
+    title: "Galeria de Fotos",
+    href: "/a-igreja/galeria-de-fotos",
     description: "Em breve.",
   },
 ];

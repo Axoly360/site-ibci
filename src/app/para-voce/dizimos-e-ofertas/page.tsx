@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Image from "next/image";
 import QRCode from "qrcode";
-import { Heart, QrCode, ShieldCheck, Building2 } from "lucide-react";
+import { Heart, QrCode, ShieldCheck, Building2, FileText } from "lucide-react";
 import { churchInfo, generatePixPayload } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
 import CopyPixKey from "@/components/contribuicoes/CopyPixKey";
+import ReceiptUploadPanel from "@/components/contribuicoes/ReceiptUploadPanel";
+import { getSession } from "@/lib/session";
+import { sql } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Dízimos e Ofertas | IBCI - Igreja Batista Central do Ibura",
@@ -30,6 +34,15 @@ export default async function DizimosEOfertasPage() {
       light: "#FFFFFF",
     },
   });
+
+  const session = await getSession();
+  let isValidatedMember = false;
+  if (session) {
+    const [member] = await sql`
+      select is_validated_member from members where id = ${session.memberId}
+    `;
+    isValidatedMember = Boolean(member?.is_validated_member);
+  }
 
   return (
     <div className="bg-bg-light">
@@ -103,6 +116,26 @@ export default async function DizimosEOfertasPage() {
             </div>
 
             <CopyPixKey pixKey={churchInfo.pix.key} />
+          </div>
+
+          <div className="mx-auto max-w-md">
+            {isValidatedMember ? (
+              <ReceiptUploadPanel />
+            ) : (
+              <div className="space-y-3 rounded-xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur-md">
+                <FileText className="mx-auto h-6 w-6 text-secondary" />
+                <p className="text-sm text-white/80">
+                  Já contribuiu? Membros validados podem enviar o comprovante
+                  em PDF, PNG ou JPEG pela Central do Membro.
+                </p>
+                <Link
+                  href="/central-do-membro"
+                  className="inline-block text-sm font-semibold text-secondary hover:underline"
+                >
+                  Entrar na Central do Membro
+                </Link>
+              </div>
+            )}
           </div>
         </section>
 

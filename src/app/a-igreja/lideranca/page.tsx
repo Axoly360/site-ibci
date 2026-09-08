@@ -1,41 +1,48 @@
 import type { Metadata } from "next";
 import { UserRound } from "lucide-react";
-import { churchInfo } from "@/data/churchInfo";
-import PageBanner from "@/components/layout/PageBanner";
 import Card from "@/components/ui/Card";
+import PageBanner from "@/components/layout/PageBanner";
 
 export const metadata: Metadata = {
-  title: "Liderança | IBCI - Igreja Batista Central do Ibura",
-  description: "Conheça a liderança pastoral da Igreja Batista Central do Ibura.",
+  title: "Diretoria Estatutária | IBCI - Igreja Batista Central do Ibura",
+  description:
+    "Conheça a Diretoria Estatutária 2026 da Igreja Batista Central do Ibura.",
 };
 
-export default function LiderancaPage() {
+const diretoria = [
+  { role: "Presidente", name: "Pr. Márcio Severino" },
+  { role: "Moderadora", name: "Ana Paula Bispo" },
+  { role: "Vice-Moderador", name: "Dc. Edson Galindo" },
+  { role: "Pastor Auxiliar de Evangelismo", name: "João Diniz" },
+  { role: "Pastor Auxiliar da Juventude", name: "Marluz Ferraz" },
+];
+
+export default function DiretoriaEstatutariaPage() {
   return (
     <div className="bg-bg-light">
       <PageBanner
-        title="Liderança"
-        description="Conheça quem conduz o rebanho da Igreja Batista Central do Ibura."
+        title="Diretoria Estatutária"
+        description="Diretoria Estatutária 2026 da Igreja Batista Central do Ibura."
       />
 
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-        <Card className="flex flex-col items-center gap-4 p-8 text-center sm:flex-row sm:text-left">
-          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <UserRound className="h-8 w-8" />
-          </span>
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
-              Liderança Pastoral
-            </span>
-            <h3 className="font-heading text-xl font-bold text-primary">
-              {churchInfo.seniorPastor}
-            </h3>
-            <p className="mt-1 text-sm text-text-neutral/80">
-              Pastor Presidente da Igreja Batista Central do Ibura, conduzindo
-              o rebanho com fidelidade à Palavra e cuidado pastoral pela
-              comunidade do Ibura.
-            </p>
-          </div>
-        </Card>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {diretoria.map((membro) => (
+            <Card key={membro.role} className="flex items-center gap-4 p-6">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <UserRound className="h-7 w-7" />
+              </span>
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
+                  {membro.role}
+                </span>
+                <h3 className="font-heading text-lg font-bold text-primary">
+                  {membro.name}
+                </h3>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

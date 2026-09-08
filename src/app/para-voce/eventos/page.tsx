@@ -4,7 +4,9 @@ import { CalendarDays, MapPin, CheckCircle2, XCircle } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import ComingSoon from "@/components/layout/ComingSoon";
 import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
 import { events } from "@/data/events";
+import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = {
   title: "Eventos | IBCI - Igreja Batista Central do Ibura",
@@ -17,10 +19,21 @@ export default async function EventosPage({
   searchParams: Promise<{ confirmado?: string; erro?: string }>;
 }) {
   const params = await searchParams;
+  const session = await getSession();
 
   return (
     <div className="bg-bg-light">
       <PageBanner title="Eventos" />
+
+      <div className="mx-auto mt-8 flex max-w-5xl justify-center px-4 sm:px-6 lg:px-8">
+        <Button
+          href={session ? "/central-do-membro/agendamentos" : "/central-do-membro"}
+          size="sm"
+        >
+          <CalendarDays className="h-4 w-4" />
+          Agendar Casamento, Ação de Graças e etc.
+        </Button>
+      </div>
 
       {params.confirmado && (
         <div className="mx-auto mt-8 flex max-w-2xl items-center gap-2 rounded-xl bg-primary/10 px-4 py-3 text-sm font-medium text-primary">

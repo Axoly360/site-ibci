@@ -128,7 +128,7 @@ export default function Navbar() {
             </button>
           ) : (
             <Link
-              href="/entrar"
+              href="/central-do-membro"
               className="ml-2 flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-white/90 hover:text-secondary"
             >
               <UserRound className="h-4 w-4" />
@@ -229,7 +229,7 @@ export default function Navbar() {
               </button>
             ) : (
               <Link
-                href="/entrar"
+                href="/central-do-membro"
                 onClick={closeAll}
                 className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-white/90 hover:bg-white/5"
               >

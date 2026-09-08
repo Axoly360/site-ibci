@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { UserRound } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import HubGrid from "@/components/layout/HubGrid";
 
@@ -61,8 +60,6 @@ const items = [
   },
 ];
 
-const diretoria = ["Presidente", "Vice-Presidente", "Secretário(a)", "Tesoureiro(a)"];
-
 export default function MinisteriosPage() {
   return (
     <div className="bg-bg-light">
@@ -71,31 +68,6 @@ export default function MinisteriosPage() {
         description="Conheça as frentes de serviço e comunhão da nossa igreja."
       />
       <HubGrid items={items} />
-
-      <div className="mx-auto max-w-5xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-heading text-2xl font-bold text-primary sm:text-3xl">
-            Diretoria
-          </h2>
-          <p className="mt-3 text-text-neutral/80">
-            Responsáveis pela administração da igreja.
-          </p>
-        </div>
-        <div className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
-          {diretoria.map((cargo) => (
-            <div
-              key={cargo}
-              className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-primary/20 bg-white p-6 text-center"
-            >
-              <span className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <UserRound className="h-9 w-9" />
-              </span>
-              <p className="font-heading text-sm font-semibold text-primary">{cargo}</p>
-              <p className="text-xs text-text-neutral/50">Foto em breve</p>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
