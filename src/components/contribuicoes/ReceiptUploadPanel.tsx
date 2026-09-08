@@ -14,6 +14,7 @@ interface Receipt {
 
 export default function ReceiptUploadPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [fileName, setFileName] = useState("");
   const [receipts, setReceipts] = useState<Receipt[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -47,6 +48,7 @@ export default function ReceiptUploadPanel() {
     setLoading(false);
     if (res.ok) {
       if (inputRef.current) inputRef.current.value = "";
+      setFileName("");
       setDone(true);
       loadReceipts();
       setTimeout(() => setDone(false), 3000);
@@ -68,29 +70,39 @@ export default function ReceiptUploadPanel() {
         </p>
       </div>
 
+      <input
+        ref={inputRef}
+        type="file"
+        accept="application/pdf,image/png,image/jpeg"
+        onChange={(e) => setFileName(e.target.files?.[0]?.name ?? "")}
+        className="hidden"
+      />
+
       <div className="flex flex-wrap items-center gap-3">
-        <input
-          ref={inputRef}
-          type="file"
-          accept="application/pdf,image/png,image/jpeg"
-          className="text-sm text-white"
-        />
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+        >
+          <FileText className="h-4 w-4" />
+          {fileName || "Escolher arquivo"}
+        </button>
         <Button onClick={handleUpload} size="sm" disabled={loading}>
           <Send className="h-4 w-4" />
           {loading ? "Enviando..." : "Enviar comprovante"}
         </Button>
       </div>
-      {error && <p className="text-sm text-red-200">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       {done && (
-        <p className="flex items-center gap-1.5 text-sm font-semibold text-secondary">
+        <p className="flex items-center gap-1.5 text-sm font-semibold text-primary">
           <CheckCircle2 className="h-4 w-4" />
           Comprovante enviado com sucesso
         </p>
       )}
 
       {receipts && receipts.length > 0 && (
-        <div className="space-y-2 border-t border-white/20 pt-4">
-          <span className="text-xs font-semibold uppercase tracking-wider text-white/70">
+        <div className="space-y-2 border-t border-black/10 pt-4">
+          <span className="text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
             Seus comprovantes enviados
           </span>
           <ul className="space-y-1.5">
