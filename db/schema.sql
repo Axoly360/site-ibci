@@ -195,3 +195,30 @@ create table if not exists membership_requests (
   decided_at timestamptz,
   decided_by uuid references admin_users(id)
 );
+
+-- Lançamentos financeiros manuais (entrada/saída) feitos pelo tesoureiro no
+-- painel. Não há gateway de pagamento nem webhook: todo lançamento é
+-- registrado à mão, e o vínculo a um membro é opcional (só quando o
+-- contribuinte foi identificado, ex.: dízimo em envelope ou informado
+-- presencialmente).
+--
+-- NOTA (dívida técnica): este projeto ainda é single-tenant — não existe
+-- tabela/coluna de igreja ("church_id") em nenhum lugar do schema. Se este
+-- site vier a ser oferecido para outras igrejas, isso exige multi-tenantizar
+-- o sistema inteiro (auth, todas as tabelas, todas as queries), não só o
+-- financeiro. Por isso esta tabela também não tem church_id.
+create table if not exists financial_entries (
+  id uuid primary key default gen_random_uuid(),
+  type text not null check (type in ('entrada', 'saida')),
+  category text not null,
+  amount numeric(12, 2) not null check (amount > 0),
+  -- Guardado como texto ISO (aaaa-mm-dd), como as demais datas do projeto
+  -- (birthdate, baptism_date etc.), para evitar deslocamento de fuso horário
+  -- na conversão. O formato ISO ainda ordena corretamente em comparações de
+  -- texto (>=, <=) usadas nos filtros de período do relatório.
+  entry_date text not null default to_char(current_date, 'YYYY-MM-DD'),
+  description text,
+  member_id uuid references members(id) on delete set null,
+  created_by uuid references admin_users(id),
+  created_at timestamptz not null default now()
+);

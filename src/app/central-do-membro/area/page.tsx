@@ -73,6 +73,15 @@ const baseShortcuts = [
     external: false,
   },
   {
+    icon: FileText,
+    title: "Minhas Contribuições",
+    description:
+      "Veja o histórico de contribuições registradas em seu nome pela tesouraria e o resumo anual.",
+    cta: "Ver contribuições",
+    href: "/central-do-membro/contribuicoes",
+    external: false,
+  },
+  {
     icon: UserRoundCheck,
     title: "Solicitação de Visita Pastoral",
     description: `Agende uma visita do ${churchInfo.seniorPastor} ou de um membro da equipe pastoral para você e sua família.`,

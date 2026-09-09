@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import { FileText, Building2 } from "lucide-react";
+import { FileText, Building2, Send } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
@@ -44,6 +45,39 @@ export default async function AdminFinanceiroPage() {
         description="Comprovantes de dízimos e ofertas enviados pelos membros."
       />
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Link href="/admin/financeiro/lancamentos">
+            <Card className="flex items-center gap-3 p-5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Send className="h-5 w-5" />
+              </span>
+              <div>
+                <h2 className="font-heading text-base font-semibold text-primary">
+                  Lançamentos
+                </h2>
+                <p className="text-sm text-text-neutral/70">
+                  Registrar entradas e saídas manualmente.
+                </p>
+              </div>
+            </Card>
+          </Link>
+          <Link href="/admin/financeiro/relatorio">
+            <Card className="flex items-center gap-3 p-5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <FileText className="h-5 w-5" />
+              </span>
+              <div>
+                <h2 className="font-heading text-base font-semibold text-primary">
+                  Relatório
+                </h2>
+                <p className="text-sm text-text-neutral/70">
+                  Totais por período e exportação em CSV.
+                </p>
+              </div>
+            </Card>
+          </Link>
+        </div>
+
         <Card className="p-6">
           <div className="mb-4 flex items-center gap-3 text-primary">
             <Building2 className="h-6 w-6 text-secondary" />
