@@ -68,7 +68,7 @@ export default async function AdminVisitantesQrCodePage({
           </form>
         </Card>
 
-        <Card className="mt-6 space-y-4 p-8 text-center" id="qr-card">
+        <Card className="mt-6 space-y-4 p-8 text-center">
           <p className="text-sm font-semibold text-text-neutral/70">
             {evento ? `Evento: ${evento}` : "Visita geral (entrada da igreja)"}
           </p>

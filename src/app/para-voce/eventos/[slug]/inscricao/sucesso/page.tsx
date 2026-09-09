@@ -46,7 +46,7 @@ export default async function InscricaoSucessoPage({ params, searchParams }: Pag
     <div className="bg-bg-light">
       <PageBanner title="Inscrição confirmada!" description={event.title} />
       <div className="mx-auto max-w-md px-4 py-16 text-center sm:px-6 lg:px-8">
-        <Card className="space-y-4 p-8" id="qr-card">
+        <Card className="space-y-4 p-8">
           <p className="flex items-center justify-center gap-2 font-semibold text-primary">
             <CheckCircle2 className="h-5 w-5" />
             {attendee.name}
