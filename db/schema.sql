@@ -222,3 +222,36 @@ create table if not exists financial_entries (
   created_by uuid references admin_users(id),
   created_at timestamptz not null default now()
 );
+
+-- Auto-cadastro de visitante em evento (sem conta/login) + check-in por QR
+-- Code no dia. Independente da tabela "registrations" (que exige conta de
+-- membro via magic-link) — aqui qualquer visitante se cadastra pelo nome e
+-- telefone e recebe um código curto (também digitável à mão na recepção).
+create table if not exists event_attendees (
+  id uuid primary key default gen_random_uuid(),
+  event_slug text not null,
+  name text not null,
+  phone text not null,
+  email text,
+  code text not null unique,
+  checked_in_at timestamptz,
+  checked_in_by uuid references admin_users(id),
+  created_at timestamptz not null default now()
+);
+
+-- Cadastro espontâneo de visitante (QR fixo na entrada física ou de um
+-- evento). Sem código, sem check-in, sem vínculo com event_attendees —
+-- propósito diferente: é só contato para follow-up da recepção/ação social,
+-- não controle de presença de um compromisso prévio.
+create table if not exists visitor_registrations (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  sex text,
+  first_visit boolean not null default true,
+  visit_times integer,
+  is_christian boolean not null default false,
+  church_name text,
+  location text,
+  event_slug text,
+  created_at timestamptz not null default now()
+);

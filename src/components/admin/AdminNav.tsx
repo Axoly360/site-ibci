@@ -29,6 +29,19 @@ export default function AdminNav({ session }: { session: AdminSessionPayload }) 
             Membros
           </Link>
         )}
+        {session.permissions.includes("eventos") && (
+          <Link
+            href="/admin/eventos/congresso-de-casais/checkin"
+            className="text-primary hover:underline"
+          >
+            Check-in
+          </Link>
+        )}
+        {session.permissions.includes("visitantes") && (
+          <Link href="/admin/visitantes" className="text-primary hover:underline">
+            Visitantes
+          </Link>
+        )}
         {session.permissions.includes("financeiro") && (
           <Link href="/admin/financeiro" className="text-primary hover:underline">
             Financeiro

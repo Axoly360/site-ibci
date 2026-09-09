@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Camera, FileText, Menu, UserRound, Lock, Building2 } from "lucide-react";
+import { Camera, FileText, Menu, UserRound, Lock, Building2, CalendarDays, UserRoundCheck } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
@@ -46,6 +46,20 @@ export default async function AdminPage() {
       title: "Membros",
       description: "Validar cadastros, arquivos e a escala de serviços.",
       show: hasPermission(session, "membros"),
+    },
+    {
+      href: "/admin/eventos/congresso-de-casais/checkin",
+      icon: CalendarDays,
+      title: "Check-in — Congresso de Casais",
+      description: "Validar código de entrada e ver inscritos x check-ins ao vivo.",
+      show: hasPermission(session, "eventos"),
+    },
+    {
+      href: "/admin/visitantes",
+      icon: UserRoundCheck,
+      title: "Visitantes",
+      description: "Cadastros espontâneos para follow-up da recepção.",
+      show: hasPermission(session, "visitantes"),
     },
     {
       href: "/admin/financeiro",

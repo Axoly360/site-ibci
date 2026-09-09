@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays, MapPin, MessageCircle } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
@@ -69,6 +70,16 @@ export default async function EventoPage({ params }: EventoPageProps) {
               {event.externalContact.label}
             </Button>
           </div>
+
+          <p className="mt-6 text-sm text-text-neutral/70">
+            Já garantiu sua vaga?{" "}
+            <Link
+              href={`/para-voce/eventos/${event.slug}/inscricao`}
+              className="font-semibold text-secondary hover:underline"
+            >
+              Gere seu QR Code de entrada
+            </Link>
+          </p>
         </div>
       </div>
     );

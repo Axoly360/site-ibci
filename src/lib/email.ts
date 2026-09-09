@@ -59,3 +59,45 @@ export async function sendConfirmationEmail({
     `,
   });
 }
+
+interface SendCheckinQrEmailParams {
+  to: string;
+  name: string;
+  eventTitle: string;
+  code: string;
+  /** PNG do QR Code, em base64, para anexar ao e-mail. */
+  qrBase64: string;
+}
+
+export async function sendCheckinQrEmail({
+  to,
+  name,
+  eventTitle,
+  code,
+  qrBase64,
+}: SendCheckinQrEmailParams) {
+  await getResend().emails.send({
+    from: FROM,
+    to,
+    subject: `Seu QR Code de entrada — ${eventTitle}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+        <h2 style="color: #123B2C;">Olá, ${name}!</h2>
+        <p>Sua inscrição em <strong>${eventTitle}</strong> foi confirmada.</p>
+        <p>Apresente o QR Code em anexo na entrada do evento. Se preferir, seu código também pode ser digitado na recepção:</p>
+        <p style="margin: 16px 0; font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #123B2C;">
+          ${code}
+        </p>
+        <p style="color: #666; font-size: 14px;">
+          Guarde este e-mail — ele é o seu ingresso.
+        </p>
+      </div>
+    `,
+    attachments: [
+      {
+        filename: `qrcode-${code}.png`,
+        content: qrBase64,
+      },
+    ],
+  });
+}
