@@ -223,6 +223,11 @@ create table if not exists financial_entries (
   created_at timestamptz not null default now()
 );
 
+-- Quem solicitou a saída (Pastor, Tesouraria, Secretaria, Zelador etc.) —
+-- só faz sentido para lançamentos do tipo "saida"; para "entrada" o vínculo
+-- de pessoa já é o member_id.
+alter table financial_entries add column if not exists requested_by text;
+
 -- Auto-cadastro de visitante em evento (sem conta/login) + check-in por QR
 -- Code no dia. Independente da tabela "registrations" (que exige conta de
 -- membro via magic-link) — aqui qualquer visitante se cadastra pelo nome e

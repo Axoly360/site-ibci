@@ -20,6 +20,8 @@ const CATEGORIES = [
   "Outro",
 ];
 
+const REQUESTED_BY_OPTIONS = ["Pastor", "Tesouraria", "Secretaria", "Zelador"];
+
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -33,6 +35,7 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
   const [description, setDescription] = useState("");
   const [memberQuery, setMemberQuery] = useState("");
   const [memberId, setMemberId] = useState<string | null>(null);
+  const [requestedBy, setRequestedBy] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
@@ -78,6 +81,7 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
         entryDate,
         description,
         memberId,
+        requestedBy,
       }),
     });
     setLoading(false);
@@ -87,6 +91,7 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
       setDescription("");
       setMemberId(null);
       setMemberQuery("");
+      setRequestedBy("");
       setDone(true);
       router.refresh();
       setTimeout(() => setDone(false), 3000);
@@ -105,7 +110,10 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
       <div className="flex gap-2">
         <button
           type="button"
-          onClick={() => setType("entrada")}
+          onClick={() => {
+            setType("entrada");
+            setRequestedBy("");
+          }}
           className={`flex-1 rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${
             type === "entrada"
               ? "border-primary bg-primary text-white"
@@ -116,7 +124,11 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
         </button>
         <button
           type="button"
-          onClick={() => setType("saida")}
+          onClick={() => {
+            setType("saida");
+            setMemberId(null);
+            setMemberQuery("");
+          }}
           className={`flex-1 rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${
             type === "saida"
               ? "border-red-600 bg-red-600 text-white"
@@ -171,55 +183,75 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
           />
         </div>
 
-        <div className="relative">
-          <label className="mb-1 block text-sm font-semibold text-text-neutral">
-            Membro (opcional)
-          </label>
-          {selectedMember ? (
-            <div className="flex items-center justify-between rounded-lg border border-black/10 px-3 py-2 text-sm">
-              <span>{selectedMember.name}</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setMemberId(null);
-                  setMemberQuery("");
-                }}
-                className="text-xs font-semibold text-secondary hover:underline"
-              >
-                Trocar
-              </button>
-            </div>
-          ) : (
-            <>
-              <input
-                type="text"
-                value={memberQuery}
-                onChange={(e) => setMemberQuery(e.target.value)}
-                placeholder="Buscar por nome ou e-mail..."
-                className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
-              />
-              {filteredMembers.length > 0 && (
-                <ul className="absolute z-10 mt-1 w-full rounded-lg border border-black/10 bg-white shadow-lg">
-                  {filteredMembers.map((m) => (
-                    <li key={m.id}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMemberId(m.id);
-                          setMemberQuery("");
-                        }}
-                        className="block w-full px-3 py-2 text-left text-sm hover:bg-primary/5"
-                      >
-                        <div className="font-semibold text-text-neutral">{m.name}</div>
-                        <div className="text-xs text-text-neutral/60">{m.email}</div>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
-          )}
-        </div>
+        {type === "saida" ? (
+          <div>
+            <label className="mb-1 block text-sm font-semibold text-text-neutral">
+              Quem solicitou (opcional)
+            </label>
+            <select
+              value={requestedBy}
+              onChange={(e) => setRequestedBy(e.target.value)}
+              className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+            >
+              <option value="">Não informado</option>
+              {REQUESTED_BY_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <div className="relative">
+            <label className="mb-1 block text-sm font-semibold text-text-neutral">
+              Membro (opcional)
+            </label>
+            {selectedMember ? (
+              <div className="flex items-center justify-between rounded-lg border border-black/10 px-3 py-2 text-sm">
+                <span>{selectedMember.name}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMemberId(null);
+                    setMemberQuery("");
+                  }}
+                  className="text-xs font-semibold text-secondary hover:underline"
+                >
+                  Trocar
+                </button>
+              </div>
+            ) : (
+              <>
+                <input
+                  type="text"
+                  value={memberQuery}
+                  onChange={(e) => setMemberQuery(e.target.value)}
+                  placeholder="Buscar por nome ou e-mail..."
+                  className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+                />
+                {filteredMembers.length > 0 && (
+                  <ul className="absolute z-10 mt-1 w-full rounded-lg border border-black/10 bg-white shadow-lg">
+                    {filteredMembers.map((m) => (
+                      <li key={m.id}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMemberId(m.id);
+                            setMemberQuery("");
+                          }}
+                          className="block w-full px-3 py-2 text-left text-sm hover:bg-primary/5"
+                        >
+                          <div className="font-semibold text-text-neutral">{m.name}</div>
+                          <div className="text-xs text-text-neutral/60">{m.email}</div>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       <div>

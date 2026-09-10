@@ -33,7 +33,8 @@ export default async function AdminLancamentosPage() {
   const recentes = await sql`
     select financial_entries.id, financial_entries.type, financial_entries.category,
            financial_entries.amount, financial_entries.entry_date,
-           financial_entries.description, members.name as member_name
+           financial_entries.description, financial_entries.requested_by,
+           members.name as member_name
     from financial_entries
     left join members on members.id = financial_entries.member_id
     order by financial_entries.entry_date desc, financial_entries.created_at desc
@@ -71,7 +72,7 @@ export default async function AdminLancamentosPage() {
                     <th className="py-2 pr-4">Data</th>
                     <th className="py-2 pr-4">Tipo</th>
                     <th className="py-2 pr-4">Categoria</th>
-                    <th className="py-2 pr-4">Membro</th>
+                    <th className="py-2 pr-4">Membro/Solicitante</th>
                     <th className="py-2 pr-4">Descrição</th>
                     <th className="py-2 pr-4 text-right">Valor</th>
                   </tr>
@@ -93,7 +94,9 @@ export default async function AdminLancamentosPage() {
                       </td>
                       <td className="py-3 pr-4 text-text-neutral/80">{entry.category}</td>
                       <td className="py-3 pr-4 text-text-neutral/80">
-                        {entry.member_name || "—"}
+                        {entry.type === "saida"
+                          ? entry.requested_by || "—"
+                          : entry.member_name || "—"}
                       </td>
                       <td className="py-3 pr-4 text-text-neutral/70">
                         {entry.description || "—"}

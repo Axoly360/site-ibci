@@ -17,6 +17,10 @@ export async function POST(request: NextRequest) {
   const entryDate = typeof body?.entryDate === "string" ? body.entryDate : "";
   const description = typeof body?.description === "string" ? body.description.trim() : "";
   const memberId = typeof body?.memberId === "string" && body.memberId ? body.memberId : null;
+  const requestedBy =
+    typeof body?.requestedBy === "string" && body.requestedBy.trim()
+      ? body.requestedBy.trim()
+      : null;
 
   if (!TYPES.includes(type)) {
     return NextResponse.json({ error: "Tipo inválido." }, { status: 400 });
@@ -31,9 +35,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Informe a data." }, { status: 400 });
   }
 
+  // member_id só se aplica a entradas (quem contribuiu); requested_by só a
+  // saídas (quem solicitou a despesa) — evita salvar o campo do tipo errado
+  // mesmo que o client mande os dois por engano.
   await sql`
-    insert into financial_entries (type, category, amount, entry_date, description, member_id, created_by)
-    values (${type}, ${category}, ${amount}, ${entryDate}, ${description || null}, ${memberId}, ${session!.id})
+    insert into financial_entries
+      (type, category, amount, entry_date, description, member_id, requested_by, created_by)
+    values (
+      ${type}, ${category}, ${amount}, ${entryDate}, ${description || null},
+      ${type === "entrada" ? memberId : null},
+      ${type === "saida" ? requestedBy : null},
+      ${session!.id}
+    )
   `;
 
   return NextResponse.json({ ok: true });
