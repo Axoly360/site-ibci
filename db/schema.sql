@@ -228,6 +228,10 @@ create table if not exists financial_entries (
 -- de pessoa já é o member_id.
 alter table financial_entries add column if not exists requested_by text;
 
+-- Comprovante/nota anexado a um lançamento de saída (PDF, PNG ou JPEG),
+-- guardado no Vercel Blob.
+alter table financial_entries add column if not exists receipt_url text;
+
 -- Auto-cadastro de visitante em evento (sem conta/login) + check-in por QR
 -- Code no dia. Independente da tabela "registrations" (que exige conta de
 -- membro via magic-link) — aqui qualquer visitante se cadastra pelo nome e

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { FileText } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
@@ -34,7 +35,7 @@ export default async function AdminLancamentosPage() {
     select financial_entries.id, financial_entries.type, financial_entries.category,
            financial_entries.amount, financial_entries.entry_date,
            financial_entries.description, financial_entries.requested_by,
-           members.name as member_name
+           financial_entries.receipt_url, members.name as member_name
     from financial_entries
     left join members on members.id = financial_entries.member_id
     order by financial_entries.entry_date desc, financial_entries.created_at desc
@@ -74,6 +75,7 @@ export default async function AdminLancamentosPage() {
                     <th className="py-2 pr-4">Categoria</th>
                     <th className="py-2 pr-4">Membro/Solicitante</th>
                     <th className="py-2 pr-4">Descrição</th>
+                    <th className="py-2 pr-4">Comprovante</th>
                     <th className="py-2 pr-4 text-right">Valor</th>
                   </tr>
                 </thead>
@@ -100,6 +102,21 @@ export default async function AdminLancamentosPage() {
                       </td>
                       <td className="py-3 pr-4 text-text-neutral/70">
                         {entry.description || "—"}
+                      </td>
+                      <td className="py-3 pr-4">
+                        {entry.receipt_url ? (
+                          <a
+                            href={entry.receipt_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 font-semibold text-secondary hover:underline"
+                          >
+                            <FileText className="h-4 w-4 shrink-0" />
+                            Ver
+                          </a>
+                        ) : (
+                          "—"
+                        )}
                       </td>
                       <td className="py-3 pr-4 text-right font-semibold text-text-neutral">
                         {formatCurrency(entry.amount)}

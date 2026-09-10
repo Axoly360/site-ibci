@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Send } from "lucide-react";
+import { CheckCircle2, FileText, Send } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 
@@ -36,6 +36,8 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
   const [memberQuery, setMemberQuery] = useState("");
   const [memberId, setMemberId] = useState<string | null>(null);
   const [requestedBy, setRequestedBy] = useState("");
+  const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
@@ -70,19 +72,21 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
       return;
     }
 
+    const formData = new FormData();
+    formData.set("type", type);
+    formData.set("category", category);
+    formData.set("amount", String(numericAmount));
+    formData.set("entryDate", entryDate);
+    formData.set("description", description);
+    if (memberId) formData.set("memberId", memberId);
+    if (requestedBy) formData.set("requestedBy", requestedBy);
+    const file = fileInputRef.current?.files?.[0];
+    if (file) formData.set("file", file);
+
     setLoading(true);
     const res = await fetch("/api/admin/financeiro/lancamentos", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type,
-        category,
-        amount: numericAmount,
-        entryDate,
-        description,
-        memberId,
-        requestedBy,
-      }),
+      body: formData,
     });
     setLoading(false);
 
@@ -92,6 +96,8 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
       setMemberId(null);
       setMemberQuery("");
       setRequestedBy("");
+      setFileName("");
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setDone(true);
       router.refresh();
       setTimeout(() => setDone(false), 3000);
@@ -113,6 +119,8 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
           onClick={() => {
             setType("entrada");
             setRequestedBy("");
+            setFileName("");
+            if (fileInputRef.current) fileInputRef.current.value = "";
           }}
           className={`flex-1 rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${
             type === "entrada"
@@ -184,23 +192,46 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
         </div>
 
         {type === "saida" ? (
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-text-neutral">
-              Quem solicitou (opcional)
-            </label>
-            <select
-              value={requestedBy}
-              onChange={(e) => setRequestedBy(e.target.value)}
-              className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
-            >
-              <option value="">Não informado</option>
-              {REQUESTED_BY_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
+          <>
+            <div>
+              <label className="mb-1 block text-sm font-semibold text-text-neutral">
+                Quem solicitou (opcional)
+              </label>
+              <select
+                value={requestedBy}
+                onChange={(e) => setRequestedBy(e.target.value)}
+                className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+              >
+                <option value="">Não informado</option>
+                {REQUESTED_BY_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="mb-1 block text-sm font-semibold text-text-neutral">
+                Anexar comprovante (opcional)
+              </label>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="application/pdf,image/png,image/jpeg"
+                onChange={(e) => setFileName(e.target.files?.[0]?.name ?? "")}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex w-full items-center gap-1.5 rounded-lg border border-black/10 px-3 py-2 text-left text-sm text-secondary hover:bg-primary/5"
+              >
+                <FileText className="h-4 w-4 shrink-0" />
+                {fileName || "Escolher arquivo (PDF, PNG ou JPEG)"}
+              </button>
+            </div>
+          </>
         ) : (
           <div className="relative">
             <label className="mb-1 block text-sm font-semibold text-text-neutral">
