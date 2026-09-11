@@ -74,9 +74,9 @@ const baseShortcuts = [
   },
   {
     icon: FileText,
-    title: "Minhas Contribuições",
+    title: "Contribuições e Saídas",
     description:
-      "Veja o histórico de contribuições registradas em seu nome pela tesouraria e o resumo anual.",
+      "Veja o histórico de contribuições e saídas registradas em seu nome pela tesouraria e o resumo anual.",
     cta: "Ver contribuições",
     href: "/central-do-membro/contribuicoes",
     external: false,

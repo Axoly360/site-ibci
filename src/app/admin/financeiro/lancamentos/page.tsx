@@ -64,7 +64,9 @@ export default async function AdminLancamentosPage({
         ]
           .filter(Boolean)
           .join(" — "),
-        memberId: receipt.type === "entrada" ? (receipt.member_id as string) : null,
+        // Mantém o vínculo com o membro mesmo em saídas (ex.: reembolso de
+        // despesa que o próprio membro solicitou via comprovante).
+        memberId: receipt.member_id as string,
         memberName: receipt.member_name as string,
         fileUrl: receipt.file_url as string,
       };
@@ -137,7 +139,7 @@ export default async function AdminLancamentosPage({
                       <td className="py-3 pr-4 text-text-neutral/80">{entry.category}</td>
                       <td className="py-3 pr-4 text-text-neutral/80">
                         {entry.type === "saida"
-                          ? entry.requested_by || "—"
+                          ? entry.requested_by || entry.member_name || "—"
                           : entry.member_name || "—"}
                       </td>
                       <td className="py-3 pr-4 text-text-neutral/70">

@@ -95,15 +95,17 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // member_id só se aplica a entradas (quem contribuiu); requested_by só a
-  // saídas (quem solicitou a despesa) — evita salvar o campo do tipo errado
-  // mesmo que o client mande os dois por engano.
+  // member_id identifica quem está associado ao lançamento — quem
+  // contribuiu (entrada) ou, quando a saída partiu de um comprovante
+  // enviado por um membro (ex.: reembolso de despesa), quem a solicitou.
+  // requested_by (papel administrativo: Pastor/Tesouraria/etc.) só se aplica
+  // a saídas e é independente do member_id.
   const [entry] = await sql`
     insert into financial_entries
       (type, category, amount, entry_date, description, member_id, requested_by, receipt_url, created_by)
     values (
       ${type}, ${category}, ${amount}, ${entryDate}, ${description || null},
-      ${type === "entrada" ? memberId : null},
+      ${memberId},
       ${type === "saida" ? requestedBy : null},
       ${receiptUrl},
       ${session!.id}
