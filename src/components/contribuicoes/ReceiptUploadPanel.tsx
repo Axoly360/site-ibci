@@ -9,12 +9,36 @@ interface Receipt {
   id: string;
   file_name: string;
   file_url: string;
+  category: string | null;
+  amount: string | null;
+  status: string;
   created_at: string;
+}
+
+const CATEGORIES = ["Dízimos", "Oferta de Amor", "Oferta Missões", "Saídas"];
+const SENDER_TYPES = ["Membro", "Congregado", "Visitante", "Funcionário", "Prestador de Serviços"];
+
+function defaultTypeFor(category: string): "entrada" | "saida" {
+  return category === "Saídas" ? "saida" : "entrada";
+}
+
+const STATUS_LABEL: Record<string, string> = {
+  pendente: "Aguardando análise",
+  aprovado: "Aprovado",
+};
+
+function formatCurrency(value: string | null) {
+  if (!value) return "";
+  return Number(value).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
 export default function ReceiptUploadPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState("");
+  const [category, setCategory] = useState(CATEGORIES[0]);
+  const [senderType, setSenderType] = useState(SENDER_TYPES[0]);
+  const [type, setType] = useState<"entrada" | "saida">("entrada");
+  const [amount, setAmount] = useState("");
   const [receipts, setReceipts] = useState<Receipt[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -39,16 +63,26 @@ export default function ReceiptUploadPanel() {
       setError("Escolha um arquivo antes de enviar.");
       return;
     }
+    const numericAmount = Number(amount.replace(",", "."));
+    if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+      setError("Informe o valor do comprovante.");
+      return;
+    }
 
     setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("category", category);
+    formData.append("senderType", senderType);
+    formData.append("type", type);
+    formData.append("amount", String(numericAmount));
 
     const res = await fetch("/api/membros/comprovantes", { method: "POST", body: formData });
     setLoading(false);
     if (res.ok) {
       if (inputRef.current) inputRef.current.value = "";
       setFileName("");
+      setAmount("");
       setDone(true);
       loadReceipts();
       setTimeout(() => setDone(false), 3000);
@@ -68,6 +102,89 @@ export default function ReceiptUploadPanel() {
           Já é membro validado? Envie o comprovante da sua contribuição em
           PDF, PNG ou JPEG.
         </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div>
+          <label className="mb-1 block text-sm font-semibold text-text-neutral">
+            Categoria
+          </label>
+          <select
+            value={category}
+            onChange={(e) => {
+              setCategory(e.target.value);
+              setType(defaultTypeFor(e.target.value));
+            }}
+            className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+          >
+            {CATEGORIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-semibold text-text-neutral">
+            Quem enviou
+          </label>
+          <select
+            value={senderType}
+            onChange={(e) => setSenderType(e.target.value)}
+            className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+          >
+            {SENDER_TYPES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-semibold text-text-neutral">
+            Tipo
+          </label>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setType("entrada")}
+              className={`flex-1 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                type === "entrada"
+                  ? "border-primary bg-primary text-white"
+                  : "border-black/10 text-text-neutral/70"
+              }`}
+            >
+              Entrada
+            </button>
+            <button
+              type="button"
+              onClick={() => setType("saida")}
+              className={`flex-1 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                type === "saida"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-black/10 text-text-neutral/70"
+              }`}
+            >
+              Saída
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-semibold text-text-neutral">
+            Valor (R$)
+          </label>
+          <input
+            type="text"
+            inputMode="decimal"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="0,00"
+            className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+          />
+        </div>
       </div>
 
       <input
@@ -107,7 +224,7 @@ export default function ReceiptUploadPanel() {
           </span>
           <ul className="space-y-1.5">
             {receipts.map((receipt) => (
-              <li key={receipt.id}>
+              <li key={receipt.id} className="flex flex-wrap items-center justify-between gap-2">
                 <a
                   href={receipt.file_url}
                   target="_blank"
@@ -115,8 +232,12 @@ export default function ReceiptUploadPanel() {
                   className="flex items-center gap-2 text-sm text-secondary hover:underline"
                 >
                   <FileText className="h-4 w-4 shrink-0" />
-                  {receipt.file_name}
+                  {receipt.category || receipt.file_name}
+                  {receipt.amount && ` — ${formatCurrency(receipt.amount)}`}
                 </a>
+                <span className="text-xs font-semibold text-text-neutral/60">
+                  {STATUS_LABEL[receipt.status] ?? receipt.status}
+                </span>
               </li>
             ))}
           </ul>

@@ -166,6 +166,17 @@ create table if not exists contribution_receipts (
   created_at timestamptz not null default now()
 );
 
+-- Classificação do comprovante (categoria, quem enviou, tipo e valor) e
+-- fluxo de aprovação: o financeiro confere e aprova, o que gera
+-- automaticamente o lançamento correspondente em financial_entries.
+alter table contribution_receipts add column if not exists category text;
+alter table contribution_receipts add column if not exists sender_type text;
+alter table contribution_receipts add column if not exists type text;
+alter table contribution_receipts add column if not exists amount numeric(12, 2);
+alter table contribution_receipts add column if not exists status text not null default 'pendente';
+alter table contribution_receipts add column if not exists approved_by uuid references admin_users(id);
+alter table contribution_receipts add column if not exists approved_at timestamptz;
+
 -- Solicitações de agendamento (casamentos, cultos de ação de graças etc.),
 -- feitas por qualquer pessoa com conta, aguardando aprovação da diretoria.
 create table if not exists booking_requests (
@@ -231,6 +242,11 @@ alter table financial_entries add column if not exists requested_by text;
 -- Comprovante/nota anexado a um lançamento de saída (PDF, PNG ou JPEG),
 -- guardado no Vercel Blob.
 alter table financial_entries add column if not exists receipt_url text;
+
+-- Vincula o comprovante ao lançamento gerado quando o financeiro aprova
+-- (evita aprovar o mesmo comprovante duas vezes). Só pode vir depois de
+-- financial_entries existir.
+alter table contribution_receipts add column if not exists financial_entry_id uuid references financial_entries(id);
 
 -- Auto-cadastro de visitante em evento (sem conta/login) + check-in por QR
 -- Code no dia. Independente da tabela "registrations" (que exige conta de
