@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
+import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 
@@ -81,6 +82,10 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Já existe um evento com esse slug." }, { status: 409 });
   }
+
+  revalidatePath("/");
+  revalidatePath("/para-voce/eventos");
+  revalidatePath(`/para-voce/eventos/${slug}`);
 
   return NextResponse.json({ ok: true });
 }
