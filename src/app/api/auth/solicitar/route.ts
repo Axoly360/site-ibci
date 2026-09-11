@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { sql } from "@/lib/db";
 import { sendConfirmationEmail } from "@/lib/email";
-import { events } from "@/data/events";
+import { getEventBySlug } from "@/lib/events";
 
 const TOKEN_TTL_MS = 1000 * 60 * 30; // 30 minutos
 
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const event = eventSlug ? events.find((e) => e.slug === eventSlug) : null;
+  const event = eventSlug ? await getEventBySlug(eventSlug) : null;
   if (eventSlug && !event) {
     return NextResponse.json({ error: "Evento não encontrado." }, { status: 404 });
   }

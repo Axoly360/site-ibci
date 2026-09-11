@@ -358,3 +358,39 @@ create table if not exists congregation_financial_submissions (
 -- vê quanto ainda resta (orçamento menos as saídas já aprovadas no ano) no
 -- card de balanço da própria área.
 alter table congregations add column if not exists annual_budget numeric(12, 2);
+
+-- Eventos da igreja, geridos pelo admin (antes viviam num arquivo estático).
+-- O slug continua sendo a chave usada por registrations, event_attendees e
+-- visitor_registrations (texto solto, sem FK) — trocar o slug de um evento
+-- que já tem inscritos quebra esse vínculo.
+create table if not exists events (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique,
+  title text not null,
+  description text not null,
+  date_label text not null,
+  location text not null,
+  capacity integer,
+  price text,
+  image_url text,
+  external_contact_label text,
+  external_contact_whatsapp_message text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- Semente única: preserva o evento que já existia no arquivo estático, com
+-- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
+insert into events
+  (slug, title, description, date_label, location, price, external_contact_label, external_contact_whatsapp_message)
+values (
+  'congresso-de-casais',
+  'Congresso de Casais IBCI',
+  'Está chegando o nosso Congresso de Casais, que acontecerá no Hotel Porto da Serra, em Gravatá, nos dias 12 e 13 de setembro. Teremos uma programação muito especial e emocionante, preparada com muito carinho para abençoar nossas famílias e fortalecer nossos casamentos. Serão mais de 40 casais desfrutando juntos desse momento tão especial. Além da presença dos nossos pastores e líderes, teremos conosco, no sábado pela manhã, ministrando a Palavra de Deus, o Pr. Gilberto Paz, da Igreja Batista Betânia, em Gravatá, e Presidente da OPBPE.',
+  '12 e 13 de setembro — Hotel Porto da Serra, Gravatá',
+  'Hotel Porto da Serra, Gravatá - PE',
+  'R$ 350,00 por casal',
+  'Falar com Maurício e Gineide',
+  'Olá! Gostaria de me inscrever no Congresso de Casais IBCI, com Maurício e Gineide.'
+)
+on conflict (slug) do nothing;

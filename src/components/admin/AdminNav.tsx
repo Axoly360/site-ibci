@@ -16,7 +16,7 @@ export default function AdminNav({ session }: { session: AdminSessionPayload }) 
         )}
         {session.permissions.includes("paginas") && (
           <Link href="/admin/textos" className="text-primary hover:underline">
-            Textos
+            Seções
           </Link>
         )}
         {session.permissions.includes("paginas") && (
@@ -30,11 +30,8 @@ export default function AdminNav({ session }: { session: AdminSessionPayload }) 
           </Link>
         )}
         {session.permissions.includes("eventos") && (
-          <Link
-            href="/admin/eventos/congresso-de-casais/checkin"
-            className="text-primary hover:underline"
-          >
-            Check-in
+          <Link href="/admin/eventos" className="text-primary hover:underline">
+            Eventos
           </Link>
         )}
         {session.permissions.includes("visitantes") && (

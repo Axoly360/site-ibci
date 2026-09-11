@@ -4,7 +4,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import CheckinPanel from "@/components/admin/CheckinPanel";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
-import { events } from "@/data/events";
+import { getEventBySlug } from "@/lib/events";
 
 export const metadata: Metadata = {
   title: "Check-in | Painel IBCI",
@@ -21,7 +21,7 @@ export default async function AdminCheckinPage({
   if (!hasPermission(session, "eventos")) redirect("/admin");
 
   const { slug } = await params;
-  const event = events.find((e) => e.slug === slug);
+  const event = await getEventBySlug(slug);
   if (!event) notFound();
 
   return (

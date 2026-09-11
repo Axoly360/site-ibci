@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
 import InscricaoVisitanteForm from "@/components/eventos/InscricaoVisitanteForm";
-import { events } from "@/data/events";
+import { getEventBySlug } from "@/lib/events";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -10,7 +10,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const event = events.find((e) => e.slug === slug);
+  const event = await getEventBySlug(slug);
   return {
     title: event
       ? `Inscrição — ${event.title} | IBCI`
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function InscricaoVisitantePage({ params }: PageProps) {
   const { slug } = await params;
-  const event = events.find((e) => e.slug === slug);
+  const event = await getEventBySlug(slug);
   if (!event) notFound();
 
   return (

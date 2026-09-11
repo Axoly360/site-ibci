@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/session";
-import { events } from "@/data/events";
+import { getEventBySlug } from "@/lib/events";
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const event = events.find((e) => e.slug === slug);
+  const event = await getEventBySlug(slug);
   if (!event) {
     return NextResponse.json({ error: "Evento não encontrado." }, { status: 404 });
   }

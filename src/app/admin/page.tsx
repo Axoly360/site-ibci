@@ -29,8 +29,8 @@ export default async function AdminPage() {
     {
       href: "/admin/textos",
       icon: FileText,
-      title: "Textos",
-      description: "Título e subtítulo de cada seção da home.",
+      title: "Seções",
+      description: "Título, subtítulo e ordem de cada seção da home.",
       show: hasPermission(session, "paginas"),
     },
     {
@@ -48,10 +48,10 @@ export default async function AdminPage() {
       show: hasPermission(session, "membros"),
     },
     {
-      href: "/admin/eventos/congresso-de-casais/checkin",
+      href: "/admin/eventos",
       icon: CalendarDays,
-      title: "Check-in — Congresso de Casais",
-      description: "Validar código de entrada e ver inscritos x check-ins ao vivo.",
+      title: "Eventos",
+      description: "Criar, editar e remover eventos — inclusive check-in por QR Code.",
       show: hasPermission(session, "eventos"),
     },
     {

@@ -7,7 +7,7 @@ import { CheckCircle2 } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import Card from "@/components/ui/Card";
 import PrintButton from "@/components/eventos/PrintButton";
-import { events } from "@/data/events";
+import { getEventBySlug } from "@/lib/events";
 import { sql } from "@/lib/db";
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ interface PageProps {
 export default async function InscricaoSucessoPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
   const { code } = await searchParams;
-  const event = events.find((e) => e.slug === slug);
+  const event = await getEventBySlug(slug);
   if (!event || !code) notFound();
 
   const [attendee] = await sql`

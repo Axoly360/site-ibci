@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import QRCode from "qrcode";
 import { sql } from "@/lib/db";
-import { events } from "@/data/events";
+import { getEventBySlug } from "@/lib/events";
 import { generateCheckinCode } from "@/lib/checkinCode";
 import { sendCheckinQrEmail } from "@/lib/email";
 
@@ -10,7 +10,7 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const event = events.find((e) => e.slug === slug);
+  const event = await getEventBySlug(slug);
   if (!event) {
     return NextResponse.json({ error: "Evento não encontrado." }, { status: 404 });
   }

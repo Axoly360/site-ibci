@@ -8,6 +8,7 @@ import WeeklyScheduleSection from "@/components/home/WeeklyScheduleSection";
 import InstitutionalVideoSection from "@/components/home/InstitutionalVideoSection";
 import { getAllContent } from "@/lib/content";
 import { getContentBlocks } from "@/lib/contentBlocks";
+import { getEvents } from "@/lib/events";
 import { heroBanners } from "@/data/heroBanners";
 import {
   HOME_SECTION_ORDER_KEY,
@@ -17,7 +18,11 @@ import {
 import type { ReactNode } from "react";
 
 export default async function Home() {
-  const [texts, blocks] = await Promise.all([getAllContent(), getContentBlocks()]);
+  const [texts, blocks, eventsList] = await Promise.all([
+    getAllContent(),
+    getContentBlocks(),
+    getEvents(),
+  ]);
 
   const mergedHeroBanners = heroBanners.map((banner) => {
     const override = blocks[banner.id];
@@ -76,6 +81,7 @@ export default async function Home() {
         key="eventosDoMes"
         title={texts["home.eventosDoMes.title"]}
         subtitle={texts["home.eventosDoMes.subtitle"]}
+        events={eventsList}
       />
     ),
     programacaoSemana: (

@@ -1,18 +1,21 @@
 import Link from "next/link";
+import Image from "next/image";
 import { CalendarDays, MapPin, Construction } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Carousel from "@/components/ui/Carousel";
-import { events } from "@/data/events";
+import type { ChurchEvent } from "@/lib/events";
 
 interface EventsOfMonthSectionProps {
   title?: string;
   subtitle?: string;
+  events: ChurchEvent[];
 }
 
 /** Eventos do mês — carrossel na home, logo abaixo de Últimas Mensagens. */
 export default function EventsOfMonthSection({
   title = "Eventos do Mês",
   subtitle = "Fique por dentro dos próximos eventos da nossa igreja.",
+  events,
 }: EventsOfMonthSectionProps) {
   return (
     <section className="bg-primary/[0.03] py-20">
@@ -45,21 +48,33 @@ export default function EventsOfMonthSection({
                   href={`/para-voce/eventos/${event.slug}`}
                   className="w-72 shrink-0 sm:w-80"
                 >
-                  <Card className="flex h-full flex-col gap-3 p-6">
-                    <h3 className="font-heading text-lg font-semibold text-primary">
-                      {event.title}
-                    </h3>
-                    <p className="flex items-center gap-2 text-sm text-text-neutral/80">
-                      <CalendarDays className="h-4 w-4 shrink-0 text-secondary" />
-                      {event.dateLabel}
-                    </p>
-                    <p className="flex items-center gap-2 text-sm text-text-neutral/80">
-                      <MapPin className="h-4 w-4 shrink-0 text-secondary" />
-                      {event.location}
-                    </p>
-                    <span className="mt-auto text-sm font-semibold text-secondary">
-                      Saiba mais →
-                    </span>
+                  <Card className="flex h-full flex-col overflow-hidden">
+                    {event.imageUrl && (
+                      <Image
+                        src={event.imageUrl}
+                        alt={event.title}
+                        width={320}
+                        height={160}
+                        unoptimized
+                        className="h-32 w-full object-cover"
+                      />
+                    )}
+                    <div className="flex flex-1 flex-col gap-3 p-6">
+                      <h3 className="font-heading text-lg font-semibold text-primary">
+                        {event.title}
+                      </h3>
+                      <p className="flex items-center gap-2 text-sm text-text-neutral/80">
+                        <CalendarDays className="h-4 w-4 shrink-0 text-secondary" />
+                        {event.dateLabel}
+                      </p>
+                      <p className="flex items-center gap-2 text-sm text-text-neutral/80">
+                        <MapPin className="h-4 w-4 shrink-0 text-secondary" />
+                        {event.location}
+                      </p>
+                      <span className="mt-auto text-sm font-semibold text-secondary">
+                        Saiba mais →
+                      </span>
+                    </div>
                   </Card>
                 </Link>
               ))}

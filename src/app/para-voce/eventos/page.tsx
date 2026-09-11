@@ -5,7 +5,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import ComingSoon from "@/components/layout/ComingSoon";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
-import { events } from "@/data/events";
+import { getEvents } from "@/lib/events";
 import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = {
@@ -20,6 +20,7 @@ export default async function EventosPage({
 }) {
   const params = await searchParams;
   const session = await getSession();
+  const events = await getEvents();
 
   return (
     <div className="bg-bg-light">

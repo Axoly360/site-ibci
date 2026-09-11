@@ -10,7 +10,7 @@ import { getAllContent } from "@/lib/content";
 import { HOME_SECTION_ORDER_KEY, parseHomeSectionOrder, type HomeSectionKey } from "@/lib/homeSections";
 
 export const metadata: Metadata = {
-  title: "Textos | Painel IBCI",
+  title: "Seções | Painel IBCI",
   robots: { index: false, follow: false },
 };
 
@@ -79,7 +79,7 @@ export default async function AdminTextosPage() {
     <div className="bg-bg-light">
       <AdminNav session={session} />
       <PageBanner
-        title="Textos"
+        title="Seções"
         description="Título, subtítulo e ordem de cada seção da home."
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">

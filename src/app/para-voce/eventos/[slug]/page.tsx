@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { CalendarDays, MapPin, MessageCircle } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import InscricaoForm from "@/components/eventos/InscricaoForm";
 import Button from "@/components/ui/Button";
-import { events } from "@/data/events";
+import { getEventBySlug } from "@/lib/events";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { churchInfo } from "@/data/churchInfo";
@@ -18,7 +19,7 @@ export async function generateMetadata({
   params,
 }: EventoPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const event = events.find((e) => e.slug === slug);
+  const event = await getEventBySlug(slug);
   return {
     title: event
       ? `${event.title} | IBCI - Igreja Batista Central do Ibura`
@@ -28,7 +29,7 @@ export async function generateMetadata({
 
 export default async function EventoPage({ params }: EventoPageProps) {
   const { slug } = await params;
-  const event = events.find((e) => e.slug === slug);
+  const event = await getEventBySlug(slug);
   if (!event) notFound();
 
   // Eventos com contato externo (ex.: pagos, combinados com um responsável)
@@ -43,6 +44,19 @@ export default async function EventoPage({ params }: EventoPageProps) {
         <PageBanner title={event.title} />
 
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 lg:px-8">
+          {event.imageUrl && (
+            <div className="mx-auto mb-8 overflow-hidden rounded-2xl">
+              <Image
+                src={event.imageUrl}
+                alt={event.title}
+                width={800}
+                height={450}
+                unoptimized
+                className="w-full object-cover"
+              />
+            </div>
+          )}
+
           <div className="mx-auto flex max-w-md flex-col gap-2 text-left sm:flex-row sm:justify-center sm:gap-8">
             <p className="flex items-center gap-2 text-sm text-text-neutral/80">
               <CalendarDays className="h-4 w-4 shrink-0 text-secondary" />
@@ -106,6 +120,19 @@ export default async function EventoPage({ params }: EventoPageProps) {
       <PageBanner title={event.title} />
 
       <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 lg:px-8">
+        {event.imageUrl && (
+          <div className="mx-auto mb-8 overflow-hidden rounded-2xl">
+            <Image
+              src={event.imageUrl}
+              alt={event.title}
+              width={800}
+              height={450}
+              unoptimized
+              className="w-full object-cover"
+            />
+          </div>
+        )}
+
         <div className="mx-auto flex max-w-md flex-col gap-2 text-left sm:flex-row sm:justify-center sm:gap-8">
           <p className="flex items-center gap-2 text-sm text-text-neutral/80">
             <CalendarDays className="h-4 w-4 shrink-0 text-secondary" />
