@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, FileText, Send } from "lucide-react";
 import Card from "@/components/ui/Card";
@@ -10,6 +10,17 @@ export interface MemberOption {
   id: string;
   name: string;
   email: string;
+}
+
+export interface InitialComprovante {
+  id: string;
+  type: "entrada" | "saida";
+  category: string;
+  amount: string;
+  description: string;
+  memberId: string | null;
+  memberName: string;
+  fileUrl: string;
 }
 
 const CATEGORIES = [
@@ -26,7 +37,13 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export default function LancamentoForm({ members }: { members: MemberOption[] }) {
+export default function LancamentoForm({
+  members,
+  initialComprovante,
+}: {
+  members: MemberOption[];
+  initialComprovante?: InitialComprovante | null;
+}) {
   const router = useRouter();
   const [type, setType] = useState<"entrada" | "saida">("entrada");
   const [category, setCategory] = useState(CATEGORIES[0]);
@@ -41,6 +58,29 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
+  const [comprovanteId, setComprovanteId] = useState<string | null>(null);
+  const [existingReceiptUrl, setExistingReceiptUrl] = useState<string | null>(null);
+
+  // Roda de novo sempre que um comprovante diferente é selecionado na tela
+  // de Financeiro (a navegação troca o parâmetro comprovanteId na URL, mas
+  // reaproveita esta mesma instância do formulário).
+  useEffect(() => {
+    if (!initialComprovante) return;
+    setType(initialComprovante.type);
+    setCategory(initialComprovante.category);
+    setAmount(initialComprovante.amount);
+    setDescription(initialComprovante.description);
+    setMemberId(initialComprovante.memberId);
+    setMemberQuery("");
+    setComprovanteId(initialComprovante.id);
+    setExistingReceiptUrl(initialComprovante.fileUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialComprovante?.id]);
+
+  const categoryOptions = useMemo(
+    () => (category && !CATEGORIES.includes(category) ? [...CATEGORIES, category] : CATEGORIES),
+    [category]
+  );
 
   const filteredMembers = useMemo(() => {
     if (!memberQuery.trim()) return [];
@@ -80,6 +120,8 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
     formData.set("description", description);
     if (memberId) formData.set("memberId", memberId);
     if (requestedBy) formData.set("requestedBy", requestedBy);
+    if (comprovanteId) formData.set("comprovanteId", comprovanteId);
+    if (existingReceiptUrl) formData.set("existingReceiptUrl", existingReceiptUrl);
     const file = fileInputRef.current?.files?.[0];
     if (file) formData.set("file", file);
 
@@ -91,14 +133,21 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
     setLoading(false);
 
     if (res.ok) {
+      setType("entrada");
+      setCategory(CATEGORIES[0]);
       setAmount("");
       setDescription("");
       setMemberId(null);
       setMemberQuery("");
       setRequestedBy("");
       setFileName("");
+      setComprovanteId(null);
+      setExistingReceiptUrl(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
       setDone(true);
+      // Troca pra URL sem comprovanteId (o comprovante já foi lançado) e
+      // atualiza a lista de comprovantes/lançamentos recentes.
+      router.replace("/admin/financeiro/lancamentos");
       router.refresh();
       setTimeout(() => setDone(false), 3000);
     } else {
@@ -112,6 +161,25 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
       <h2 className="font-heading text-lg font-semibold text-primary">
         Novo Lançamento
       </h2>
+
+      {comprovanteId && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-primary/5 px-4 py-3 text-sm">
+          <span className="font-semibold text-primary">
+            Preenchido a partir do comprovante de {initialComprovante?.memberName}
+          </span>
+          {existingReceiptUrl && (
+            <a
+              href={existingReceiptUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 font-semibold text-secondary hover:underline"
+            >
+              <FileText className="h-4 w-4 shrink-0" />
+              Ver comprovante
+            </a>
+          )}
+        </div>
+      )}
 
       <div className="flex gap-2">
         <button
@@ -157,7 +225,7 @@ export default function LancamentoForm({ members }: { members: MemberOption[] })
             onChange={(e) => setCategory(e.target.value)}
             className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
           >
-            {CATEGORIES.map((c) => (
+            {categoryOptions.map((c) => (
               <option key={c} value={c}>
                 {c}
               </option>

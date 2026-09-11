@@ -27,6 +27,14 @@ export async function POST(request: NextRequest) {
   const requestedByRaw = formData.get("requestedBy");
   const requestedBy =
     typeof requestedByRaw === "string" && requestedByRaw.trim() ? requestedByRaw.trim() : null;
+  const comprovanteIdRaw = formData.get("comprovanteId");
+  const comprovanteId =
+    typeof comprovanteIdRaw === "string" && comprovanteIdRaw ? comprovanteIdRaw : null;
+  const existingReceiptUrlRaw = formData.get("existingReceiptUrl");
+  const existingReceiptUrl =
+    typeof existingReceiptUrlRaw === "string" && existingReceiptUrlRaw
+      ? existingReceiptUrlRaw
+      : null;
   const file = formData.get("file");
 
   if (!TYPES.includes(type)) {
@@ -42,8 +50,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Informe a data." }, { status: 400 });
   }
 
-  let receiptUrl: string | null = null;
-  if (type === "saida" && file && typeof file !== "string") {
+  // Se vem de um comprovante selecionado no Financeiro, confere que ele
+  // ainda não foi lançado — evita duplicar caso o botão seja clicado duas
+  // vezes ou a mesma tela fique aberta em duas abas.
+  if (comprovanteId) {
+    const [receipt] = await sql`
+      select status from contribution_receipts where id = ${comprovanteId}
+    `;
+    if (!receipt) {
+      return NextResponse.json({ error: "Comprovante não encontrado." }, { status: 404 });
+    }
+    if (receipt.status === "aprovado") {
+      return NextResponse.json(
+        { error: "Este comprovante já foi lançado." },
+        { status: 409 }
+      );
+    }
+  }
+
+  let receiptUrl: string | null = existingReceiptUrl;
+  if (file && typeof file !== "string") {
     if (!ALLOWED_RECEIPT_TYPES.includes(file.type)) {
       return NextResponse.json(
         { error: "Envie o comprovante em PDF, PNG ou JPEG." },
@@ -69,20 +95,30 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // member_id só se aplica a entradas (quem contribuiu); requested_by e
-  // receipt_url só a saídas (quem solicitou a despesa e o comprovante) —
-  // evita salvar o campo do tipo errado mesmo que o client mande os dois.
-  await sql`
+  // member_id só se aplica a entradas (quem contribuiu); requested_by só a
+  // saídas (quem solicitou a despesa) — evita salvar o campo do tipo errado
+  // mesmo que o client mande os dois por engano.
+  const [entry] = await sql`
     insert into financial_entries
       (type, category, amount, entry_date, description, member_id, requested_by, receipt_url, created_by)
     values (
       ${type}, ${category}, ${amount}, ${entryDate}, ${description || null},
       ${type === "entrada" ? memberId : null},
       ${type === "saida" ? requestedBy : null},
-      ${type === "saida" ? receiptUrl : null},
+      ${receiptUrl},
       ${session!.id}
     )
+    returning id
   `;
 
-  return NextResponse.json({ ok: true });
+  if (comprovanteId) {
+    await sql`
+      update contribution_receipts
+      set status = 'aprovado', financial_entry_id = ${entry.id},
+          approved_by = ${session!.id}, approved_at = now()
+      where id = ${comprovanteId}
+    `;
+  }
+
+  return NextResponse.json({ ok: true, id: entry.id });
 }

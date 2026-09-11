@@ -22,14 +22,54 @@ function formatDate(value: string) {
   return new Date(value).toLocaleDateString("pt-BR", { timeZone: "UTC" });
 }
 
-export default async function AdminLancamentosPage() {
+export default async function AdminLancamentosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ comprovanteId?: string }>;
+}) {
   const session = await getAdminSession();
   if (!session) redirect("/admin/entrar");
   if (!hasPermission(session, "financeiro")) redirect("/admin");
 
+  const { comprovanteId } = await searchParams;
+
   const members = await sql`
     select id, name, email from members order by name asc
   `;
+
+  let initialComprovante = null;
+  if (comprovanteId) {
+    const [receipt] = await sql`
+      select contribution_receipts.id, contribution_receipts.type, contribution_receipts.category,
+             contribution_receipts.amount, contribution_receipts.note, contribution_receipts.sender_type,
+             contribution_receipts.member_id, contribution_receipts.file_url, contribution_receipts.status,
+             members.name as member_name
+      from contribution_receipts
+      join members on members.id = contribution_receipts.member_id
+      where contribution_receipts.id = ${comprovanteId}
+    `;
+    // Se já foi lançado (status = aprovado) não pré-preenche de novo — evita
+    // duplicar o lançamento se o link for reaberto.
+    if (receipt && receipt.status !== "aprovado") {
+      initialComprovante = {
+        id: receipt.id,
+        type: receipt.type as "entrada" | "saida",
+        category: receipt.category as string,
+        amount: String(receipt.amount),
+        description: [
+          receipt.sender_type && receipt.sender_type !== "Membro"
+            ? `Enviado como: ${receipt.sender_type}`
+            : null,
+          receipt.note,
+        ]
+          .filter(Boolean)
+          .join(" — "),
+        memberId: receipt.type === "entrada" ? (receipt.member_id as string) : null,
+        memberName: receipt.member_name as string,
+        fileUrl: receipt.file_url as string,
+      };
+    }
+  }
 
   const recentes = await sql`
     select financial_entries.id, financial_entries.type, financial_entries.category,
@@ -57,7 +97,7 @@ export default async function AdminLancamentosPage() {
           ← Voltar para Financeiro
         </Link>
 
-        <LancamentoForm members={members} />
+        <LancamentoForm members={members} initialComprovante={initialComprovante} />
 
         <Card className="mt-10 p-6">
           <h2 className="mb-4 font-heading text-lg font-semibold text-primary">
