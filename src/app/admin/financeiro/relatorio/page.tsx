@@ -45,7 +45,7 @@ function presetRange(preset: string): { from: string; to: string } {
 export default async function AdminFinanceiroRelatorioPage({
   searchParams,
 }: {
-  searchParams: Promise<{ preset?: string; from?: string; to?: string }>;
+  searchParams: Promise<{ preset?: string; from?: string; to?: string; congregacao?: string }>;
 }) {
   const session = await getAdminSession();
   if (!session) redirect("/admin/entrar");
@@ -54,12 +54,33 @@ export default async function AdminFinanceiroRelatorioPage({
   const params = await searchParams;
   const preset = params.preset || "mes";
   const range = params.from && params.to ? { from: params.from, to: params.to } : presetRange(preset);
+  const congregacaoFiltro = params.congregacao || "";
 
-  const entries = await sql`
-    select type, category, amount
-    from financial_entries
-    where entry_date >= ${range.from} and entry_date <= ${range.to}
-  `;
+  const congregacoes = await sql`select slug, name from congregations order by name asc`;
+
+  // "sede" = só lançamentos sem congregação (congregation_id is null); um
+  // slug específico filtra só aquela congregação; vazio = todos, sem filtro.
+  const entries =
+    congregacaoFiltro === "sede"
+      ? await sql`
+          select type, category, amount
+          from financial_entries
+          where entry_date >= ${range.from} and entry_date <= ${range.to}
+            and congregation_id is null
+        `
+      : congregacaoFiltro
+        ? await sql`
+            select financial_entries.type, financial_entries.category, financial_entries.amount
+            from financial_entries
+            join congregations on congregations.id = financial_entries.congregation_id
+            where financial_entries.entry_date >= ${range.from} and financial_entries.entry_date <= ${range.to}
+              and congregations.slug = ${congregacaoFiltro}
+          `
+        : await sql`
+            select type, category, amount
+            from financial_entries
+            where entry_date >= ${range.from} and entry_date <= ${range.to}
+          `;
 
   let totalEntradas = 0;
   let totalSaidas = 0;
@@ -79,7 +100,11 @@ export default async function AdminFinanceiroRelatorioPage({
   }
 
   const saldo = totalEntradas - totalSaidas;
-  const csvQuery = new URLSearchParams({ from: range.from, to: range.to }).toString();
+  const csvQuery = new URLSearchParams({
+    from: range.from,
+    to: range.to,
+    ...(congregacaoFiltro ? { congregacao: congregacaoFiltro } : {}),
+  }).toString();
 
   const presets = [
     { key: "dia", label: "Hoje" },
@@ -142,6 +167,24 @@ export default async function AdminFinanceiroRelatorioPage({
                 defaultValue={range.to}
                 className="rounded-lg border border-black/10 px-3 py-2 text-sm"
               />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-text-neutral/70">
+                Congregação
+              </label>
+              <select
+                name="congregacao"
+                defaultValue={congregacaoFiltro}
+                className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-text-neutral"
+              >
+                <option value="">Todas</option>
+                <option value="sede">Só a sede</option>
+                {congregacoes.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <button
               type="submit"

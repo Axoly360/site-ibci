@@ -11,6 +11,7 @@ export const PERMISSIONS = {
   membros: "Membros (aprovar cadastros)",
   financeiro: "Financeiro (dízimos, ofertas e comprovantes)",
   visitantes: "Visitantes (cadastro espontâneo)",
+  congregacoes: "Congregações (filiais)",
   admins: "Gerenciar administradores",
 } as const;
 
@@ -24,6 +25,7 @@ export const ROLES: Record<string, Permission[]> = {
     "membros",
     "financeiro",
     "visitantes",
+    "congregacoes",
     "admins",
   ],
   "Editor de Conteúdo": ["banners", "paginas"],
@@ -31,6 +33,7 @@ export const ROLES: Record<string, Permission[]> = {
   "Validador de Cadastros": ["membros"],
   "Financeiro": ["financeiro"],
   "Recepção/Ação Social": ["visitantes"],
+  "Supervisor de Congregações": ["congregacoes"],
 };
 
 export interface AdminSessionPayload {

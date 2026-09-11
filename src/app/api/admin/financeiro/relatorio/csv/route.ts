@@ -18,19 +18,42 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const from = searchParams.get("from");
   const to = searchParams.get("to");
+  const congregacao = searchParams.get("congregacao") || "";
 
   if (!from || !to) {
     return NextResponse.json({ error: "Informe o período (from/to)." }, { status: 400 });
   }
 
-  const entries = await sql`
-    select financial_entries.entry_date, financial_entries.type, financial_entries.category,
-           financial_entries.amount, financial_entries.description, members.name as member_name
-    from financial_entries
-    left join members on members.id = financial_entries.member_id
-    where entry_date >= ${from} and entry_date <= ${to}
-    order by entry_date asc
-  `;
+  const entries =
+    congregacao === "sede"
+      ? await sql`
+          select financial_entries.entry_date, financial_entries.type, financial_entries.category,
+                 financial_entries.amount, financial_entries.description, members.name as member_name
+          from financial_entries
+          left join members on members.id = financial_entries.member_id
+          where entry_date >= ${from} and entry_date <= ${to}
+            and congregation_id is null
+          order by entry_date asc
+        `
+      : congregacao
+        ? await sql`
+            select financial_entries.entry_date, financial_entries.type, financial_entries.category,
+                   financial_entries.amount, financial_entries.description, members.name as member_name
+            from financial_entries
+            left join members on members.id = financial_entries.member_id
+            join congregations on congregations.id = financial_entries.congregation_id
+            where financial_entries.entry_date >= ${from} and financial_entries.entry_date <= ${to}
+              and congregations.slug = ${congregacao}
+            order by financial_entries.entry_date asc
+          `
+        : await sql`
+            select financial_entries.entry_date, financial_entries.type, financial_entries.category,
+                   financial_entries.amount, financial_entries.description, members.name as member_name
+            from financial_entries
+            left join members on members.id = financial_entries.member_id
+            where entry_date >= ${from} and entry_date <= ${to}
+            order by entry_date asc
+          `;
 
   const header = ["Data", "Tipo", "Categoria", "Valor", "Membro", "Descrição"];
   const rows = entries.map((entry) => [

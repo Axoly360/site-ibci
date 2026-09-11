@@ -283,3 +283,53 @@ create table if not exists visitor_registrations (
 
 -- WhatsApp do visitante, para a recepção/ação social fazer follow-up direto.
 alter table visitor_registrations add column if not exists whatsapp text;
+
+-- Filiais/congregações da IBCI. Hoje só a Vila dos Milagres, mas já
+-- preparado para outras filiais no futuro sem precisar remodelar nada.
+create table if not exists congregations (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  address text,
+  created_at timestamptz not null default now()
+);
+
+insert into congregations (name, slug, address) values
+  ('Vila dos Milagres', 'vila-dos-milagres', null)
+on conflict (slug) do nothing;
+
+-- Responsáveis com login próprio por congregação — permite mais de um por
+-- filial (ex.: pastor local + tesoureiro local) sem compartilhar senha.
+create table if not exists congregation_users (
+  id uuid primary key default gen_random_uuid(),
+  congregation_id uuid not null references congregations(id) on delete cascade,
+  name text not null,
+  email text not null unique,
+  password_hash text not null,
+  status text not null default 'ativo',
+  created_at timestamptz not null default now()
+);
+
+-- Solicitações da congregação para a central (verba, material, evento,
+-- visita pastoral etc.), com aprovação da sede.
+create table if not exists congregation_requests (
+  id uuid primary key default gen_random_uuid(),
+  congregation_id uuid not null references congregations(id) on delete cascade,
+  congregation_user_id uuid references congregation_users(id),
+  category text not null,
+  description text not null,
+  estimated_amount numeric(12, 2),
+  attachment_url text,
+  status text not null default 'pendente',
+  requested_at timestamptz not null default now(),
+  decided_at timestamptz,
+  decided_by uuid references admin_users(id),
+  response_note text
+);
+
+-- Prestação de contas da congregação: os lançamentos entram na mesma tabela
+-- do financeiro da sede (financial_entries), só marcados com a congregação
+-- de origem — assim aparecem juntos no Relatório Financeiro que já existe,
+-- filtráveis por congregação em vez de duplicar tela e lógica.
+alter table financial_entries add column if not exists congregation_id uuid references congregations(id);
+alter table financial_entries add column if not exists congregation_user_id uuid references congregation_users(id);

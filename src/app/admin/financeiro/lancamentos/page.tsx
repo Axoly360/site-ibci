@@ -77,9 +77,11 @@ export default async function AdminLancamentosPage({
     select financial_entries.id, financial_entries.type, financial_entries.category,
            financial_entries.amount, financial_entries.entry_date,
            financial_entries.description, financial_entries.requested_by,
-           financial_entries.receipt_url, members.name as member_name
+           financial_entries.receipt_url, members.name as member_name,
+           congregations.name as congregation_name
     from financial_entries
     left join members on members.id = financial_entries.member_id
+    left join congregations on congregations.id = financial_entries.congregation_id
     order by financial_entries.entry_date desc, financial_entries.created_at desc
     limit 20
   `;
@@ -116,6 +118,7 @@ export default async function AdminLancamentosPage({
                     <th className="py-2 pr-4">Tipo</th>
                     <th className="py-2 pr-4">Categoria</th>
                     <th className="py-2 pr-4">Membro/Solicitante</th>
+                    <th className="py-2 pr-4">Congregação</th>
                     <th className="py-2 pr-4">Descrição</th>
                     <th className="py-2 pr-4">Comprovante</th>
                     <th className="py-2 pr-4 text-right">Valor</th>
@@ -141,6 +144,9 @@ export default async function AdminLancamentosPage({
                         {entry.type === "saida"
                           ? entry.requested_by || entry.member_name || "—"
                           : entry.member_name || "—"}
+                      </td>
+                      <td className="py-3 pr-4 text-text-neutral/70">
+                        {entry.congregation_name || "Sede"}
                       </td>
                       <td className="py-3 pr-4 text-text-neutral/70">
                         {entry.description || "—"}

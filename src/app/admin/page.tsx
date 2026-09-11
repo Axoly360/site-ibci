@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Camera, FileText, Menu, UserRound, Lock, Building2, CalendarDays, UserRoundCheck } from "lucide-react";
+import { Camera, FileText, Menu, UserRound, Lock, Building2, CalendarDays, UserRoundCheck, MapPin } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
@@ -60,6 +60,13 @@ export default async function AdminPage() {
       title: "Visitantes",
       description: "Cadastros espontâneos para follow-up da recepção.",
       show: hasPermission(session, "visitantes"),
+    },
+    {
+      href: "/admin/congregacoes",
+      icon: MapPin,
+      title: "Congregações",
+      description: "Filiais da IBCI — responsáveis, solicitações e prestação de contas.",
+      show: hasPermission(session, "congregacoes"),
     },
     {
       href: "/admin/financeiro",
