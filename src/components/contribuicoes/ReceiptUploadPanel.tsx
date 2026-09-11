@@ -115,7 +115,7 @@ export default function ReceiptUploadPanel() {
               setCategory(e.target.value);
               setType(defaultTypeFor(e.target.value));
             }}
-            className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-text-neutral"
           >
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -132,7 +132,7 @@ export default function ReceiptUploadPanel() {
           <select
             value={senderType}
             onChange={(e) => setSenderType(e.target.value)}
-            className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-text-neutral"
           >
             {SENDER_TYPES.map((s) => (
               <option key={s} value={s}>
@@ -182,7 +182,7 @@ export default function ReceiptUploadPanel() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0,00"
-            className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-text-neutral placeholder:text-text-neutral/40"
           />
         </div>
       </div>
