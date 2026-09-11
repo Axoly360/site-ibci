@@ -20,6 +20,11 @@ function formatDate(value: string) {
   return new Date(value).toLocaleDateString("pt-BR", { timeZone: "UTC" });
 }
 
+const STATUS_LABEL: Record<string, string> = {
+  pendente: "Aguardando análise",
+  aprovado: "Aprovado",
+};
+
 export default async function CongregacaoFinanceiroPage({
   params,
 }: {
@@ -31,9 +36,36 @@ export default async function CongregacaoFinanceiroPage({
     redirect(`/congregacoes/${slug}/entrar`);
   }
 
+  const [congregation] = await sql`
+    select annual_budget from congregations where id = ${session.congregationId}
+  `;
+  const annualBudget =
+    congregation?.annual_budget !== null && congregation?.annual_budget !== undefined
+      ? Number(congregation.annual_budget)
+      : null;
+
+  const currentYear = new Date().getFullYear();
+  // Balanço só com o que já foi aprovado pela central (financial_entries é o
+  // livro-caixa oficial) — o que ainda está pendente não conta pro saldo nem
+  // consome o orçamento até ser revisado.
+  const aprovadosDoAno = await sql`
+    select type, amount from financial_entries
+    where congregation_id = ${session.congregationId}
+      and entry_date >= ${`${currentYear}-01-01`} and entry_date <= ${`${currentYear}-12-31`}
+  `;
+
+  let entradasAno = 0;
+  let saidasAno = 0;
+  for (const entry of aprovadosDoAno) {
+    if (entry.type === "entrada") entradasAno += Number(entry.amount);
+    else saidasAno += Number(entry.amount);
+  }
+  const saldoAno = entradasAno - saidasAno;
+  const orcamentoDisponivel = annualBudget !== null ? annualBudget - saidasAno : null;
+
   const lancamentos = await sql`
-    select id, type, category, amount, entry_date, description, receipt_url
-    from financial_entries
+    select id, type, category, amount, entry_date, description, receipt_url, status
+    from congregation_financial_submissions
     where congregation_id = ${session.congregationId}
     order by entry_date desc, created_at desc
     limit 30
@@ -60,6 +92,50 @@ export default async function CongregacaoFinanceiroPage({
           ← Voltar para o painel
         </Link>
 
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <Card className="p-5 text-center">
+            <span className="text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
+              Entradas ({currentYear})
+            </span>
+            <p className="mt-2 font-heading text-xl font-bold text-primary">
+              {formatCurrency(entradasAno)}
+            </p>
+          </Card>
+          <Card className="p-5 text-center">
+            <span className="text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
+              Saídas ({currentYear})
+            </span>
+            <p className="mt-2 font-heading text-xl font-bold text-red-600">
+              {formatCurrency(saidasAno)}
+            </p>
+          </Card>
+          <Card className="p-5 text-center">
+            <span className="text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
+              Saldo
+            </span>
+            <p
+              className={`mt-2 font-heading text-xl font-bold ${
+                saldoAno >= 0 ? "text-primary" : "text-red-600"
+              }`}
+            >
+              {formatCurrency(saldoAno)}
+            </p>
+          </Card>
+          <Card className="p-5 text-center">
+            <span className="text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
+              Orçamento Disponível
+            </span>
+            <p className="mt-2 font-heading text-xl font-bold text-secondary">
+              {orcamentoDisponivel !== null ? formatCurrency(orcamentoDisponivel) : "—"}
+            </p>
+            {annualBudget === null && (
+              <p className="mt-1 text-xs text-text-neutral/50">
+                Orçamento anual ainda não definido pela central.
+              </p>
+            )}
+          </Card>
+        </div>
+
         <CongregacaoLancamentoForm slug={slug} />
 
         <Card className="p-6">
@@ -79,6 +155,7 @@ export default async function CongregacaoFinanceiroPage({
                     <th className="py-2 pr-4">Descrição</th>
                     <th className="py-2 pr-4">Comprovante</th>
                     <th className="py-2 pr-4 text-right">Valor</th>
+                    <th className="py-2 pr-4">Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -117,6 +194,15 @@ export default async function CongregacaoFinanceiroPage({
                       </td>
                       <td className="py-3 pr-4 text-right font-semibold text-text-neutral">
                         {formatCurrency(entry.amount)}
+                      </td>
+                      <td className="py-3 pr-4">
+                        <span
+                          className={`text-xs font-semibold ${
+                            entry.status === "aprovado" ? "text-primary" : "text-secondary"
+                          }`}
+                        >
+                          {STATUS_LABEL[entry.status] ?? entry.status}
+                        </span>
                       </td>
                     </tr>
                   ))}

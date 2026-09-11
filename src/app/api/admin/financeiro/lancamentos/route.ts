@@ -30,6 +30,19 @@ export async function POST(request: NextRequest) {
   const comprovanteIdRaw = formData.get("comprovanteId");
   const comprovanteId =
     typeof comprovanteIdRaw === "string" && comprovanteIdRaw ? comprovanteIdRaw : null;
+  const congregacaoSubmissaoIdRaw = formData.get("congregacaoSubmissaoId");
+  const congregacaoSubmissaoId =
+    typeof congregacaoSubmissaoIdRaw === "string" && congregacaoSubmissaoIdRaw
+      ? congregacaoSubmissaoIdRaw
+      : null;
+  const congregationIdRaw = formData.get("congregationId");
+  const congregationId =
+    typeof congregationIdRaw === "string" && congregationIdRaw ? congregationIdRaw : null;
+  const congregationUserIdRaw = formData.get("congregationUserId");
+  const congregationUserId =
+    typeof congregationUserIdRaw === "string" && congregationUserIdRaw
+      ? congregationUserIdRaw
+      : null;
   const existingReceiptUrlRaw = formData.get("existingReceiptUrl");
   const existingReceiptUrl =
     typeof existingReceiptUrlRaw === "string" && existingReceiptUrlRaw
@@ -63,6 +76,26 @@ export async function POST(request: NextRequest) {
     if (receipt.status === "aprovado") {
       return NextResponse.json(
         { error: "Este comprovante já foi lançado." },
+        { status: 409 }
+      );
+    }
+  }
+
+  // Mesma cautela para prestação de contas de congregação: confere que
+  // ainda não foi lançada antes de criar a linha real.
+  if (congregacaoSubmissaoId) {
+    const [submissao] = await sql`
+      select status from congregation_financial_submissions where id = ${congregacaoSubmissaoId}
+    `;
+    if (!submissao) {
+      return NextResponse.json(
+        { error: "Prestação de contas não encontrada." },
+        { status: 404 }
+      );
+    }
+    if (submissao.status === "aprovado") {
+      return NextResponse.json(
+        { error: "Esta prestação de contas já foi lançada." },
         { status: 409 }
       );
     }
@@ -102,12 +135,15 @@ export async function POST(request: NextRequest) {
   // a saídas e é independente do member_id.
   const [entry] = await sql`
     insert into financial_entries
-      (type, category, amount, entry_date, description, member_id, requested_by, receipt_url, created_by)
+      (type, category, amount, entry_date, description, member_id, requested_by, receipt_url,
+       congregation_id, congregation_user_id, created_by)
     values (
       ${type}, ${category}, ${amount}, ${entryDate}, ${description || null},
       ${memberId},
       ${type === "saida" ? requestedBy : null},
       ${receiptUrl},
+      ${congregationId},
+      ${congregationUserId},
       ${session!.id}
     )
     returning id
@@ -119,6 +155,15 @@ export async function POST(request: NextRequest) {
       set status = 'aprovado', financial_entry_id = ${entry.id},
           approved_by = ${session!.id}, approved_at = now()
       where id = ${comprovanteId}
+    `;
+  }
+
+  if (congregacaoSubmissaoId) {
+    await sql`
+      update congregation_financial_submissions
+      set status = 'aprovado', financial_entry_id = ${entry.id},
+          approved_by = ${session!.id}, approved_at = now()
+      where id = ${congregacaoSubmissaoId}
     `;
   }
 

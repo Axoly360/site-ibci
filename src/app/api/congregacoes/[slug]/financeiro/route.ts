@@ -68,12 +68,14 @@ export async function POST(
     }
   }
 
+  // Fica pendente até o financeiro da central revisar e lançar — não entra
+  // direto em financial_entries.
   await sql`
-    insert into financial_entries
-      (type, category, amount, entry_date, description, receipt_url, congregation_id, congregation_user_id)
+    insert into congregation_financial_submissions
+      (congregation_id, congregation_user_id, type, category, amount, entry_date, description, receipt_url)
     values (
-      ${type}, ${category}, ${amount}, ${entryDate}, ${description || null},
-      ${receiptUrl}, ${session.congregationId}, ${session.id}
+      ${session.congregationId}, ${session.id}, ${type}, ${category}, ${amount}, ${entryDate},
+      ${description || null}, ${receiptUrl}
     )
   `;
 

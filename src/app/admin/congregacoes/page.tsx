@@ -21,7 +21,9 @@ export default async function AdminCongregacoesPage() {
   const congregacoes = await sql`
     select congregations.id, congregations.name, congregations.slug,
            (select count(*)::int from congregation_requests
-             where congregation_id = congregations.id and status = 'pendente') as pendentes
+             where congregation_id = congregations.id and status = 'pendente') as pendentes_solicitacoes,
+           (select count(*)::int from congregation_financial_submissions
+             where congregation_id = congregations.id and status = 'pendente') as pendentes_financeiro
     from congregations
     order by congregations.name asc
   `;
@@ -40,9 +42,17 @@ export default async function AdminCongregacoesPage() {
               <div className="mb-4 flex items-center gap-3 text-primary">
                 <Building2 className="h-6 w-6 text-secondary" />
                 <h2 className="font-heading text-lg font-semibold">{c.name}</h2>
-                {c.pendentes > 0 && (
+                {c.pendentes_solicitacoes > 0 && (
                   <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-primary">
-                    {c.pendentes} pendente{c.pendentes > 1 ? "s" : ""}
+                    {c.pendentes_solicitacoes} solicitação
+                    {c.pendentes_solicitacoes > 1 ? "ões" : ""} pendente
+                    {c.pendentes_solicitacoes > 1 ? "s" : ""}
+                  </span>
+                )}
+                {c.pendentes_financeiro > 0 && (
+                  <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-primary">
+                    {c.pendentes_financeiro} lançamento{c.pendentes_financeiro > 1 ? "s" : ""}{" "}
+                    pendente{c.pendentes_financeiro > 1 ? "s" : ""}
                   </span>
                 )}
               </div>
@@ -62,7 +72,7 @@ export default async function AdminCongregacoesPage() {
                   Responsáveis
                 </Link>
                 <Link
-                  href={`/admin/financeiro/relatorio?congregacao=${c.slug}`}
+                  href={`/admin/congregacoes/${c.slug}/financeiro`}
                   className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
                 >
                   <Building2 className="h-4 w-4" />

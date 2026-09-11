@@ -13,6 +13,10 @@ export interface MemberOption {
 }
 
 export interface InitialComprovante {
+  /** "comprovante" = comprovante de membro; "congregacao" = prestação de
+   * contas de uma congregação. Muda o texto do aviso e o que é enviado ao
+   * aprovar. */
+  kind?: "comprovante" | "congregacao";
   id: string;
   type: "entrada" | "saida";
   category: string;
@@ -21,6 +25,8 @@ export interface InitialComprovante {
   memberId: string | null;
   memberName: string;
   fileUrl: string;
+  congregationId?: string | null;
+  congregationUserId?: string | null;
 }
 
 const CATEGORIES = [
@@ -59,11 +65,14 @@ export default function LancamentoForm({
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
   const [comprovanteId, setComprovanteId] = useState<string | null>(null);
+  const [congregacaoSubmissaoId, setCongregacaoSubmissaoId] = useState<string | null>(null);
+  const [congregationId, setCongregationId] = useState<string | null>(null);
+  const [congregationUserId, setCongregationUserId] = useState<string | null>(null);
   const [existingReceiptUrl, setExistingReceiptUrl] = useState<string | null>(null);
 
-  // Roda de novo sempre que um comprovante diferente é selecionado na tela
-  // de Financeiro (a navegação troca o parâmetro comprovanteId na URL, mas
-  // reaproveita esta mesma instância do formulário).
+  // Roda de novo sempre que um comprovante/lançamento de congregação
+  // diferente é selecionado na tela de Financeiro (a navegação troca o
+  // parâmetro na URL, mas reaproveita esta mesma instância do formulário).
   useEffect(() => {
     if (!initialComprovante) return;
     setType(initialComprovante.type);
@@ -72,8 +81,18 @@ export default function LancamentoForm({
     setDescription(initialComprovante.description);
     setMemberId(initialComprovante.memberId);
     setMemberQuery("");
-    setComprovanteId(initialComprovante.id);
     setExistingReceiptUrl(initialComprovante.fileUrl);
+    if (initialComprovante.kind === "congregacao") {
+      setComprovanteId(null);
+      setCongregacaoSubmissaoId(initialComprovante.id);
+      setCongregationId(initialComprovante.congregationId ?? null);
+      setCongregationUserId(initialComprovante.congregationUserId ?? null);
+    } else {
+      setCongregacaoSubmissaoId(null);
+      setCongregationId(null);
+      setCongregationUserId(null);
+      setComprovanteId(initialComprovante.id);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialComprovante?.id]);
 
@@ -121,6 +140,9 @@ export default function LancamentoForm({
     if (memberId) formData.set("memberId", memberId);
     if (requestedBy) formData.set("requestedBy", requestedBy);
     if (comprovanteId) formData.set("comprovanteId", comprovanteId);
+    if (congregacaoSubmissaoId) formData.set("congregacaoSubmissaoId", congregacaoSubmissaoId);
+    if (congregationId) formData.set("congregationId", congregationId);
+    if (congregationUserId) formData.set("congregationUserId", congregationUserId);
     if (existingReceiptUrl) formData.set("existingReceiptUrl", existingReceiptUrl);
     const file = fileInputRef.current?.files?.[0];
     if (file) formData.set("file", file);
@@ -142,6 +164,9 @@ export default function LancamentoForm({
       setRequestedBy("");
       setFileName("");
       setComprovanteId(null);
+      setCongregacaoSubmissaoId(null);
+      setCongregationId(null);
+      setCongregationUserId(null);
       setExistingReceiptUrl(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
       setDone(true);
@@ -162,10 +187,12 @@ export default function LancamentoForm({
         Novo Lançamento
       </h2>
 
-      {comprovanteId && (
+      {(comprovanteId || congregacaoSubmissaoId) && (
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-primary/5 px-4 py-3 text-sm">
           <span className="font-semibold text-primary">
-            Preenchido a partir do comprovante de {initialComprovante?.memberName}
+            {congregacaoSubmissaoId
+              ? `Preenchido a partir da prestação de contas de ${initialComprovante?.memberName}`
+              : `Preenchido a partir do comprovante de ${initialComprovante?.memberName}`}
           </span>
           {existingReceiptUrl && (
             <a

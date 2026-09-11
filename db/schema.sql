@@ -327,9 +327,34 @@ create table if not exists congregation_requests (
   response_note text
 );
 
--- Prestação de contas da congregação: os lançamentos entram na mesma tabela
--- do financeiro da sede (financial_entries), só marcados com a congregação
--- de origem — assim aparecem juntos no Relatório Financeiro que já existe,
--- filtráveis por congregação em vez de duplicar tela e lógica.
+-- Marca de qual congregação (ou null = sede) e de qual responsável veio um
+-- lançamento já aprovado — assim entram no mesmo Relatório Financeiro da
+-- sede, filtráveis por congregação, sem duplicar tela nem lógica.
 alter table financial_entries add column if not exists congregation_id uuid references congregations(id);
 alter table financial_entries add column if not exists congregation_user_id uuid references congregation_users(id);
+
+-- Prestação de contas da congregação AGUARDANDO aprovação da central — não
+-- vai direto pra financial_entries. O financeiro da sede revisa (mesma tela
+-- de Lançamentos, pré-preenchida, igual ao fluxo de comprovante de membro) e
+-- só ao confirmar cria a linha real em financial_entries.
+create table if not exists congregation_financial_submissions (
+  id uuid primary key default gen_random_uuid(),
+  congregation_id uuid not null references congregations(id) on delete cascade,
+  congregation_user_id uuid references congregation_users(id),
+  type text not null check (type in ('entrada', 'saida')),
+  category text not null,
+  amount numeric(12, 2) not null check (amount > 0),
+  entry_date text not null default to_char(current_date, 'YYYY-MM-DD'),
+  description text,
+  receipt_url text,
+  status text not null default 'pendente',
+  financial_entry_id uuid references financial_entries(id),
+  approved_by uuid references admin_users(id),
+  approved_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+-- Orçamento anual que a central disponibiliza pra congregação. A congregação
+-- vê quanto ainda resta (orçamento menos as saídas já aprovadas no ano) no
+-- card de balanço da própria área.
+alter table congregations add column if not exists annual_budget numeric(12, 2);

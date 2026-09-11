@@ -25,13 +25,13 @@ function formatDate(value: string) {
 export default async function AdminLancamentosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ comprovanteId?: string }>;
+  searchParams: Promise<{ comprovanteId?: string; congregacaoSubmissaoId?: string }>;
 }) {
   const session = await getAdminSession();
   if (!session) redirect("/admin/entrar");
   if (!hasPermission(session, "financeiro")) redirect("/admin");
 
-  const { comprovanteId } = await searchParams;
+  const { comprovanteId, congregacaoSubmissaoId } = await searchParams;
 
   const members = await sql`
     select id, name, email from members order by name asc
@@ -69,6 +69,37 @@ export default async function AdminLancamentosPage({
         memberId: receipt.member_id as string,
         memberName: receipt.member_name as string,
         fileUrl: receipt.file_url as string,
+      };
+    }
+  }
+
+  if (congregacaoSubmissaoId) {
+    const [submissao] = await sql`
+      select congregation_financial_submissions.id, congregation_financial_submissions.type,
+             congregation_financial_submissions.category, congregation_financial_submissions.amount,
+             congregation_financial_submissions.description, congregation_financial_submissions.receipt_url,
+             congregation_financial_submissions.status, congregation_financial_submissions.congregation_id,
+             congregation_financial_submissions.congregation_user_id,
+             congregations.name as congregation_name
+      from congregation_financial_submissions
+      join congregations on congregations.id = congregation_financial_submissions.congregation_id
+      where congregation_financial_submissions.id = ${congregacaoSubmissaoId}
+    `;
+    // Mesma cautela do comprovante: se já foi lançado, não pré-preenche de
+    // novo (evita duplicar caso o link seja reaberto).
+    if (submissao && submissao.status !== "aprovado") {
+      initialComprovante = {
+        kind: "congregacao",
+        id: submissao.id,
+        type: submissao.type as "entrada" | "saida",
+        category: submissao.category as string,
+        amount: String(submissao.amount),
+        description: submissao.description ?? "",
+        memberId: null,
+        memberName: submissao.congregation_name as string,
+        fileUrl: submissao.receipt_url as string,
+        congregationId: submissao.congregation_id as string,
+        congregationUserId: submissao.congregation_user_id as string,
       };
     }
   }
