@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, Lock } from "lucide-react";
+import { ArrowRight, Lock, Building2 } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import MemberLoginForm from "@/components/membros/MemberLoginForm";
 import Card from "@/components/ui/Card";
@@ -21,6 +21,27 @@ function AdminAccessCard() {
           </h2>
           <p className="text-sm text-text-neutral/70">
             Acesse o painel administrativo com seu e-mail e senha.
+          </p>
+        </div>
+        <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-secondary" />
+      </Card>
+    </Link>
+  );
+}
+
+function CongregationAccessCard() {
+  return (
+    <Link href="/congregacoes/vila-dos-milagres/entrar" className="mt-4 block">
+      <Card className="flex items-center gap-4 p-5">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <Building2 className="h-5 w-5" />
+        </span>
+        <div>
+          <h2 className="font-heading text-base font-semibold text-primary">
+            É responsável de uma congregação?
+          </h2>
+          <p className="text-sm text-text-neutral/70">
+            Acesse a área da Vila dos Milagres com seu e-mail e senha.
           </p>
         </div>
         <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-secondary" />
@@ -106,6 +127,7 @@ export default async function CentralDoMembroPage() {
           )}
           <SairButton />
           <AdminAccessCard />
+          <CongregationAccessCard />
         </div>
       </div>
     );
@@ -130,6 +152,7 @@ export default async function CentralDoMembroPage() {
           </Link>
         </p>
         <AdminAccessCard />
+        <CongregationAccessCard />
       </div>
     </div>
   );
