@@ -9,6 +9,12 @@ import InstitutionalVideoSection from "@/components/home/InstitutionalVideoSecti
 import { getAllContent } from "@/lib/content";
 import { getContentBlocks } from "@/lib/contentBlocks";
 import { heroBanners } from "@/data/heroBanners";
+import {
+  HOME_SECTION_ORDER_KEY,
+  parseHomeSectionOrder,
+  type HomeSectionKey,
+} from "@/lib/homeSections";
+import type { ReactNode } from "react";
 
 export default async function Home() {
   const [texts, blocks] = await Promise.all([getAllContent(), getContentBlocks()]);
@@ -47,32 +53,61 @@ export default async function Home() {
     blocks["institutional-video"]?.video_url ??
     "https://www.youtube.com/watch?v=6QYUSWm85gY";
 
-  return (
-    <>
-      <HeroSection banners={mergedHeroBanners} />
+  // As 3 seções só de imagem (Hero, Destaques, Banner Principal — geridas em
+  // /admin/banners) ficam fixas nestes mesmos intervalos; só a ordem das 5
+  // seções de texto abaixo é configurável em /admin/textos.
+  const sectionNodes: Record<HomeSectionKey, ReactNode> = {
+    acessoRapido: (
       <QuickAccessSection
+        key="acessoRapido"
         title={texts["home.acessoRapido.title"]}
         subtitle={texts["home.acessoRapido.subtitle"]}
       />
-      <HighlightBannersSection pepe={pepe} eventoPrincipal={eventoPrincipal} />
+    ),
+    ultimasMensagens: (
       <LatestSermonSection
+        key="ultimasMensagens"
         title={texts["home.ultimasMensagens.title"]}
         subtitle={texts["home.ultimasMensagens.subtitle"]}
       />
+    ),
+    eventosDoMes: (
       <EventsOfMonthSection
+        key="eventosDoMes"
         title={texts["home.eventosDoMes.title"]}
         subtitle={texts["home.eventosDoMes.subtitle"]}
       />
-      <MainBannerSection {...mainBanner} />
+    ),
+    programacaoSemana: (
       <WeeklyScheduleSection
+        key="programacaoSemana"
         title={texts["home.programacaoSemana.title"]}
         subtitle={texts["home.programacaoSemana.subtitle"]}
       />
+    ),
+    conhecaIbci: (
       <InstitutionalVideoSection
+        key="conhecaIbci"
         title={texts["home.conhecaIbci.title"]}
         subtitle={texts["home.conhecaIbci.subtitle"]}
         videoUrl={institutionalVideoUrl}
       />
+    ),
+  };
+
+  const order = parseHomeSectionOrder(texts[HOME_SECTION_ORDER_KEY]);
+  const [slot1, slot2, slot3, slot4, slot5] = order.map((key) => sectionNodes[key]);
+
+  return (
+    <>
+      <HeroSection banners={mergedHeroBanners} />
+      {slot1}
+      <HighlightBannersSection pepe={pepe} eventoPrincipal={eventoPrincipal} />
+      {slot2}
+      {slot3}
+      <MainBannerSection {...mainBanner} />
+      {slot4}
+      {slot5}
     </>
   );
 }
