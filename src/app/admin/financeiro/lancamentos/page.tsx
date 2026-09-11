@@ -5,7 +5,7 @@ import { FileText } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
-import LancamentoForm from "@/components/admin/LancamentoForm";
+import LancamentoForm, { type InitialComprovante } from "@/components/admin/LancamentoForm";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
 
@@ -37,7 +37,7 @@ export default async function AdminLancamentosPage({
     select id, name, email from members order by name asc
   `;
 
-  let initialComprovante = null;
+  let initialComprovante: InitialComprovante | null = null;
   if (comprovanteId) {
     const [receipt] = await sql`
       select contribution_receipts.id, contribution_receipts.type, contribution_receipts.category,
