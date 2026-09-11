@@ -264,3 +264,6 @@ create table if not exists visitor_registrations (
   event_slug text,
   created_at timestamptz not null default now()
 );
+
+-- WhatsApp do visitante, para a recepção/ação social fazer follow-up direto.
+alter table visitor_registrations add column if not exists whatsapp text;

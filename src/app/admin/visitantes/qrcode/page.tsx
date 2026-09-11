@@ -9,6 +9,7 @@ import PrintButton from "@/components/eventos/PrintButton";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { generateQrCodeDataUrl } from "@/lib/qrcode";
 import { getOrigin } from "@/lib/site";
+import { VISITOR_EVENT_OPTIONS, visitorEventLabel } from "@/data/visitorEvents";
 
 export const metadata: Metadata = {
   title: "QR Code de Visitantes | Painel IBCI",
@@ -49,15 +50,20 @@ export default async function AdminVisitantesQrCodePage({
           <form className="flex flex-wrap items-end gap-3" method="get">
             <div className="flex-1">
               <label className="mb-1 block text-xs font-semibold text-text-neutral/70">
-                Slug do evento (deixe em branco para o QR fixo da entrada)
+                Evento (ou geral, para o QR fixo da entrada)
               </label>
-              <input
-                type="text"
+              <select
                 name="evento"
                 defaultValue={evento || ""}
-                placeholder="ex.: congresso-de-casais"
                 className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm"
-              />
+              >
+                <option value="">Visita geral (entrada da igreja)</option>
+                {VISITOR_EVENT_OPTIONS.map((e) => (
+                  <option key={e.slug} value={e.slug}>
+                    {e.label}
+                  </option>
+                ))}
+              </select>
             </div>
             <button
               type="submit"
@@ -70,7 +76,7 @@ export default async function AdminVisitantesQrCodePage({
 
         <Card className="mt-6 space-y-4 p-8 text-center">
           <p className="text-sm font-semibold text-text-neutral/70">
-            {evento ? `Evento: ${evento}` : "Visita geral (entrada da igreja)"}
+            {evento ? `Evento: ${visitorEventLabel(evento)}` : "Visita geral (entrada da igreja)"}
           </p>
           <div className="mx-auto w-fit rounded-xl bg-white p-3 shadow-sm">
             <Image

@@ -5,6 +5,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
 
   const name = typeof body?.name === "string" ? body.name.trim() : "";
+  const whatsapp = typeof body?.whatsapp === "string" ? body.whatsapp.trim() : "";
   const sex = typeof body?.sex === "string" ? body.sex.trim() : "";
   const firstVisit = Boolean(body?.firstVisit);
   const visitTimes =
@@ -20,12 +21,15 @@ export async function POST(request: NextRequest) {
   if (!name) {
     return NextResponse.json({ error: "Informe seu nome." }, { status: 400 });
   }
+  if (!whatsapp) {
+    return NextResponse.json({ error: "Informe seu WhatsApp." }, { status: 400 });
+  }
 
   await sql`
     insert into visitor_registrations
-      (name, sex, first_visit, visit_times, is_christian, church_name, location, event_slug)
+      (name, whatsapp, sex, first_visit, visit_times, is_christian, church_name, location, event_slug)
     values
-      (${name}, ${sex || null}, ${firstVisit}, ${visitTimes}, ${isChristian},
+      (${name}, ${whatsapp}, ${sex || null}, ${firstVisit}, ${visitTimes}, ${isChristian},
        ${churchName || null}, ${location || null}, ${eventSlug || null})
   `;
 

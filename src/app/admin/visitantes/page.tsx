@@ -7,6 +7,7 @@ import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
+import { VISITOR_EVENT_OPTIONS, visitorEventLabel } from "@/data/visitorEvents";
 
 export const metadata: Metadata = {
   title: "Visitantes | Painel IBCI",
@@ -41,11 +42,20 @@ export default async function AdminVisitantesPage({
   const to = params.to || null;
   const eventoFiltro = params.evento || null;
 
-  const eventosDisponiveis = await sql`
+  const eventosNoBanco = await sql`
     select distinct event_slug from visitor_registrations
     where event_slug is not null
     order by event_slug asc
   `;
+  // Junta os presets fixos com quaisquer outros slugs que já existam no
+  // banco (ex.: usados antes destes presets existirem), sem duplicar.
+  const presetSlugs = new Set(VISITOR_EVENT_OPTIONS.map((e) => e.slug));
+  const eventosDisponiveis = [
+    ...VISITOR_EVENT_OPTIONS,
+    ...eventosNoBanco
+      .filter((e) => !presetSlugs.has(e.event_slug))
+      .map((e) => ({ slug: e.event_slug, label: e.event_slug })),
+  ];
 
   // "__geral__" significa "sem evento" (event_slug is null) — não dá pra
   // expressar isso com uma comparação de igualdade simples, então trata à
@@ -53,7 +63,7 @@ export default async function AdminVisitantesPage({
   const visitantes =
     eventoFiltro === "__geral__"
       ? await sql`
-          select id, name, sex, first_visit, visit_times, is_christian, church_name,
+          select id, name, whatsapp, sex, first_visit, visit_times, is_christian, church_name,
                  location, event_slug, created_at
           from visitor_registrations
           where event_slug is null
@@ -62,7 +72,7 @@ export default async function AdminVisitantesPage({
           order by created_at desc
         `
       : await sql`
-          select id, name, sex, first_visit, visit_times, is_christian, church_name,
+          select id, name, whatsapp, sex, first_visit, visit_times, is_christian, church_name,
                  location, event_slug, created_at
           from visitor_registrations
           where (${from}::date is null or created_at >= ${from}::date)
@@ -123,8 +133,8 @@ export default async function AdminVisitantesPage({
                 <option value="">Todos</option>
                 <option value="__geral__">Visita geral (sem evento)</option>
                 {eventosDisponiveis.map((e) => (
-                  <option key={e.event_slug} value={e.event_slug}>
-                    {e.event_slug}
+                  <option key={e.slug} value={e.slug}>
+                    {e.label}
                   </option>
                 ))}
               </select>
@@ -152,6 +162,7 @@ export default async function AdminVisitantesPage({
                 <thead>
                   <tr className="border-b border-black/10 text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
                     <th className="py-2 pr-4">Nome</th>
+                    <th className="py-2 pr-4">WhatsApp</th>
                     <th className="py-2 pr-4">Visita</th>
                     <th className="py-2 pr-4">Igreja</th>
                     <th className="py-2 pr-4">Local</th>
@@ -163,6 +174,7 @@ export default async function AdminVisitantesPage({
                   {visitantes.map((v) => (
                     <tr key={v.id} className="border-b border-black/5">
                       <td className="py-3 pr-4 font-semibold text-text-neutral">{v.name}</td>
+                      <td className="py-3 pr-4 text-text-neutral/80">{v.whatsapp || "—"}</td>
                       <td className="py-3 pr-4 text-text-neutral/80">
                         {v.first_visit
                           ? "Primeira vez"
@@ -173,7 +185,7 @@ export default async function AdminVisitantesPage({
                       </td>
                       <td className="py-3 pr-4 text-text-neutral/80">{v.location || "—"}</td>
                       <td className="py-3 pr-4 text-text-neutral/80">
-                        {v.event_slug || "Visita geral"}
+                        {v.event_slug ? visitorEventLabel(v.event_slug) : "Visita geral"}
                       </td>
                       <td className="py-3 pr-4 text-text-neutral/70">
                         {formatDate(v.created_at)}

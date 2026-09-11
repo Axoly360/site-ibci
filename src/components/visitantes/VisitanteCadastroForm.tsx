@@ -7,6 +7,7 @@ import Card from "@/components/ui/Card";
 
 export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string }) {
   const [name, setName] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [sex, setSex] = useState("");
   const [firstVisit, setFirstVisit] = useState(true);
   const [visitTimes, setVisitTimes] = useState("");
@@ -25,6 +26,10 @@ export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string
       setError("Informe seu nome.");
       return;
     }
+    if (!whatsapp.trim()) {
+      setError("Informe seu WhatsApp.");
+      return;
+    }
 
     setLoading(true);
     const res = await fetch("/api/visitantes/cadastro", {
@@ -32,6 +37,7 @@ export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
+        whatsapp,
         sex,
         firstVisit,
         visitTimes,
@@ -80,6 +86,20 @@ export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="w-full rounded-lg border border-black/10 px-3 py-2.5 text-sm"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-semibold text-text-neutral">
+            WhatsApp
+          </label>
+          <input
+            type="tel"
+            required
+            value={whatsapp}
+            onChange={(e) => setWhatsapp(e.target.value)}
+            placeholder="(81) 90000-0000"
             className="w-full rounded-lg border border-black/10 px-3 py-2.5 text-sm"
           />
         </div>
