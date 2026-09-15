@@ -379,6 +379,23 @@ create table if not exists events (
   updated_at timestamptz not null default now()
 );
 
+-- Campos adicionais de perfil (paridade com o cadastro de outras igrejas):
+-- estado civil, naturalidade e profissão, editáveis pelo próprio membro.
+alter table members add column if not exists marital_status text;
+alter table members add column if not exists birthplace text;
+alter table members add column if not exists profession text;
+
+-- Filhos cadastrados pelo membro (responsável), usados pelo Ministério
+-- Infantil para identificar a criança e montar a etiqueta de check-in.
+create table if not exists member_children (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id) on delete cascade,
+  name text not null,
+  birthdate text,
+  sex text,
+  created_at timestamptz not null default now()
+);
+
 -- Semente única: preserva o evento que já existia no arquivo estático, com
 -- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
 insert into events

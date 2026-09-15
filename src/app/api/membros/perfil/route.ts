@@ -25,6 +25,9 @@ export async function POST(request: NextRequest) {
     typeof body?.timeAtChurch === "string" ? body.timeAtChurch.trim() : "";
   const baptismDate = typeof body?.baptismDate === "string" ? body.baptismDate.trim() : "";
   const arrivalDate = typeof body?.arrivalDate === "string" ? body.arrivalDate.trim() : "";
+  const maritalStatus = typeof body?.maritalStatus === "string" ? body.maritalStatus.trim() : "";
+  const birthplace = typeof body?.birthplace === "string" ? body.birthplace.trim() : "";
+  const profession = typeof body?.profession === "string" ? body.profession.trim() : "";
 
   if (!name) {
     return NextResponse.json({ error: "Nome é obrigatório." }, { status: 400 });
@@ -39,7 +42,10 @@ export async function POST(request: NextRequest) {
       address = ${address || null},
       time_at_church = ${timeAtChurch || null},
       baptism_date = ${baptismDate || null},
-      arrival_date = ${arrivalDate || null}
+      arrival_date = ${arrivalDate || null},
+      marital_status = ${maritalStatus || null},
+      birthplace = ${birthplace || null},
+      profession = ${profession || null}
     where id = ${session.memberId}
   `;
 

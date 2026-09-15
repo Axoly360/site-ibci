@@ -9,6 +9,7 @@ import {
   ArrowRight,
   CalendarDays,
   UserRound,
+  Users,
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
@@ -61,6 +62,15 @@ const baseShortcuts = [
       "Solicite agendamento e disponibilidade para casamentos, cultos de ação de graças e outros eventos especiais.",
     cta: "Solicitar agendamento",
     href: "/central-do-membro/agendamentos",
+    external: false,
+  },
+  {
+    icon: Users,
+    title: "Ministério Infantil",
+    description:
+      "Cadastre seus filhos para facilitar a entrada deles no Ministério Infantil nos cultos.",
+    cta: "Cadastrar filhos",
+    href: "/central-do-membro/filhos",
     external: false,
   },
   {

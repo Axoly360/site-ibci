@@ -18,7 +18,12 @@ export interface ProfileData {
   baptism_date: string | null;
   arrival_date: string | null;
   photo_url: string | null;
+  marital_status: string | null;
+  birthplace: string | null;
+  profession: string | null;
 }
+
+const MARITAL_STATUS_OPTIONS = ["Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viúvo(a)"];
 
 export default function ProfileForm({ profile }: { profile: ProfileData }) {
   const router = useRouter();
@@ -34,6 +39,9 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
     timeAtChurch: profile.time_at_church ?? "",
     baptismDate: profile.baptism_date ?? "",
     arrivalDate: profile.arrival_date ?? "",
+    maritalStatus: profile.marital_status ?? "",
+    birthplace: profile.birthplace ?? "",
+    profession: profile.profession ?? "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [error, setError] = useState("");
@@ -224,6 +232,49 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
           onChange={set("timeAtChurch")}
           className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div>
+          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+            Estado civil
+          </label>
+          <select
+            value={form.maritalStatus}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, maritalStatus: e.target.value }))
+            }
+            className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">Selecione</option>
+            {MARITAL_STATUS_OPTIONS.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+            Naturalidade
+          </label>
+          <input
+            placeholder="Cidade / UF"
+            value={form.birthplace}
+            onChange={set("birthplace")}
+            className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+            Profissão
+          </label>
+          <input
+            value={form.profession}
+            onChange={set("profession")}
+            className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
       </div>
 
       <div className="mt-2 flex items-center gap-3">
