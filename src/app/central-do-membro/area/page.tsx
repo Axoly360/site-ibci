@@ -3,20 +3,17 @@ import { redirect } from "next/navigation";
 import {
   Heart,
   CalendarClock,
-  Gift,
   UserRoundCheck,
   FileText,
   ArrowRight,
   CalendarDays,
-  UserRound,
-  Users,
   ShieldCheck,
-  HandHeart,
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
 import MemberProfileSummary from "@/components/membros/MemberProfileSummary";
 import MemberGroupsCard from "@/components/membros/MemberGroupsCard";
+import DashboardCategoryTiles from "@/components/membros/DashboardCategoryTiles";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
 
@@ -32,15 +29,6 @@ function waLink(message: string) {
 }
 
 const baseShortcuts = [
-  {
-    icon: UserRound,
-    title: "Meu Cadastro",
-    description:
-      "Atualize seus dados, foto, data de batismo e há quanto tempo você chegou na igreja.",
-    cta: "Editar cadastro",
-    href: "/central-do-membro/perfil",
-    external: false,
-  },
   {
     icon: Heart,
     title: "Pedido de Oração",
@@ -66,51 +54,6 @@ const baseShortcuts = [
       "Solicite agendamento e disponibilidade para casamentos, cultos de ação de graças e outros eventos especiais.",
     cta: "Solicitar agendamento",
     href: "/central-do-membro/agendamentos",
-    external: false,
-  },
-  {
-    icon: Users,
-    title: "Grupos",
-    description:
-      "Conheça os grupos/células da igreja e solicite para participar de um.",
-    cta: "Ver grupos",
-    href: "/central-do-membro/grupos",
-    external: false,
-  },
-  {
-    icon: Users,
-    title: "Ministério Infantil",
-    description:
-      "Cadastre seus filhos para facilitar a entrada deles no Ministério Infantil nos cultos.",
-    cta: "Cadastrar filhos",
-    href: "/central-do-membro/filhos",
-    external: false,
-  },
-  {
-    icon: Gift,
-    title: "Dízimos e Ofertas",
-    description:
-      "Acesse a chave PIX da igreja e contribua de forma rápida e segura com a obra de Deus.",
-    cta: "Ir para Contribuições",
-    href: "/para-voce/dizimos-e-ofertas",
-    external: false,
-  },
-  {
-    icon: FileText,
-    title: "Contribuições e Saídas",
-    description:
-      "Veja o histórico de contribuições e saídas registradas em seu nome pela tesouraria e o resumo anual.",
-    cta: "Ver contribuições",
-    href: "/central-do-membro/contribuicoes",
-    external: false,
-  },
-  {
-    icon: HandHeart,
-    title: "Servir",
-    description:
-      "Conte pra gente em quais ministérios você já serve ou gostaria de servir.",
-    cta: "Cadastrar voluntariado",
-    href: "/central-do-membro/servir",
     external: false,
   },
   {
@@ -203,6 +146,7 @@ export default async function AreaDoMembroPage() {
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
         <MemberProfileSummary member={{ id: session.memberId, ...member }} />
         <MemberGroupsCard groups={groups} />
+        <DashboardCategoryTiles />
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {shortcuts.map((shortcut) => {
