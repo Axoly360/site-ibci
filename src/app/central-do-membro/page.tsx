@@ -141,8 +141,6 @@ export default async function CentralDoMembroPage() {
           <DashboardCategoryTiles />
 
           <SairButton />
-          <AdminAccessCard />
-          <CongregationAccessCard />
         </div>
       </div>
     );
