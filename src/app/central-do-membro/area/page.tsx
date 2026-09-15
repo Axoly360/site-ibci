@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
-import MemberProfileSummary from "@/components/membros/MemberProfileSummary";
+import MemberProfileSummary, { MemberGroupsBar } from "@/components/membros/MemberProfileSummary";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
 
@@ -173,7 +173,8 @@ export default async function AreaDoMembroPage() {
       </section>
 
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-        <MemberProfileSummary member={member} />
+        <MemberProfileSummary member={{ id: session.memberId, ...member }} />
+        <MemberGroupsBar />
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {shortcuts.map((shortcut) => {

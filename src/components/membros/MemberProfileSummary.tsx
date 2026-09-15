@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Pencil, Phone, UserRound } from "lucide-react";
+import { Pencil, Phone, UserRound, Users } from "lucide-react";
 
 export interface MemberProfileSummaryData {
+  id: string;
   name: string;
   email: string;
   phone: string | null;
@@ -53,13 +54,18 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
           </p>
         </div>
 
-        <Link
-          href="/central-do-membro/perfil"
-          className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-secondary px-5 py-2.5 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-secondary-light"
-        >
-          <Pencil className="h-4 w-4" />
-          Editar Dados
-        </Link>
+        <div className="flex shrink-0 items-center gap-3">
+          <span className="whitespace-nowrap rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white">
+            # ID: {member.id.slice(0, 8).toUpperCase()}
+          </span>
+          <Link
+            href="/central-do-membro/perfil"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-secondary px-5 py-2.5 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-secondary-light"
+          >
+            <Pencil className="h-4 w-4" />
+            Editar Dados
+          </Link>
+        </div>
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -79,6 +85,22 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
         <Field label="Batismo" value={member.baptism_date} />
         <Field label="Há quanto tempo na IBCI" value={member.time_at_church} />
       </div>
+    </div>
+  );
+}
+
+/**
+ * A IBCI ainda não tem um cadastro de Grupos/Células — este bloco só mostra
+ * "Nenhum" honestamente até essa funcionalidade existir. Quando houver a
+ * tabela de grupos, trocar por uma lista real vinda do banco.
+ */
+export function MemberGroupsBar() {
+  return (
+    <div className="mt-4 flex items-center gap-2 rounded-2xl border-l-4 border-secondary bg-white px-5 py-4 shadow-sm">
+      <Users className="h-5 w-5 shrink-0 text-secondary" />
+      <p className="text-sm text-text-neutral">
+        <span className="font-bold text-primary">Meus Grupos:</span> Nenhum
+      </p>
     </div>
   );
 }
