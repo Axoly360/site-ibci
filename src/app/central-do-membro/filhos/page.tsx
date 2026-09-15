@@ -14,11 +14,6 @@ export default async function FilhosPage() {
   const session = await getSession();
   if (!session) redirect("/central-do-membro");
 
-  const [member] = await sql`
-    select is_validated_member from members where id = ${session.memberId}
-  `;
-  if (!member?.is_validated_member) redirect("/central-do-membro");
-
   const children = await sql`
     select id, name, birthdate, sex
     from member_children

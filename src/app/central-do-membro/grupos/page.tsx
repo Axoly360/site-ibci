@@ -14,11 +14,6 @@ export default async function GruposPage() {
   const session = await getSession();
   if (!session) redirect("/central-do-membro");
 
-  const [member] = await sql`
-    select is_validated_member from members where id = ${session.memberId}
-  `;
-  if (!member?.is_validated_member) redirect("/central-do-membro");
-
   const [groups, myMemberships, myRequests] = await Promise.all([
     sql`select id, name, leader_name, meeting_day, location, description from member_groups order by name asc`,
     sql`select group_id from member_group_members where member_id = ${session.memberId}`,

@@ -12,13 +12,6 @@ export async function POST(
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
-  const [member] = await sql`
-    select is_validated_member from members where id = ${session.memberId}
-  `;
-  if (!member?.is_validated_member) {
-    return NextResponse.json({ error: "Cadastro ainda não validado." }, { status: 403 });
-  }
-
   const [group] = await sql`select id from member_groups where id = ${id}`;
   if (!group) {
     return NextResponse.json({ error: "Grupo não encontrado." }, { status: 404 });

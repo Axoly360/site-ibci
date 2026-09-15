@@ -8,13 +8,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
-  const [member] = await sql`
-    select is_validated_member from members where id = ${session.memberId}
-  `;
-  if (!member?.is_validated_member) {
-    return NextResponse.json({ error: "Cadastro ainda não validado." }, { status: 403 });
-  }
-
   const body = await request.json().catch(() => null);
   const name = typeof body?.name === "string" ? body.name.trim() : "";
   const birthdate = typeof body?.birthdate === "string" ? body.birthdate.trim() : "";
