@@ -48,6 +48,13 @@ export default async function AdminPage() {
       show: hasPermission(session, "membros"),
     },
     {
+      href: "/admin/documentos",
+      icon: FileText,
+      title: "Documentos",
+      description: "Estatuto e Regimento Interno, em PDF.",
+      show: hasPermission(session, "paginas"),
+    },
+    {
       href: "/admin/grupos",
       icon: Users,
       title: "Grupos",
