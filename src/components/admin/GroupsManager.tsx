@@ -15,6 +15,7 @@ export interface Group {
   location: string | null;
   description: string | null;
   member_count: number;
+  pending_count: number;
 }
 
 interface GroupFields {
@@ -173,6 +174,11 @@ export default function GroupsManager({ groups }: { groups: Group[] }) {
                   <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-primary">
                     <Users className="h-3.5 w-3.5" />
                     {group.member_count} {group.member_count === 1 ? "membro" : "membros"}
+                    {group.pending_count > 0 && (
+                      <span className="ml-1 rounded-full bg-secondary px-2 py-0.5 text-primary">
+                        {group.pending_count} pendente{group.pending_count > 1 ? "s" : ""}
+                      </span>
+                    )}
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-4">

@@ -69,6 +69,15 @@ const baseShortcuts = [
   },
   {
     icon: Users,
+    title: "Grupos",
+    description:
+      "Conheça os grupos/células da igreja e solicite para participar de um.",
+    cta: "Ver grupos",
+    href: "/central-do-membro/grupos",
+    external: false,
+  },
+  {
+    icon: Users,
     title: "Ministério Infantil",
     description:
       "Cadastre seus filhos para facilitar a entrada deles no Ministério Infantil nos cultos.",

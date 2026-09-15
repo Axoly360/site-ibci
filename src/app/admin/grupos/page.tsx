@@ -18,9 +18,11 @@ export default async function AdminGruposPage() {
 
   const groups = await sql`
     select mg.id, mg.name, mg.leader_name, mg.meeting_day, mg.location, mg.description,
-           count(mgm.member_id)::int as member_count
+           count(distinct mgm.member_id)::int as member_count,
+           count(distinct gjr.id) filter (where gjr.status = 'pendente')::int as pending_count
     from member_groups mg
     left join member_group_members mgm on mgm.group_id = mg.id
+    left join group_join_requests gjr on gjr.group_id = mg.id
     group by mg.id
     order by mg.name asc
   `;

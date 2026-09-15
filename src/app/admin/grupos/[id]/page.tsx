@@ -42,6 +42,15 @@ export default async function AdminGrupoDetalhePage({
     order by name asc
   `;
 
+  const pendingRequests = await sql`
+    select group_join_requests.id, members.id as member_id, members.name, members.email,
+           group_join_requests.requested_at
+    from group_join_requests
+    join members on members.id = group_join_requests.member_id
+    where group_join_requests.group_id = ${id} and group_join_requests.status = 'pendente'
+    order by group_join_requests.requested_at asc
+  `;
+
   return (
     <div className="bg-bg-light">
       <AdminNav session={session} />
@@ -53,7 +62,12 @@ export default async function AdminGrupoDetalhePage({
         >
           ← Voltar para Grupos
         </Link>
-        <GroupMembersManager groupId={id} members={members} availableMembers={availableMembers} />
+        <GroupMembersManager
+          groupId={id}
+          members={members}
+          availableMembers={availableMembers}
+          pendingRequests={pendingRequests}
+        />
       </div>
     </div>
   );

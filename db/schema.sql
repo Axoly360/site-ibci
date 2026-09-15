@@ -431,6 +431,20 @@ create table if not exists member_group_members (
   unique (group_id, member_id)
 );
 
+-- Pedido do próprio membro para entrar num grupo — aguarda aprovação do
+-- admin (permissão "membros"). Ao aprovar, vira uma linha real em
+-- member_group_members; o admin também pode adicionar membros direto,
+-- sem passar por aqui (fluxo já existente em /admin/grupos/[id]).
+create table if not exists group_join_requests (
+  id uuid primary key default gen_random_uuid(),
+  group_id uuid not null references member_groups(id) on delete cascade,
+  member_id uuid not null references members(id) on delete cascade,
+  status text not null default 'pendente',
+  requested_at timestamptz not null default now(),
+  decided_at timestamptz,
+  decided_by uuid references admin_users(id)
+);
+
 -- Semente única: preserva o evento que já existia no arquivo estático, com
 -- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
 insert into events
