@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Camera, FileText, Menu, UserRound, Lock, Building2, CalendarDays, UserRoundCheck, MapPin } from "lucide-react";
+import { Camera, FileText, Menu, UserRound, Lock, Building2, CalendarDays, UserRoundCheck, MapPin, ShieldCheck } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
@@ -38,6 +38,13 @@ export default async function AdminPage() {
       icon: Menu,
       title: "Menu",
       description: "Categorias e subcategorias do menu do site.",
+      show: hasPermission(session, "paginas"),
+    },
+    {
+      href: "/admin/consentimento",
+      icon: ShieldCheck,
+      title: "Consentimento",
+      description: "Textos dos termos LGPD (uso de imagem, voluntariado, proteção) aceitos pelo membro.",
       show: hasPermission(session, "paginas"),
     },
     {

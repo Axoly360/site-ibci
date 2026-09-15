@@ -10,6 +10,7 @@ import {
   CalendarDays,
   UserRound,
   Users,
+  ShieldCheck,
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
@@ -89,6 +90,15 @@ const baseShortcuts = [
       "Veja o histórico de contribuições e saídas registradas em seu nome pela tesouraria e o resumo anual.",
     cta: "Ver contribuições",
     href: "/central-do-membro/contribuicoes",
+    external: false,
+  },
+  {
+    icon: ShieldCheck,
+    title: "Consentimento",
+    description:
+      "Leia e registre seu aceite aos termos da igreja (uso de imagem, voluntariado, proteção de crianças e idosos).",
+    cta: "Ver termos",
+    href: "/central-do-membro/consentimento",
     external: false,
   },
   {

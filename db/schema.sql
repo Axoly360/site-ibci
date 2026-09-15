@@ -396,6 +396,19 @@ create table if not exists member_children (
   created_at timestamptz not null default now()
 );
 
+-- Aceite de termos de consentimento (LGPD) pelo membro — uso de imagem,
+-- trabalho voluntário, proteção de crianças/adolescentes/idosos etc. Os
+-- textos dos termos ficam em site_content (chave "consentimento.<termo>.*",
+-- editável pelo painel); aqui só fica registrado quem aceitou e quando, para
+-- fins de auditoria/compliance. term_key identifica qual termo foi aceito.
+create table if not exists member_consents (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id) on delete cascade,
+  term_key text not null,
+  accepted_at timestamptz not null default now(),
+  unique (member_id, term_key)
+);
+
 -- Semente única: preserva o evento que já existia no arquivo estático, com
 -- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
 insert into events
