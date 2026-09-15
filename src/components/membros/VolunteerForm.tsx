@@ -2,9 +2,10 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { CheckCircle2, HandHeart } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { MINISTRIES } from "@/lib/ministries";
+import { MINISTRIES, MINISTRY_LINKS } from "@/lib/ministries";
 
 export default function VolunteerForm({
   initialMinistries,
@@ -50,25 +51,39 @@ export default function VolunteerForm({
       <p className="text-sm font-semibold text-text-neutral">
         Em quais ministérios você já serve ou gostaria de servir?
       </p>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        {MINISTRIES.map((ministry) => (
-          <label
-            key={ministry}
-            className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
-              ministries.includes(ministry)
-                ? "border-primary bg-primary/5 font-semibold text-primary"
-                : "border-black/10 bg-white text-text-neutral"
-            }`}
-          >
-            <input
-              type="checkbox"
-              checked={ministries.includes(ministry)}
-              onChange={() => toggle(ministry)}
-              className="shrink-0"
-            />
-            {ministry}
-          </label>
-        ))}
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {MINISTRIES.map((ministry) => {
+          const link = MINISTRY_LINKS[ministry];
+          return (
+            <div
+              key={ministry}
+              className={`flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
+                ministries.includes(ministry)
+                  ? "border-primary bg-primary/5 font-semibold text-primary"
+                  : "border-black/10 bg-white text-text-neutral"
+              }`}
+            >
+              <label className="flex flex-1 cursor-pointer items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={ministries.includes(ministry)}
+                  onChange={() => toggle(ministry)}
+                  className="shrink-0"
+                />
+                {ministry}
+              </label>
+              {link && (
+                <Link
+                  href={link}
+                  target="_blank"
+                  className="shrink-0 text-xs font-semibold text-secondary hover:underline"
+                >
+                  Conhecer
+                </Link>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       <div>
