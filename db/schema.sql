@@ -445,6 +445,19 @@ create table if not exists group_join_requests (
   decided_by uuid references admin_users(id)
 );
 
+-- Cadastro de voluntariado do membro: em quais ministérios já serve ou
+-- quer servir. Um registro por membro (upsert); não é um fluxo de
+-- aprovação — é o membro se declarando disponível, e o admin acompanha.
+create table if not exists volunteer_registrations (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id) on delete cascade,
+  ministries text[] not null,
+  note text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (member_id)
+);
+
 -- Semente única: preserva o evento que já existia no arquivo estático, com
 -- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
 insert into events

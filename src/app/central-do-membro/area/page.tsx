@@ -11,6 +11,7 @@ import {
   UserRound,
   Users,
   ShieldCheck,
+  HandHeart,
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
@@ -101,6 +102,15 @@ const baseShortcuts = [
       "Veja o histórico de contribuições e saídas registradas em seu nome pela tesouraria e o resumo anual.",
     cta: "Ver contribuições",
     href: "/central-do-membro/contribuicoes",
+    external: false,
+  },
+  {
+    icon: HandHeart,
+    title: "Servir",
+    description:
+      "Conte pra gente em quais ministérios você já serve ou gostaria de servir.",
+    cta: "Cadastrar voluntariado",
+    href: "/central-do-membro/servir",
     external: false,
   },
   {

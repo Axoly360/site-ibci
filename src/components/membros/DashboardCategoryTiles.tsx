@@ -36,7 +36,7 @@ export default function DashboardCategoryTiles() {
         subtitle="Escola de Crianças"
       />
       <Tile
-        href="/para-voce/servir"
+        href="/central-do-membro/servir"
         icon={HandHeart}
         iconBg="bg-orange-600"
         borderColor="border-t-orange-600"
