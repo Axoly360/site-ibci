@@ -138,7 +138,7 @@ export default async function CentralDoMembroPage() {
 
           <MemberProfileSummary member={{ id: session.memberId, ...member }} />
           <MemberGroupsCard groups={groups} />
-          <DashboardCategoryTiles />
+          <DashboardCategoryTiles isLeadership={member.is_leadership} />
 
           <SairButton />
         </div>
