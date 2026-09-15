@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
+import MemberProfileSummary from "@/components/membros/MemberProfileSummary";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
 
@@ -127,7 +128,9 @@ export default async function AreaDoMembroPage() {
   if (!session) redirect("/central-do-membro");
 
   const [member] = await sql`
-    select is_validated_member, is_leadership, church_role
+    select is_validated_member, is_leadership, church_role, name, email, phone,
+           photo_url, marital_status, birthplace, profession, birthdate,
+           baptism_date, time_at_church
     from members where id = ${session.memberId}
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");
@@ -170,7 +173,9 @@ export default async function AreaDoMembroPage() {
       </section>
 
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <MemberProfileSummary member={member} />
+
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {shortcuts.map((shortcut) => {
             const Icon = shortcut.icon;
             const content = (
