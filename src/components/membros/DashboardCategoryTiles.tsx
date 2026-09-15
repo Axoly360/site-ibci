@@ -86,7 +86,7 @@ function Tile({
 const FINANCEIRO_OPTIONS = [
   { label: "Dízimo", icon: Gift, href: "/central-do-membro/contribuicoes" },
   { label: "IBCI Contribua", icon: Heart, href: "/para-voce/dizimos-e-ofertas" },
-  { label: "Centro de Formação", icon: BookOpen, href: "/para-voce/cursos" },
+  { label: "Centro de Formação", icon: BookOpen, href: "/central-do-membro/matriculas" },
   { label: "Relatório", icon: FileText, href: "/central-do-membro/contribuicoes" },
 ];
 
