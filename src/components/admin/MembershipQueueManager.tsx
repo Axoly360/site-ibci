@@ -60,6 +60,20 @@ export default function MembershipQueueManager({
     router.refresh();
   };
 
+  const deleteMember = async (memberId: string, name: string) => {
+    if (
+      !confirm(
+        `Excluir definitivamente o cadastro de ${name}? Essa ação não pode ser desfeita — todos os dados dele (perfil, filhos, grupos, consentimentos, voluntariado) serão apagados. Lançamentos financeiros já registrados são mantidos, sem o vínculo com o nome.`
+      )
+    ) {
+      return;
+    }
+    setLoadingId(memberId);
+    await fetch(`/api/admin/membros/excluir/${memberId}`, { method: "DELETE" });
+    setLoadingId(null);
+    router.refresh();
+  };
+
   const decide = async (id: string, decision: "aprovado" | "recusado") => {
     setLoadingId(id);
     await fetch(`/api/admin/membros/${id}`, {
@@ -185,6 +199,7 @@ export default function MembershipQueueManager({
               member={m}
               loading={loadingId === m.id}
               onRevoke={() => revoke(m.id)}
+              onDelete={() => deleteMember(m.id, m.name)}
               onSaveLeadership={async (isLeadership, churchRole) => {
                 setLoadingId(m.id);
                 await fetch(`/api/admin/membros/lideranca/${m.id}`, {
@@ -207,11 +222,13 @@ function ValidatedMemberCard({
   member,
   loading,
   onRevoke,
+  onDelete,
   onSaveLeadership,
 }: {
   member: ValidatedMemberRow;
   loading: boolean;
   onRevoke: () => void;
+  onDelete: () => void;
   onSaveLeadership: (isLeadership: boolean, churchRole: string) => void;
 }) {
   const router = useRouter();
@@ -260,15 +277,26 @@ function ValidatedMemberCard({
           <p className="font-semibold text-text-neutral">{member.name}</p>
           <p className="text-sm text-text-neutral/60">{member.email}</p>
         </div>
-        <button
-          type="button"
-          disabled={loading}
-          onClick={onRevoke}
-          className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
-        >
-          <Lock className="h-4 w-4" />
-          Revogar validação
-        </button>
+        <div className="flex shrink-0 items-center gap-4">
+          <button
+            type="button"
+            disabled={loading}
+            onClick={onRevoke}
+            className="flex items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
+          >
+            <Lock className="h-4 w-4" />
+            Revogar validação
+          </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={onDelete}
+            className="flex items-center gap-1.5 text-sm font-semibold text-red-800 hover:text-red-900 disabled:opacity-50"
+          >
+            <Trash2 className="h-4 w-4" />
+            Excluir
+          </button>
+        </div>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-black/5 pt-3">
