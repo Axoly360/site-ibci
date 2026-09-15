@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, Lock, Building2 } from "lucide-react";
+import { ArrowRight, Lock, Building2, XCircle } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import MemberLoginForm from "@/components/membros/MemberLoginForm";
+import MemberProfileSummary from "@/components/membros/MemberProfileSummary";
+import MemberGroupsCard from "@/components/membros/MemberGroupsCard";
+import DashboardCategoryTiles from "@/components/membros/DashboardCategoryTiles";
 import Card from "@/components/ui/Card";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
@@ -74,7 +77,10 @@ export default async function CentralDoMembroPage() {
 
   if (session) {
     const [member] = await sql`
-      select is_validated_member from members where id = ${session.memberId}
+      select is_validated_member, is_leadership, church_role, name, email, phone,
+             photo_url, marital_status, birthplace, profession, birthdate,
+             baptism_date, time_at_church
+      from members where id = ${session.memberId}
     `;
     if (member?.is_validated_member) {
       redirect("/central-do-membro/area");
@@ -87,44 +93,53 @@ export default async function CentralDoMembroPage() {
       limit 1
     `;
 
+    const groups = await sql`
+      select mg.id, mg.name, mg.leader_name, mg.meeting_day, mg.location
+      from member_group_members mgm
+      join member_groups mg on mg.id = mgm.group_id
+      where mgm.member_id = ${session.memberId}
+      order by mg.name asc
+    `;
+
     return (
       <div className="bg-bg-light">
-        <PageBanner
-          title="Central do Membro"
-          description={`Você está logado como ${session.email}.`}
-        />
-        <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-          {latestRequest?.status === "pendente" && (
-            <p className="mx-auto max-w-md text-center text-text-neutral/80">
-              Seu cadastro de membro ainda está em análise pela diretoria.
-              Assim que for validado, esta página passa a mostrar sua área de
-              membro automaticamente.
+        <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="mb-6 flex items-start gap-3 rounded-2xl bg-secondary/90 p-5 text-primary shadow-sm">
+            <XCircle className="mt-0.5 h-6 w-6 shrink-0" />
+            <p className="text-sm leading-relaxed">
+              {latestRequest?.status === "pendente" ? (
+                <>
+                  <strong>{session.name}</strong>, seu cadastro de membro está em análise
+                  pela diretoria. Assim que for validado, você terá acesso completo à área
+                  de membro.
+                </>
+              ) : latestRequest?.status === "recusado" ? (
+                <>
+                  <strong>{session.name}</strong>, seu cadastro de membro não foi aprovado
+                  desta vez. Você pode enviar novos dados.{" "}
+                  <Link href="/central-do-membro/seja-membro" className="font-bold underline">
+                    Clique aqui
+                  </Link>
+                  .
+                </>
+              ) : (
+                <>
+                  <strong>{session.name}</strong>, você ainda não é um membro da IBCI.
+                  Preencha seus dados por completo para que a diretoria entre em contato
+                  com você. Caso queira saber como se tornar um membro da IBCI,{" "}
+                  <Link href="/central-do-membro/seja-membro" className="font-bold underline">
+                    clique aqui
+                  </Link>
+                  .
+                </>
+              )}
             </p>
-          )}
-          {latestRequest?.status === "recusado" && (
-            <div className="mx-auto max-w-md text-center text-text-neutral/80">
-              <p>Seu cadastro de membro não foi aprovado desta vez.</p>
-              <Link
-                href="/central-do-membro/cadastro"
-                className="mt-3 inline-flex items-center gap-1 font-semibold text-secondary hover:underline"
-              >
-                Enviar um novo cadastro
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          )}
-          {!latestRequest && (
-            <div className="mx-auto max-w-md text-center text-text-neutral/80">
-              <p>Você ainda não solicitou seu cadastro de membro.</p>
-              <Link
-                href="/central-do-membro/cadastro"
-                className="mt-3 inline-flex items-center gap-1 font-semibold text-secondary hover:underline"
-              >
-                Fazer cadastro
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          )}
+          </div>
+
+          <MemberProfileSummary member={{ id: session.memberId, ...member }} />
+          <MemberGroupsCard groups={groups} />
+          <DashboardCategoryTiles />
+
           <SairButton />
           <AdminAccessCard />
           <CongregationAccessCard />
