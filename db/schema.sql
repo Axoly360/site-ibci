@@ -458,6 +458,10 @@ create table if not exists volunteer_registrations (
   unique (member_id)
 );
 
+-- Em qual organização o membro está se voluntariando: null = sede (Igreja
+-- Batista Central do Ibura), ou uma das congregações/filiais.
+alter table volunteer_registrations add column if not exists congregation_id uuid references congregations(id);
+
 -- Semente única: preserva o evento que já existia no arquivo estático, com
 -- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
 insert into events

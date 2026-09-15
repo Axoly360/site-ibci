@@ -27,18 +27,20 @@ export default async function AdminServirPage({
     ? await sql`
         select volunteer_registrations.id, members.name, members.email, members.phone,
                volunteer_registrations.ministries, volunteer_registrations.note,
-               volunteer_registrations.updated_at
+               volunteer_registrations.updated_at, congregations.name as congregation_name
         from volunteer_registrations
         join members on members.id = volunteer_registrations.member_id
+        left join congregations on congregations.id = volunteer_registrations.congregation_id
         where ${ministerio} = any(volunteer_registrations.ministries)
         order by members.name asc
       `
     : await sql`
         select volunteer_registrations.id, members.name, members.email, members.phone,
                volunteer_registrations.ministries, volunteer_registrations.note,
-               volunteer_registrations.updated_at
+               volunteer_registrations.updated_at, congregations.name as congregation_name
         from volunteer_registrations
         join members on members.id = volunteer_registrations.member_id
+        left join congregations on congregations.id = volunteer_registrations.congregation_id
         order by members.name asc
       `;
 
@@ -81,6 +83,9 @@ export default async function AdminServirPage({
                 <p className="font-semibold text-text-neutral">{r.name}</p>
                 <p className="text-sm text-text-neutral/60">
                   {[r.email, r.phone].filter(Boolean).join(" · ")}
+                </p>
+                <p className="mt-1 text-xs font-semibold text-secondary">
+                  {r.congregation_name ? `Congregação ${r.congregation_name}` : "Sede"}
                 </p>
                 <p className="mt-2 flex flex-wrap gap-1.5">
                   {(r.ministries as string[]).map((m) => (

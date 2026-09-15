@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
     ? body.ministries.filter((m: unknown): m is string => MINISTRIES.includes(m as never))
     : [];
   const note = typeof body?.note === "string" ? body.note.trim() : "";
+  const congregationId = typeof body?.congregationId === "string" ? body.congregationId : "";
 
   if (ministries.length === 0) {
     return NextResponse.json(
@@ -44,11 +45,23 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  let validCongregationId: string | null = null;
+  if (congregationId) {
+    const [congregation] = await sql`
+      select id from congregations where id = ${congregationId}
+    `;
+    if (!congregation) {
+      return NextResponse.json({ error: "Organização inválida." }, { status: 400 });
+    }
+    validCongregationId = congregation.id;
+  }
+
   await sql`
-    insert into volunteer_registrations (member_id, ministries, note)
-    values (${session.memberId}, ${ministries}, ${note || null})
+    insert into volunteer_registrations (member_id, ministries, note, congregation_id)
+    values (${session.memberId}, ${ministries}, ${note || null}, ${validCongregationId})
     on conflict (member_id) do update
-      set ministries = excluded.ministries, note = excluded.note, updated_at = now()
+      set ministries = excluded.ministries, note = excluded.note,
+          congregation_id = excluded.congregation_id, updated_at = now()
   `;
 
   return NextResponse.json({ ok: true });

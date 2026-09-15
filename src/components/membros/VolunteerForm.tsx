@@ -7,14 +7,24 @@ import { CheckCircle2, HandHeart } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { MINISTRIES, MINISTRY_LINKS } from "@/lib/ministries";
 
+export interface CongregationOption {
+  id: string;
+  name: string;
+}
+
 export default function VolunteerForm({
+  congregations,
+  initialCongregationId,
   initialMinistries,
   initialNote,
 }: {
+  congregations: CongregationOption[];
+  initialCongregationId: string;
   initialMinistries: string[];
   initialNote: string;
 }) {
   const router = useRouter();
+  const [congregationId, setCongregationId] = useState(initialCongregationId);
   const [ministries, setMinistries] = useState<string[]>(initialMinistries);
   const [note, setNote] = useState(initialNote);
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
@@ -33,7 +43,7 @@ export default function VolunteerForm({
     const res = await fetch("/api/membros/servir", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ministries, note }),
+      body: JSON.stringify({ congregationId, ministries, note }),
     });
     if (res.ok) {
       setStatus("done");
@@ -48,6 +58,49 @@ export default function VolunteerForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div>
+        <p className="mb-2 text-sm font-semibold text-text-neutral">
+          Onde você quer servir?
+        </p>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <label
+            className={`flex flex-1 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
+              congregationId === ""
+                ? "border-primary bg-primary/5 font-semibold text-primary"
+                : "border-black/10 bg-white text-text-neutral"
+            }`}
+          >
+            <input
+              type="radio"
+              name="congregation"
+              checked={congregationId === ""}
+              onChange={() => setCongregationId("")}
+              className="shrink-0"
+            />
+            Igreja Batista Central do Ibura (Sede)
+          </label>
+          {congregations.map((c) => (
+            <label
+              key={c.id}
+              className={`flex flex-1 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
+                congregationId === c.id
+                  ? "border-primary bg-primary/5 font-semibold text-primary"
+                  : "border-black/10 bg-white text-text-neutral"
+              }`}
+            >
+              <input
+                type="radio"
+                name="congregation"
+                checked={congregationId === c.id}
+                onChange={() => setCongregationId(c.id)}
+                className="shrink-0"
+              />
+              Congregação {c.name}
+            </label>
+          ))}
+        </div>
+      </div>
+
       <p className="text-sm font-semibold text-text-neutral">
         Em quais ministérios você já serve ou gostaria de servir?
       </p>

@@ -24,13 +24,14 @@ export default async function ServirCadastroPage() {
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");
 
-  const [accepted, texts, [existing]] = await Promise.all([
+  const [accepted, texts, [existing], congregations] = await Promise.all([
     sql`select term_key from member_consents where member_id = ${session.memberId}`,
     getAllContent(),
     sql`
-      select ministries, note from volunteer_registrations
+      select ministries, note, congregation_id from volunteer_registrations
       where member_id = ${session.memberId}
     `,
+    sql`select id, name from congregations order by name asc`,
   ]);
 
   const acceptedKeys = new Set(accepted.map((a: { term_key: string }) => a.term_key));
@@ -65,6 +66,8 @@ export default async function ServirCadastroPage() {
         ) : (
           <Card className="p-6">
             <VolunteerForm
+              congregations={congregations}
+              initialCongregationId={existing?.congregation_id ?? ""}
               initialMinistries={existing?.ministries ?? []}
               initialNote={existing?.note ?? ""}
             />
