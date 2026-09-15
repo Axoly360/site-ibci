@@ -2,7 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BookOpen, Building2, ChevronDown, FileText, Gift, HandHeart, Heart, Users } from "lucide-react";
+import {
+  BookOpen,
+  Building2,
+  ChevronDown,
+  FileText,
+  Gift,
+  HandHeart,
+  Heart,
+  Users,
+  X,
+} from "lucide-react";
 
 export default function DashboardCategoryTiles() {
   return (
@@ -35,15 +45,7 @@ export default function DashboardCategoryTiles() {
         title="Ministério Infantil"
         subtitle="Escola de Crianças"
       />
-      <Tile
-        href="/central-do-membro/servir"
-        icon={HandHeart}
-        iconBg="bg-orange-600"
-        borderColor="border-t-orange-600"
-        titleColor="text-orange-700"
-        title="Servir"
-        subtitle="Oportunidades de Voluntariado"
-      />
+      <ServirTile />
     </div>
   );
 }
@@ -87,6 +89,73 @@ const FINANCEIRO_OPTIONS = [
   { label: "Centro de Formação", icon: BookOpen, href: "/para-voce/cursos" },
   { label: "Relatório", icon: FileText, href: "/central-do-membro/contribuicoes" },
 ];
+
+function ServirTile() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex flex-col items-center gap-2 rounded-2xl border-t-4 border-t-orange-600 bg-white p-5 text-center shadow-sm transition-shadow hover:shadow-md"
+      >
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-600 text-white">
+          <HandHeart className="h-7 w-7" />
+        </span>
+        <p className="font-heading text-sm font-bold text-orange-700 underline decoration-2 underline-offset-2">
+          Servir
+        </p>
+        <p className="text-xs text-text-neutral/60">Oportunidades de Voluntariado</p>
+      </button>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between bg-orange-600 px-6 py-4">
+              <p className="flex items-center gap-2 font-heading text-base font-bold text-white">
+                <HandHeart className="h-5 w-5" />
+                Servir na IBCI
+              </p>
+              <button type="button" onClick={() => setOpen(false)} className="text-white/80 hover:text-white">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="flex flex-col gap-3 p-6">
+              <p className="text-sm text-text-neutral/70">
+                Escolha uma das opções abaixo para prosseguir com seu voluntariado:
+              </p>
+              <Link
+                href="/central-do-membro/servir"
+                className="rounded-xl bg-orange-600 px-4 py-3.5 text-center font-bold text-white transition-colors hover:bg-orange-700"
+              >
+                Já estou servindo
+                <span className="block text-xs font-normal text-white/80">
+                  e vou informar onde
+                </span>
+              </Link>
+              <Link
+                href="/para-voce/servir"
+                className="rounded-xl border border-black/10 px-4 py-3.5 text-center font-bold text-text-neutral transition-colors hover:bg-bg-light"
+              >
+                Quero conhecer
+                <span className="block text-xs font-normal text-text-neutral/60">
+                  as oportunidades disponíveis
+                </span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 
 function FinanceiroTile() {
   const [open, setOpen] = useState(false);
