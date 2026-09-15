@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Camera, FileText, Menu, UserRound, Lock, Building2, CalendarDays, UserRoundCheck, MapPin, ShieldCheck } from "lucide-react";
+import { Camera, FileText, Menu, UserRound, Lock, Building2, CalendarDays, UserRoundCheck, MapPin, ShieldCheck, Users } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
@@ -39,6 +39,13 @@ export default async function AdminPage() {
       title: "Menu",
       description: "Categorias e subcategorias do menu do site.",
       show: hasPermission(session, "paginas"),
+    },
+    {
+      href: "/admin/grupos",
+      icon: Users,
+      title: "Grupos",
+      description: "Grupos/células da igreja e quem faz parte de cada um.",
+      show: hasPermission(session, "membros"),
     },
     {
       href: "/admin/consentimento",

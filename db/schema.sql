@@ -409,6 +409,28 @@ create table if not exists member_consents (
   unique (member_id, term_key)
 );
 
+-- Grupos/Células que a igreja organiza (reunião em casas, discipulado etc.).
+-- Gerido pelo admin (permissão "membros"); o membro só vê os grupos aos
+-- quais pertence, na Área do Membro.
+create table if not exists member_groups (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  leader_name text,
+  meeting_day text,
+  location text,
+  description text,
+  created_at timestamptz not null default now()
+);
+
+-- Vínculo membro <-> grupo. Um membro pode estar em mais de um grupo.
+create table if not exists member_group_members (
+  id uuid primary key default gen_random_uuid(),
+  group_id uuid not null references member_groups(id) on delete cascade,
+  member_id uuid not null references members(id) on delete cascade,
+  joined_at timestamptz not null default now(),
+  unique (group_id, member_id)
+);
+
 -- Semente única: preserva o evento que já existia no arquivo estático, com
 -- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
 insert into events

@@ -34,6 +34,11 @@ export default function AdminNav({ session }: { session: AdminSessionPayload }) 
             Membros
           </Link>
         )}
+        {session.permissions.includes("membros") && (
+          <Link href="/admin/grupos" className="text-primary hover:underline">
+            Grupos
+          </Link>
+        )}
         {session.permissions.includes("eventos") && (
           <Link href="/admin/eventos" className="text-primary hover:underline">
             Eventos

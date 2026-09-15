@@ -14,7 +14,8 @@ import {
 } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
-import MemberProfileSummary, { MemberGroupsBar } from "@/components/membros/MemberProfileSummary";
+import MemberProfileSummary from "@/components/membros/MemberProfileSummary";
+import MemberGroupsCard from "@/components/membros/MemberGroupsCard";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
 
@@ -135,6 +136,14 @@ export default async function AreaDoMembroPage() {
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");
 
+  const groups = await sql`
+    select mg.id, mg.name, mg.leader_name, mg.meeting_day, mg.location
+    from member_group_members mgm
+    join member_groups mg on mg.id = mgm.group_id
+    where mgm.member_id = ${session.memberId}
+    order by mg.name asc
+  `;
+
   const shortcuts = member.is_leadership
     ? [
         {
@@ -174,7 +183,7 @@ export default async function AreaDoMembroPage() {
 
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
         <MemberProfileSummary member={{ id: session.memberId, ...member }} />
-        <MemberGroupsBar />
+        <MemberGroupsCard groups={groups} />
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {shortcuts.map((shortcut) => {

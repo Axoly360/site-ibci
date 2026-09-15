@@ -1,0 +1,107 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { Trash2, UserPlus } from "lucide-react";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+
+export interface GroupMember {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export default function GroupMembersManager({
+  groupId,
+  members,
+  availableMembers,
+}: {
+  groupId: string;
+  members: GroupMember[];
+  availableMembers: GroupMember[];
+}) {
+  const router = useRouter();
+  const [memberId, setMemberId] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleAdd = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!memberId) return;
+    setLoading(true);
+    setError("");
+    const res = await fetch(`/api/admin/grupos/${groupId}/membros`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ memberId }),
+    });
+    setLoading(false);
+    if (res.ok) {
+      setMemberId("");
+      router.refresh();
+    } else {
+      const data = await res.json().catch(() => null);
+      setError(data?.error ?? "Não foi possível adicionar o membro.");
+    }
+  };
+
+  const handleRemove = async (id: string) => {
+    const res = await fetch(`/api/admin/grupos/${groupId}/membros/${id}`, {
+      method: "DELETE",
+    });
+    if (res.ok) router.refresh();
+  };
+
+  return (
+    <div className="flex flex-col gap-6">
+      <Card className="p-6">
+        <h2 className="font-heading text-lg font-semibold text-primary">
+          Adicionar membro ao grupo
+        </h2>
+        <form onSubmit={handleAdd} className="mt-4 flex flex-col gap-3 sm:flex-row">
+          <select
+            value={memberId}
+            onChange={(e) => setMemberId(e.target.value)}
+            className="w-full flex-1 rounded-lg border border-black/10 bg-bg-light px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">Selecione um membro validado</option>
+            {availableMembers.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.name} — {m.email}
+              </option>
+            ))}
+          </select>
+          <Button type="submit" disabled={loading || !memberId}>
+            <UserPlus className="h-4 w-4" />
+            {loading ? "Adicionando..." : "Adicionar"}
+          </Button>
+        </form>
+        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      </Card>
+
+      <div className="flex flex-col gap-3">
+        {members.length === 0 ? (
+          <p className="text-sm text-text-neutral/60">Nenhum membro neste grupo ainda.</p>
+        ) : (
+          members.map((m) => (
+            <Card key={m.id} className="flex items-center justify-between gap-4 p-4">
+              <div>
+                <p className="font-semibold text-text-neutral">{m.name}</p>
+                <p className="text-sm text-text-neutral/60">{m.email}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleRemove(m.id)}
+                className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700"
+              >
+                <Trash2 className="h-4 w-4" />
+                Remover
+              </button>
+            </Card>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Pencil, Phone, UserRound, Users } from "lucide-react";
+import { Pencil, Phone, UserRound } from "lucide-react";
 
 export interface MemberProfileSummaryData {
   id: string;
@@ -85,22 +85,6 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
         <Field label="Batismo" value={member.baptism_date} />
         <Field label="Há quanto tempo na IBCI" value={member.time_at_church} />
       </div>
-    </div>
-  );
-}
-
-/**
- * A IBCI ainda não tem um cadastro de Grupos/Células — este bloco só mostra
- * "Nenhum" honestamente até essa funcionalidade existir. Quando houver a
- * tabela de grupos, trocar por uma lista real vinda do banco.
- */
-export function MemberGroupsBar() {
-  return (
-    <div className="mt-4 flex items-center gap-2 rounded-2xl border-l-4 border-secondary bg-white px-5 py-4 shadow-sm">
-      <Users className="h-5 w-5 shrink-0 text-secondary" />
-      <p className="text-sm text-text-neutral">
-        <span className="font-bold text-primary">Meus Grupos:</span> Nenhum
-      </p>
     </div>
   );
 }
