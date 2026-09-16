@@ -9,7 +9,7 @@ interface InstitutionalVideoSectionProps {
 /** Vídeo institucional da igreja. */
 export default function InstitutionalVideoSection({
   title = "Conheça a IBCI",
-  subtitle = "Aqui vamos usar um vídeo institucional da igreja.",
+  subtitle = "Um pouco da nossa história e da nossa comunidade de fé.",
   videoUrl = "https://www.youtube.com/watch?v=6QYUSWm85gY",
 }: InstitutionalVideoSectionProps) {
   const videoId = extractYouTubeId(videoUrl);

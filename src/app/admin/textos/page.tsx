@@ -51,7 +51,7 @@ const sectionsByKey: Record<
     titleKey: "home.conhecaIbci.title",
     subtitleKey: "home.conhecaIbci.subtitle",
     defaultTitle: "Conheça a IBCI",
-    defaultSubtitle: "Aqui vamos usar um vídeo institucional da igreja.",
+    defaultSubtitle: "Um pouco da nossa história e da nossa comunidade de fé.",
   },
 };
 

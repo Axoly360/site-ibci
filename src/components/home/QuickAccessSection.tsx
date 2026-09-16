@@ -40,7 +40,8 @@ export default function QuickAccessSection({
         <p className="mt-3 text-text-neutral/80">{subtitle}</p>
       </div>
 
-      <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
+      <div className="relative mt-12">
+      <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
         {cards.map((card) => {
           const Icon = QUICK_ACCESS_ICONS[card.icon] ?? QUICK_ACCESS_ICONS.Clock;
           const content = (
@@ -69,7 +70,7 @@ export default function QuickAccessSection({
                 href={card.linkUrl}
                 target={card.external ? "_blank" : undefined}
                 rel={card.external ? "noopener noreferrer" : undefined}
-                className="block h-full w-64 shrink-0 snap-start sm:w-auto sm:shrink"
+                className="block h-full w-[85%] shrink-0 snap-start sm:w-auto sm:shrink"
               >
                 {content}
               </a>
@@ -82,7 +83,7 @@ export default function QuickAccessSection({
                 key={card.id}
                 type="button"
                 onClick={() => setPixOpen(true)}
-                className="block h-full w-64 shrink-0 snap-start text-left sm:w-auto sm:shrink"
+                className="block h-full w-[85%] shrink-0 snap-start text-left sm:w-auto sm:shrink"
               >
                 {content}
               </button>
@@ -90,11 +91,16 @@ export default function QuickAccessSection({
           }
 
           return (
-            <div key={card.id} className="h-full w-64 shrink-0 snap-start sm:w-auto sm:shrink">
+            <div key={card.id} className="h-full w-[85%] shrink-0 snap-start sm:w-auto sm:shrink">
               {content}
             </div>
           );
         })}
+      </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-bg-light to-transparent sm:hidden"
+      />
       </div>
 
       {pixOpen && (
