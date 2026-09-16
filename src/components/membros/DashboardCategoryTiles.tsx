@@ -257,6 +257,12 @@ function MaisTile({ isLeadership }: { isLeadership: boolean }) {
       href: "/central-do-membro/consentimento",
       external: false,
     },
+    {
+      label: "Ajuda",
+      icon: BookOpen,
+      href: "/central-do-membro/ajuda",
+      external: false,
+    },
   ];
 
   return (

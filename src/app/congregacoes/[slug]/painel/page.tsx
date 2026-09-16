@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Send, Building2, ArrowRight } from "lucide-react";
+import { Send, Building2, ArrowRight, BookOpen } from "lucide-react";
 import Card from "@/components/ui/Card";
 import { getCongregationSession } from "@/lib/congregation-session";
 
@@ -35,6 +35,13 @@ export default async function CongregacaoPainelPage({
       description: "Registre as entradas e saídas da congregação, com comprovante.",
       cta: "Ver financeiro",
       href: `/congregacoes/${slug}/financeiro`,
+    },
+    {
+      icon: BookOpen,
+      title: "Ajuda",
+      description: "Como usar o login, o financeiro, as solicitações e o orçamento.",
+      cta: "Ver ajuda",
+      href: `/congregacoes/${slug}/ajuda`,
     },
   ];
 

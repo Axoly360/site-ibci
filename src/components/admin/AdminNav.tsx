@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronDown, LogOut } from "lucide-react";
+import { BookOpen, ChevronDown, LogOut } from "lucide-react";
 import type { AdminSessionPayload, Permission } from "@/lib/admin-session";
 
 interface NavItem {
@@ -103,6 +103,15 @@ export default function AdminNav({ session }: { session: AdminSessionPayload }) 
         <span>
           {session.name} · {session.role}
         </span>
+        <Link
+          href="/admin/ajuda"
+          aria-label="Ajuda"
+          title="Ajuda"
+          className="flex items-center gap-1.5 font-semibold text-text-neutral/70 hover:text-primary"
+        >
+          <BookOpen className="h-4 w-4" />
+          Ajuda
+        </Link>
         <form action="/api/admin/sair" method="POST">
           <button
             type="submit"
