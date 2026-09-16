@@ -4,6 +4,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import WeeklyScheduleSection from "@/components/home/WeeklyScheduleSection";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
+import { getWeeklySchedule } from "@/lib/weeklySchedule";
 
 export const metadata: Metadata = {
   title: "Escala de Cultos & Avisos | IBCI - Igreja Batista Central do Ibura",
@@ -19,13 +20,15 @@ export default async function ProgramacaoMembroPage() {
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");
 
+  const items = await getWeeklySchedule();
+
   return (
     <div className="bg-bg-light">
       <PageBanner
         title="Escala de Cultos & Avisos"
         description="Programação da semana e os principais avisos da liderança."
       />
-      <WeeklyScheduleSection />
+      <WeeklyScheduleSection items={items} />
     </div>
   );
 }
