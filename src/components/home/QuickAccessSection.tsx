@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Clock, MapPin, Heart, Gift, X, Copy, Check } from "lucide-react";
+import { Copy, Check, X } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
+import { QUICK_ACCESS_ICONS } from "@/lib/quickAccessIcons";
+import type { QuickAccessCard } from "@/lib/quickAccess";
 
 interface QuickAccessSectionProps {
   title?: string;
   subtitle?: string;
+  cards: QuickAccessCard[];
 }
 
 export default function QuickAccessSection({
   title = "Acesso Rápido",
   subtitle = "Tudo o que você precisa saber sobre a nossa igreja, em um só lugar.",
+  cards,
 }: QuickAccessSectionProps) {
   const [pixOpen, setPixOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -27,37 +31,6 @@ export default function QuickAccessSection({
     }
   };
 
-  const cards = [
-    {
-      title: "Horários dos Cultos",
-      description: `Domingo: 8h30, EBD 10h e 18h. Quarta: Oração 19h.`,
-      icon: Clock,
-    },
-    {
-      title: "Localização",
-      description: churchInfo.address.full,
-      icon: MapPin,
-      href: churchInfo.address.mapsUrl,
-      external: true,
-      cta: "Como chegar",
-    },
-    {
-      title: "Pedido de Oração",
-      description: "Está passando por um momento difícil? Fale conosco.",
-      icon: Heart,
-      href: churchInfo.social.whatsapp,
-      external: true,
-      cta: "Enviar no WhatsApp",
-    },
-    {
-      title: "Dízimos e Ofertas",
-      description: "Contribua com a obra de Deus através da nossa chave PIX.",
-      icon: Gift,
-      cta: "Ver chave PIX",
-      onClick: () => setPixOpen(true),
-    },
-  ];
-
   return (
     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -69,7 +42,7 @@ export default function QuickAccessSection({
 
       <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
         {cards.map((card) => {
-          const Icon = card.icon;
+          const Icon = QUICK_ACCESS_ICONS[card.icon] ?? QUICK_ACCESS_ICONS.Clock;
           const content = (
             <Card className="flex h-full flex-col items-start gap-4 p-6">
               <div className="rounded-xl bg-primary/5 p-3 text-primary">
@@ -81,19 +54,19 @@ export default function QuickAccessSection({
               <p className="flex-1 text-sm text-text-neutral/80">
                 {card.description}
               </p>
-              {card.cta && (
+              {card.ctaLabel && (
                 <span className="text-sm font-semibold text-secondary">
-                  {card.cta} →
+                  {card.ctaLabel} →
                 </span>
               )}
             </Card>
           );
 
-          if (card.href) {
+          if (card.actionType === "link" && card.linkUrl) {
             return (
               <a
-                key={card.title}
-                href={card.href}
+                key={card.id}
+                href={card.linkUrl}
                 target={card.external ? "_blank" : undefined}
                 rel={card.external ? "noopener noreferrer" : undefined}
                 className="block h-full w-64 shrink-0 snap-start sm:w-auto sm:shrink"
@@ -103,15 +76,23 @@ export default function QuickAccessSection({
             );
           }
 
+          if (card.actionType === "pix") {
+            return (
+              <button
+                key={card.id}
+                type="button"
+                onClick={() => setPixOpen(true)}
+                className="block h-full w-64 shrink-0 snap-start text-left sm:w-auto sm:shrink"
+              >
+                {content}
+              </button>
+            );
+          }
+
           return (
-            <button
-              key={card.title}
-              type="button"
-              onClick={card.onClick}
-              className="block h-full w-64 shrink-0 snap-start text-left sm:w-auto sm:shrink"
-            >
+            <div key={card.id} className="h-full w-64 shrink-0 snap-start sm:w-auto sm:shrink">
               {content}
-            </button>
+            </div>
           );
         })}
       </div>

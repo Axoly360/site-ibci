@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Camera, FileText, Menu, UserRound, Lock, Building2, CalendarDays, UserRoundCheck, MapPin, ShieldCheck, Users, HandHeart, Tv } from "lucide-react";
+import { Camera, FileText, Menu, UserRound, Lock, Building2, CalendarDays, UserRoundCheck, MapPin, ShieldCheck, Users, HandHeart, Tv, Clock } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
@@ -52,6 +52,13 @@ export default async function AdminPage() {
       icon: Tv,
       title: "Mensagens",
       description: "Vídeos do YouTube da seção Últimas Mensagens, na home.",
+      show: hasPermission(session, "paginas"),
+    },
+    {
+      href: "/admin/acesso-rapido",
+      icon: Clock,
+      title: "Acesso Rápido",
+      description: "Cards da seção Acesso Rápido, na home.",
       show: hasPermission(session, "paginas"),
     },
     {

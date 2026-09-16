@@ -11,6 +11,7 @@ import { getContentBlocks } from "@/lib/contentBlocks";
 import { getEvents } from "@/lib/events";
 import { getWeeklySchedule } from "@/lib/weeklySchedule";
 import { getSermonVideos } from "@/lib/sermonVideos";
+import { getQuickAccessCards } from "@/lib/quickAccess";
 import { heroBanners } from "@/data/heroBanners";
 import {
   HOME_SECTION_ORDER_KEY,
@@ -20,13 +21,15 @@ import {
 import type { ReactNode } from "react";
 
 export default async function Home() {
-  const [texts, blocks, eventsList, scheduleItems, sermonVideos] = await Promise.all([
-    getAllContent(),
-    getContentBlocks(),
-    getEvents(),
-    getWeeklySchedule(),
-    getSermonVideos(),
-  ]);
+  const [texts, blocks, eventsList, scheduleItems, sermonVideos, quickAccessCards] =
+    await Promise.all([
+      getAllContent(),
+      getContentBlocks(),
+      getEvents(),
+      getWeeklySchedule(),
+      getSermonVideos(),
+      getQuickAccessCards(),
+    ]);
 
   const mergedHeroBanners = heroBanners.map((banner) => {
     const override = blocks[banner.id];
@@ -71,6 +74,7 @@ export default async function Home() {
         key="acessoRapido"
         title={texts["home.acessoRapido.title"]}
         subtitle={texts["home.acessoRapido.subtitle"]}
+        cards={quickAccessCards}
       />
     ),
     ultimasMensagens: (

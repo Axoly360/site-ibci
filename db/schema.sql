@@ -511,6 +511,34 @@ select * from (values
 ) as seed(youtube_id, title, position)
 where not exists (select 1 from sermon_videos);
 
+-- Cards da seção Acesso Rápido (home), geridos pelo admin (antes viviam
+-- fixos no componente). action_type define o comportamento do card:
+-- "link" (abre link_url), "pix" (abre o modal com a chave PIX já
+-- existente em churchInfo) ou "info" (só texto, sem ação).
+create table if not exists quick_access_cards (
+  id uuid primary key default gen_random_uuid(),
+  icon text not null default 'Clock',
+  title text not null,
+  description text not null,
+  action_type text not null default 'link' check (action_type in ('link', 'pix', 'info')),
+  link_url text,
+  external boolean not null default true,
+  cta_label text,
+  position integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+-- Semente única: preserva os 4 cards que já existiam no componente.
+insert into quick_access_cards
+  (icon, title, description, action_type, link_url, external, cta_label, position)
+select * from (values
+  ('Clock', 'Horários dos Cultos', 'Domingo: 8h30, EBD 10h e 18h. Quarta: Oração 19h.', 'info', null::text, true, null::text, 0),
+  ('MapPin', 'Localização', 'Av. Rio Grande, 72 - COHAB, Recife - PE, 51280-030', 'link', 'https://maps.app.goo.gl/FLToSDAYoKsqYJ656', true, 'Como chegar', 1),
+  ('Heart', 'Pedido de Oração', 'Está passando por um momento difícil? Fale conosco.', 'link', 'https://wa.me/5581988953552', true, 'Enviar no WhatsApp', 2),
+  ('Gift', 'Dízimos e Ofertas', 'Contribua com a obra de Deus através da nossa chave PIX.', 'pix', null::text, true, 'Ver chave PIX', 3)
+) as seed(icon, title, description, action_type, link_url, external, cta_label, position)
+where not exists (select 1 from quick_access_cards);
+
 -- Semente única: preserva o evento que já existia no arquivo estático, com
 -- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
 insert into events
