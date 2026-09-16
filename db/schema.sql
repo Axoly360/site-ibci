@@ -489,6 +489,28 @@ select * from (values
 ) as seed(day, title, time, description, position)
 where not exists (select 1 from weekly_schedule_items);
 
+-- Vídeos de mensagens (Últimas Mensagens, home), geridos pelo admin (antes
+-- viviam num arquivo estático em src/data/sermonVideos.ts).
+create table if not exists sermon_videos (
+  id uuid primary key default gen_random_uuid(),
+  youtube_id text not null,
+  title text not null,
+  position integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+-- Semente única: preserva os vídeos que já existiam no arquivo estático.
+insert into sermon_videos (youtube_id, title, position)
+select * from (values
+  ('J_ptMSUOQkY', 'Encerramento Conf. de Aniv. MM IBCI | Domingo | 30/08/2026', 0),
+  ('JiRY1iYdr6w', 'Conferência MM | Abertura | 29/08/2026', 1),
+  ('DijBuTTud0k', 'Culto de Matinal | Manhã | Conferência Mulheres 30/08/2026', 2),
+  ('RseubSIPJ6c', 'Culto Noturno | Domingo | 02/08/2026', 3),
+  ('KvdjY56X5Ww', 'Encontrão Desperta Débora | Sábado | 04/07/2026', 4),
+  ('fNH9JG6DIuE', 'Mensagem', 5)
+) as seed(youtube_id, title, position)
+where not exists (select 1 from sermon_videos);
+
 -- Semente única: preserva o evento que já existia no arquivo estático, com
 -- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
 insert into events

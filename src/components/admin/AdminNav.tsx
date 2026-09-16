@@ -30,6 +30,11 @@ export default function AdminNav({ session }: { session: AdminSessionPayload }) 
           </Link>
         )}
         {session.permissions.includes("paginas") && (
+          <Link href="/admin/mensagens" className="text-primary hover:underline">
+            Mensagens
+          </Link>
+        )}
+        {session.permissions.includes("paginas") && (
           <Link href="/admin/consentimento" className="text-primary hover:underline">
             Consentimento
           </Link>

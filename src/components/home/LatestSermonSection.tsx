@@ -1,17 +1,19 @@
 import { Tv } from "lucide-react";
 import { churchInfo } from "@/data/churchInfo";
-import { sermonVideos } from "@/data/sermonVideos";
 import Button from "@/components/ui/Button";
 import Carousel from "@/components/ui/Carousel";
+import type { SermonVideo } from "@/lib/sermonVideos";
 
 interface LatestSermonSectionProps {
   title?: string;
   subtitle?: string;
+  videos: SermonVideo[];
 }
 
 export default function LatestSermonSection({
   title = "Últimas Mensagens",
   subtitle = "Assista às transmissões mais recentes da nossa igreja.",
+  videos,
 }: LatestSermonSectionProps) {
   return (
     <section id="mensagens" className="bg-primary/[0.03] py-20">
@@ -25,8 +27,8 @@ export default function LatestSermonSection({
 
         <div className="mt-10">
           <Carousel>
-            {sermonVideos.length > 0
-              ? sermonVideos.map((video) => (
+            {videos.length > 0
+              ? videos.map((video) => (
                   <a
                     key={video.id}
                     href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
