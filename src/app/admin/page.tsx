@@ -41,6 +41,13 @@ export default async function AdminPage() {
       show: hasPermission(session, "paginas"),
     },
     {
+      href: "/admin/programacao",
+      icon: CalendarDays,
+      title: "Programação",
+      description: "Itens da seção Programação da Semana, na home.",
+      show: hasPermission(session, "paginas"),
+    },
+    {
       href: "/admin/servir",
       icon: HandHeart,
       title: "Servir",

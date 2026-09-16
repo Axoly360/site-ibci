@@ -462,6 +462,33 @@ create table if not exists volunteer_registrations (
 -- Batista Central do Ibura), ou uma das congregações/filiais.
 alter table volunteer_registrations add column if not exists congregation_id uuid references congregations(id);
 
+-- Programação da Semana (home), geridas pelo admin (antes viviam num
+-- arquivo estático em churchInfo.ts).
+create table if not exists weekly_schedule_items (
+  id uuid primary key default gen_random_uuid(),
+  day text not null,
+  title text not null,
+  time text not null,
+  description text not null,
+  position integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+-- Semente única: preserva os itens que já existiam no arquivo estático.
+insert into weekly_schedule_items (day, title, time, description, position)
+select * from (values
+  ('Terça-feira', 'Visitação', '14h00', 'Equipe de visitação levando cuidado e a Palavra aos membros e à comunidade.', 0),
+  ('Quarta-feira', 'Culto de Oração', '19h00', 'Ensino da Palavra e tempo de oração em comunhão.', 1),
+  ('Quarta-feira', 'Uniões', '20h00', 'Encontro das uniões da igreja em estudo e comunhão.', 2),
+  ('Quinta-feira', 'Jardim de Oração', '14h30', 'Momento de intercessão e oração em comunhão.', 3),
+  ('Sexta-feira', 'Melhor Idade', '19h00', 'Encontro do ministério da Melhor Idade.', 4),
+  ('Sexta-feira', 'Mensageiras do Rei / Embaixadores do Rei', '19h00', 'Encontro dos ministérios infanto-juvenis Mensageiras do Rei e Embaixadores do Rei.', 5),
+  ('Domingo', 'Culto Matinal', '08h30', 'Culto de celebração no período da manhã.', 6),
+  ('Domingo', 'Escola Bíblica Dominical', '10h00', 'Estudo bíblico em classes para todas as idades.', 7),
+  ('Domingo', 'Culto Noturno', '18h00', 'Momento de louvor, adoração e pregação da Palavra.', 8)
+) as seed(day, title, time, description, position)
+where not exists (select 1 from weekly_schedule_items);
+
 -- Semente única: preserva o evento que já existia no arquivo estático, com
 -- o mesmo slug (para não quebrar inscrições/check-ins já feitos).
 insert into events

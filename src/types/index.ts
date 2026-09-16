@@ -6,13 +6,6 @@ export interface ServiceTime {
   time: string;
 }
 
-export interface WeeklyScheduleItem {
-  day: string;
-  title: string;
-  time: string;
-  description: string;
-}
-
 export interface SocialLinks {
   youtube: string;
   instagram: string;
@@ -36,7 +29,6 @@ export interface ChurchInfo {
     mapsUrl: string;
   };
   serviceTimes: ServiceTime[];
-  weeklySchedule: WeeklyScheduleItem[];
   cnpj: string;
   pix: {
     /** Chave formatada, usada para exibição (ex.: "11.238.163/0001-08"). */

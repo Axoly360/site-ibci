@@ -1,17 +1,19 @@
 import { CalendarDays } from "lucide-react";
-import { churchInfo } from "@/data/churchInfo";
 import Card from "@/components/ui/Card";
 import Carousel from "@/components/ui/Carousel";
+import type { WeeklyScheduleItem } from "@/lib/weeklySchedule";
 
 interface WeeklyScheduleSectionProps {
   title?: string;
   subtitle?: string;
+  items: WeeklyScheduleItem[];
 }
 
 export default function WeeklyScheduleSection({
   title = "Programação da Semana",
   subtitle = "Participe dos nossos encontros e cresça em comunhão com a igreja.",
-}: WeeklyScheduleSectionProps = {}) {
+  items,
+}: WeeklyScheduleSectionProps) {
   return (
     <section id="cultos" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -23,8 +25,8 @@ export default function WeeklyScheduleSection({
 
       <div className="mt-12">
         <Carousel>
-          {churchInfo.weeklySchedule.map((item) => (
-            <Card key={`${item.day}-${item.title}`} className="w-64 shrink-0 p-6 sm:w-72">
+          {items.map((item) => (
+            <Card key={item.id} className="w-64 shrink-0 p-6 sm:w-72">
               <div className="flex items-center gap-2 text-secondary">
                 <CalendarDays className="h-5 w-5" />
                 <span className="text-xs font-semibold uppercase tracking-wide">

@@ -9,6 +9,7 @@ import InstitutionalVideoSection from "@/components/home/InstitutionalVideoSecti
 import { getAllContent } from "@/lib/content";
 import { getContentBlocks } from "@/lib/contentBlocks";
 import { getEvents } from "@/lib/events";
+import { getWeeklySchedule } from "@/lib/weeklySchedule";
 import { heroBanners } from "@/data/heroBanners";
 import {
   HOME_SECTION_ORDER_KEY,
@@ -18,10 +19,11 @@ import {
 import type { ReactNode } from "react";
 
 export default async function Home() {
-  const [texts, blocks, eventsList] = await Promise.all([
+  const [texts, blocks, eventsList, scheduleItems] = await Promise.all([
     getAllContent(),
     getContentBlocks(),
     getEvents(),
+    getWeeklySchedule(),
   ]);
 
   const mergedHeroBanners = heroBanners.map((banner) => {
@@ -89,6 +91,7 @@ export default async function Home() {
         key="programacaoSemana"
         title={texts["home.programacaoSemana.title"]}
         subtitle={texts["home.programacaoSemana.subtitle"]}
+        items={scheduleItems}
       />
     ),
     conhecaIbci: (
