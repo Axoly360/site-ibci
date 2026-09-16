@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil, Plus, Trash2, Tv, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2, Tv, X } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 
@@ -20,6 +20,15 @@ export default function SermonVideosManager({ videos }: { videos: SermonVideoRow
   const handleRemove = async (id: string) => {
     if (!confirm("Remover este vídeo da seção Últimas Mensagens?")) return;
     const res = await fetch(`/api/admin/mensagens/${id}`, { method: "DELETE" });
+    if (res.ok) router.refresh();
+  };
+
+  const handleMove = async (id: string, direction: "up" | "down") => {
+    const res = await fetch(`/api/admin/mensagens/${id}/mover`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ direction }),
+    });
     if (res.ok) router.refresh();
   };
 
@@ -47,7 +56,7 @@ export default function SermonVideosManager({ videos }: { videos: SermonVideoRow
       {videos.length === 0 ? (
         <p className="text-sm text-text-neutral/60">Nenhum vídeo cadastrado ainda.</p>
       ) : (
-        videos.map((video) =>
+        videos.map((video, index) =>
           editingId === video.id ? (
             <VideoFormCard
               key={video.id}
@@ -80,6 +89,26 @@ export default function SermonVideosManager({ videos }: { videos: SermonVideoRow
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-4">
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => handleMove(video.id, "up")}
+                    disabled={index === 0}
+                    aria-label="Mover vídeo para a esquerda"
+                    className="rounded-lg p-1.5 text-text-neutral/50 hover:bg-black/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleMove(video.id, "down")}
+                    disabled={index === videos.length - 1}
+                    aria-label="Mover vídeo para a direita"
+                    className="rounded-lg p-1.5 text-text-neutral/50 hover:bg-black/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
                 <button
                   type="button"
                   onClick={() => setEditingId(video.id)}

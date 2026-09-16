@@ -29,13 +29,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const [{ max_position }] = await sql`
-    select coalesce(max(position), -1) as max_position from sermon_videos
+  const [{ min_position }] = await sql`
+    select coalesce(min(position), 1) as min_position from sermon_videos
   `;
 
   await sql`
     insert into sermon_videos (youtube_id, title, position)
-    values (${youtubeId}, ${title}, ${max_position + 1})
+    values (${youtubeId}, ${title}, ${min_position - 1})
   `;
 
   revalidatePath("/");
