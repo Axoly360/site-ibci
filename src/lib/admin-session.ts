@@ -6,7 +6,8 @@ const SESSION_MAX_AGE_SECONDS = 60 * 60 * 12; // 12 horas
 
 export const PERMISSIONS = {
   banners: "Banners",
-  paginas: "Páginas & Textos",
+  paginas: "Páginas & Conteúdo Visual",
+  documentos: "Documentos & Consentimento",
   eventos: "Eventos",
   membros: "Membros (aprovar cadastros)",
   financeiro: "Financeiro (dízimos, ofertas e comprovantes)",
@@ -17,10 +18,33 @@ export const PERMISSIONS = {
 
 export type Permission = keyof typeof PERMISSIONS;
 
+/**
+ * Setor de cada permissão — só para agrupar visualmente o painel
+ * (/admin) e as telas de administradores. Não afeta o controle de
+ * acesso em si, que continua sendo checado por permissão individual.
+ */
+export const PERMISSION_SECTOR: Record<Permission, string> = {
+  banners: "Mídias",
+  paginas: "Mídias",
+  documentos: "Secretaria",
+  eventos: "Secretaria",
+  membros: "Secretaria",
+  visitantes: "Secretaria",
+  financeiro: "Financeiro",
+  congregacoes: "Congregações",
+  admins: "Administração",
+};
+
+/**
+ * 5 acessos iniciais da IBCI, um por setor responsável. Cada um só tem as
+ * permissões do seu setor (ver PERMISSION_SECTOR) — Administrador geral
+ * continua com tudo.
+ */
 export const ROLES: Record<string, Permission[]> = {
   "Administrador geral": [
     "banners",
     "paginas",
+    "documentos",
     "eventos",
     "membros",
     "financeiro",
@@ -28,12 +52,10 @@ export const ROLES: Record<string, Permission[]> = {
     "congregacoes",
     "admins",
   ],
-  "Editor de Conteúdo": ["banners", "paginas"],
-  "Gestor de Eventos": ["eventos"],
-  "Validador de Cadastros": ["membros"],
+  "Mídias": ["banners", "paginas"],
+  "Secretária": ["documentos", "eventos", "membros", "visitantes"],
   "Financeiro": ["financeiro"],
-  "Recepção/Ação Social": ["visitantes"],
-  "Supervisor de Congregações": ["congregacoes"],
+  "Congregação": ["congregacoes"],
 };
 
 export interface AdminSessionPayload {

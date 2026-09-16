@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default async function AdminConsentimentoPage() {
   const session = await getAdminSession();
   if (!session) redirect("/admin/entrar");
-  if (!hasPermission(session, "paginas")) redirect("/admin");
+  if (!hasPermission(session, "documentos")) redirect("/admin");
 
   const texts = await getAllContent();
 

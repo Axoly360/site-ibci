@@ -8,7 +8,7 @@ const DOC_TYPES = ["estatuto", "regimento"] as const;
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSession();
-  if (!hasPermission(session, "paginas")) {
+  if (!hasPermission(session, "documentos")) {
     return NextResponse.json({ error: "Sem permissão." }, { status: 403 });
   }
 
