@@ -589,7 +589,7 @@ export default async function AdminMembroDetalhePage({
                         }`}
                       >
                         {f.relationship}
-                        {isChild && age !== null && age <= 11 ? " · Ministério Infantil" : ""}
+                        {isChild && age !== null && age <= 12 ? " · Ministério Infantil" : ""}
                       </span>
                     </div>
                   );

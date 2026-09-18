@@ -43,11 +43,14 @@ export default async function AdminCriancasPage({
   const params = await searchParams;
   const nome = params.nome?.trim() || null;
 
+  const IDADE_MAXIMA = 12;
+
   // Toda criança cadastrada pelos membros no "Grupo Familiar"
   // (relationship = 'Filho(a)'), com o responsável e contato, para o
   // Ministério Infantil saber quantas crianças a igreja tem e como
-  // contatar a família.
-  const criancas = await sql`
+  // contatar a família. O cálculo de idade é em JS (calcAge), então o
+  // corte por idade também é feito depois da consulta, não no SQL.
+  const filhosCadastrados = await sql`
     select member_children.id, member_children.name, member_children.birthdate,
            member_children.sex, members.id as member_id, members.name as member_name,
            members.phone as member_phone
@@ -58,12 +61,20 @@ export default async function AdminCriancasPage({
     order by member_children.birthdate asc nulls last, member_children.name asc
   `;
 
+  // Sem data de nascimento a idade é desconhecida — mantém na lista (não dá
+  // pra afirmar que passou da idade do Ministério Infantil) em vez de
+  // esconder a criança por falta de dado.
+  const criancas = filhosCadastrados.filter((c) => {
+    const age = calcAge(c.birthdate);
+    return age === null || age <= IDADE_MAXIMA;
+  });
+
   return (
     <div className="bg-bg-light">
       <AdminNav session={session} />
       <PageBanner
         title="Ministério Infantil"
-        description="Todas as crianças cadastradas pelos membros no Grupo Familiar, com o responsável e o contato para a igreja organizar as atividades infantis."
+        description="Crianças de até 12 anos cadastradas pelos membros no Grupo Familiar, com o responsável e o contato para a igreja organizar as atividades infantis."
       />
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <Link
@@ -77,7 +88,7 @@ export default async function AdminCriancasPage({
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <h2 className="flex items-center gap-2 font-heading text-lg font-semibold text-primary">
               <Baby className="h-5 w-5" />
-              Crianças cadastradas ({criancas.length})
+              Crianças até {IDADE_MAXIMA} anos ({criancas.length})
             </h2>
             <form className="flex items-end gap-2" method="get">
               <input
