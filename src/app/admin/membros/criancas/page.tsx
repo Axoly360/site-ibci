@@ -26,6 +26,77 @@ function calcAge(birthdate: string | null): number | null {
   return age;
 }
 
+/** Ignora acentos, caixa e espaços extras para comparar nomes de criança
+ * cadastrados por membros diferentes (ex.: pai e mãe, cada um com sua
+ * própria conta) sem depender de digitação idêntica. */
+function normalizeName(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+}
+
+interface FilhoCadastrado {
+  id: string;
+  name: string;
+  birthdate: string | null;
+  sex: string | null;
+  member_id: string;
+  member_name: string;
+  member_phone: string | null;
+}
+
+interface Responsavel {
+  memberId: string;
+  memberName: string;
+  memberPhone: string | null;
+}
+
+interface CriancaAgregada {
+  id: string;
+  name: string;
+  birthdate: string | null;
+  sex: string | null;
+  responsaveis: Responsavel[];
+}
+
+/**
+ * Um mesmo filho pode ser cadastrado mais de uma vez no Grupo Familiar —
+ * cada responsável (pai, mãe) tem sua própria conta e cadastra a mesma
+ * criança de forma independente. Para o Ministério Infantil, isso deve
+ * contar como UMA criança só, com todos os responsáveis listados, em vez de
+ * duplicar a linha. O critério de "é a mesma criança" é nome (sem acento,
+ * caixa ou espaços) + data de nascimento idêntica.
+ */
+function deduplicarCriancas(filhos: FilhoCadastrado[]): CriancaAgregada[] {
+  const porChave = new Map<string, CriancaAgregada>();
+  for (const f of filhos) {
+    const chave = `${normalizeName(f.name)}|${f.birthdate ?? ""}`;
+    const existente = porChave.get(chave);
+    const responsavel: Responsavel = {
+      memberId: f.member_id,
+      memberName: f.member_name,
+      memberPhone: f.member_phone,
+    };
+    if (existente) {
+      if (!existente.responsaveis.some((r) => r.memberId === responsavel.memberId)) {
+        existente.responsaveis.push(responsavel);
+      }
+    } else {
+      porChave.set(chave, {
+        id: f.id,
+        name: f.name,
+        birthdate: f.birthdate,
+        sex: f.sex,
+        responsaveis: [responsavel],
+      });
+    }
+  }
+  return Array.from(porChave.values());
+}
+
 export default async function AdminCriancasPage({
   searchParams,
 }: {
@@ -63,7 +134,7 @@ export default async function AdminCriancasPage({
   // Sem data de nascimento a idade é desconhecida — mantém na lista (não dá
   // pra afirmar que passou da idade do Ministério Infantil) em vez de
   // esconder a criança por falta de dado.
-  const criancas = filhosCadastrados
+  const criancas = deduplicarCriancas(filhosCadastrados)
     .filter((c) => {
       const age = calcAge(c.birthdate);
       return age === null || age <= IDADE_MAXIMA;
@@ -156,15 +227,22 @@ export default async function AdminCriancasPage({
                         </td>
                         <td className="py-3 pr-4 text-text-neutral/70">{c.sex || "—"}</td>
                         <td className="py-3 pr-4 text-text-neutral/80">
-                          <Link
-                            href={`/admin/membros/${c.member_id}`}
-                            className="font-semibold text-secondary hover:underline"
-                          >
-                            {c.member_name}
-                          </Link>
+                          {c.responsaveis.map((r, i) => (
+                            <span key={r.memberId}>
+                              {i > 0 && ", "}
+                              <Link
+                                href={`/admin/membros/${r.memberId}`}
+                                className="font-semibold text-secondary hover:underline"
+                              >
+                                {r.memberName}
+                              </Link>
+                            </span>
+                          ))}
                         </td>
                         <td className="py-3 pr-4 text-text-neutral/70">
-                          {c.member_phone || "—"}
+                          {Array.from(
+                            new Set(c.responsaveis.map((r) => r.memberPhone).filter(Boolean))
+                          ).join(" / ") || "—"}
                         </td>
                       </tr>
                     );
