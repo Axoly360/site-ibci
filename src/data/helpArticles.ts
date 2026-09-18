@@ -357,12 +357,13 @@ const membroArticles: HelpArticle[] = [
   },
   {
     slug: "membro-filhos",
-    title: "Ministério Infantil (Filhos)",
+    title: "Grupo Familiar",
     audience: "membro",
-    category: "Filhos",
-    tags: ["filhos", "crianças", "ministério infantil"],
+    category: "Grupo Familiar",
+    tags: ["familia", "filhos", "crianças", "cônjuge", "ministério infantil"],
     blocks: [
-      p("Em Ministério Infantil você cadastra seus filhos (nome, data de nascimento, sexo) para facilitar a entrada deles nas atividades infantis durante os cultos."),
+      p("Em Grupo Familiar você cadastra os familiares que também congregam na IBCI — cônjuge, filhos e outros — informando nome, parentesco, data de nascimento e sexo."),
+      p("Cadastrar os filhos aqui facilita a entrada deles nas atividades do Ministério Infantil durante os cultos, e ajuda a diretoria a te conhecer melhor."),
       p("Dá pra editar ou remover um cadastro a qualquer momento."),
     ],
   },

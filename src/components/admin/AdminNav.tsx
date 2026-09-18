@@ -29,6 +29,7 @@ const SECTORS: NavSector[] = [
     name: "Secretaria",
     items: [
       { href: "/admin/membros", label: "Membros", permission: "membros" },
+      { href: "/admin/membros/criancas", label: "Ministério Infantil", permission: "membros" },
       { href: "/admin/grupos", label: "Grupos", permission: "membros" },
       { href: "/admin/servir", label: "Servir", permission: "membros" },
       { href: "/admin/visitantes", label: "Visitantes", permission: "visitantes" },

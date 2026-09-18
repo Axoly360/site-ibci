@@ -39,6 +39,19 @@ function formatCurrency(value: string | number) {
   return Number(value).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+function calcAge(birthdate: string | null): number | null {
+  if (!birthdate) return null;
+  const parsed = new Date(birthdate);
+  if (Number.isNaN(parsed.getTime())) return null;
+  const today = new Date();
+  let age = today.getUTCFullYear() - parsed.getUTCFullYear();
+  const monthDiff = today.getUTCMonth() - parsed.getUTCMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getUTCDate() < parsed.getUTCDate())) {
+    age -= 1;
+  }
+  return age;
+}
+
 function SectionCard({
   icon,
   title,
@@ -122,7 +135,7 @@ export default async function AdminMembroDetalhePage({
     lancamentos,
     agendamentos,
     inscricoesEventos,
-    filhos,
+    familiares,
     consentimentos,
     arquivos,
     historicoSolicitacoes,
@@ -181,9 +194,9 @@ export default async function AdminMembroDetalhePage({
       order by registrations.created_at desc
     `,
     sql`
-      select id, name, birthdate, sex from member_children
+      select id, name, birthdate, sex, relationship from member_children
       where member_id = ${id}
-      order by name asc
+      order by (relationship = 'Filho(a)') asc, name asc
     `,
     sql`
       select term_key, accepted_at from member_consents
@@ -544,21 +557,43 @@ export default async function AdminMembroDetalhePage({
             )}
           </SectionCard>
 
-          {/* Filhos */}
-          <SectionCard icon={<Baby className="h-5 w-5" />} title="Filhos cadastrados">
-            {filhos.length === 0 ? (
-              <p className="text-sm text-text-neutral/60">Nenhum filho cadastrado.</p>
+          {/* Grupo Familiar */}
+          <SectionCard icon={<Baby className="h-5 w-5" />} title="Grupo Familiar">
+            {familiares.length === 0 ? (
+              <p className="text-sm text-text-neutral/60">Nenhum familiar cadastrado.</p>
             ) : (
               <div className="flex flex-col gap-1.5">
-                {filhos.map((f) => (
-                  <div key={f.id} className="rounded-lg border border-black/5 px-3 py-2 text-sm">
-                    <span className="font-semibold text-text-neutral">{f.name}</span>
-                    {f.birthdate && (
-                      <span className="text-text-neutral/60"> · {formatDate(f.birthdate)}</span>
-                    )}
-                    {f.sex && <span className="text-text-neutral/50"> · {f.sex}</span>}
-                  </div>
-                ))}
+                {familiares.map((f) => {
+                  const isChild = f.relationship === "Filho(a)";
+                  const age = calcAge(f.birthdate);
+                  return (
+                    <div
+                      key={f.id}
+                      className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm ${
+                        isChild ? "border-sky-200 bg-sky-50/60" : "border-black/5"
+                      }`}
+                    >
+                      <div>
+                        <span className="font-semibold text-text-neutral">{f.name}</span>
+                        {f.birthdate && (
+                          <span className="text-text-neutral/60"> · {formatDate(f.birthdate)}</span>
+                        )}
+                        {age !== null && (
+                          <span className="text-text-neutral/60"> · {age} anos</span>
+                        )}
+                        {f.sex && <span className="text-text-neutral/50"> · {f.sex}</span>}
+                      </div>
+                      <span
+                        className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
+                          isChild ? "bg-sky-100 text-sky-700" : "bg-black/5 text-text-neutral/70"
+                        }`}
+                      >
+                        {f.relationship}
+                        {isChild && age !== null && age <= 11 ? " · Ministério Infantil" : ""}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </SectionCard>

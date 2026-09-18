@@ -12,6 +12,7 @@ import {
   Gift,
   HandHeart,
   Heart,
+  Home,
   Menu,
   ShieldCheck,
   UserRoundCheck,
@@ -51,13 +52,13 @@ export default function DashboardCategoryTiles({
         subtitle="Escola Bíblica & Cursos"
       />
       <Tile
-        href="/central-do-membro/filhos"
-        icon={Gift}
+        href="/central-do-membro/grupo-familiar"
+        icon={Home}
         iconBg="bg-sky-500"
         borderColor="border-t-sky-500"
         titleColor="text-sky-700"
-        title="Ministério Infantil"
-        subtitle="Escola de Crianças"
+        title="Grupo Familiar"
+        subtitle="Cônjuge, filhos e familiares"
       />
       <ServirTile />
       <MaisTile isLeadership={isLeadership} />

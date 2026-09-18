@@ -96,6 +96,13 @@ export default async function AdminMembrosPage({
         description="Cadastros de membro aguardando a validação da diretoria."
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+        <Link
+          href="/admin/membros/criancas"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+        >
+          Ver crianças cadastradas (Ministério Infantil) →
+        </Link>
+
         <EscalaUploadPanel currentUrl={escalaImageUrl} />
 
         <Card className="mt-10 p-6">

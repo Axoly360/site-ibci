@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/session";
+import { RELATIONSHIP_OPTIONS } from "@/lib/family";
 
 export async function POST(
   request: NextRequest,
@@ -16,19 +17,24 @@ export async function POST(
   const name = typeof body?.name === "string" ? body.name.trim() : "";
   const birthdate = typeof body?.birthdate === "string" ? body.birthdate.trim() : "";
   const sex = typeof body?.sex === "string" ? body.sex.trim() : "";
+  const relationshipInput = typeof body?.relationship === "string" ? body.relationship.trim() : "";
+  const relationship = RELATIONSHIP_OPTIONS.includes(relationshipInput as (typeof RELATIONSHIP_OPTIONS)[number])
+    ? relationshipInput
+    : "Filho(a)";
 
   if (!name) {
-    return NextResponse.json({ error: "Nome da criança é obrigatório." }, { status: 400 });
+    return NextResponse.json({ error: "Nome do familiar é obrigatório." }, { status: 400 });
   }
 
   const [updated] = await sql`
     update member_children
-    set name = ${name}, birthdate = ${birthdate || null}, sex = ${sex || null}
+    set name = ${name}, birthdate = ${birthdate || null}, sex = ${sex || null},
+        relationship = ${relationship}
     where id = ${id} and member_id = ${session.memberId}
     returning id
   `;
   if (!updated) {
-    return NextResponse.json({ error: "Criança não encontrada." }, { status: 404 });
+    return NextResponse.json({ error: "Familiar não encontrado." }, { status: 404 });
   }
 
   return NextResponse.json({ ok: true });

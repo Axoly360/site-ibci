@@ -590,3 +590,10 @@ begin
 end $$;
 
 alter sequence members_member_number_seq owned by members.member_number;
+
+-- "Grupo Familiar": member_children deixou de ser só "filhos" e passou a
+-- guardar qualquer familiar que também congrega na IBCI (cônjuge, filhos,
+-- pais etc.), identificado por "relationship". Mantém o nome da tabela
+-- (só dado armazenado, sem impacto visível) para não quebrar nada que já
+-- referencia member_children; a mudança visível é só no rótulo da tela.
+alter table member_children add column if not exists relationship text not null default 'Filho(a)';
