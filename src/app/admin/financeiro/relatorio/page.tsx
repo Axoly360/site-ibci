@@ -45,7 +45,14 @@ function presetRange(preset: string): { from: string; to: string } {
 export default async function AdminFinanceiroRelatorioPage({
   searchParams,
 }: {
-  searchParams: Promise<{ preset?: string; from?: string; to?: string; congregacao?: string }>;
+  searchParams: Promise<{
+    preset?: string;
+    from?: string;
+    to?: string;
+    congregacao?: string;
+    tipo?: string;
+    membro?: string;
+  }>;
 }) {
   const session = await getAdminSession();
   if (!session) redirect("/admin/entrar");
@@ -55,6 +62,9 @@ export default async function AdminFinanceiroRelatorioPage({
   const preset = params.preset || "mes";
   const range = params.from && params.to ? { from: params.from, to: params.to } : presetRange(preset);
   const congregacaoFiltro = params.congregacao || "";
+  // "entrada"/"saida" filtra o tipo; vazio = ambos.
+  const tipoFiltro = params.tipo === "entrada" || params.tipo === "saida" ? params.tipo : "";
+  const membroFiltro = params.membro?.trim() || null;
 
   const congregacoes = await sql`select slug, name from congregations order by name asc`;
 
@@ -63,23 +73,32 @@ export default async function AdminFinanceiroRelatorioPage({
   const entries =
     congregacaoFiltro === "sede"
       ? await sql`
-          select type, category, amount
+          select financial_entries.type, financial_entries.category, financial_entries.amount
           from financial_entries
-          where entry_date >= ${range.from} and entry_date <= ${range.to}
-            and congregation_id is null
+          left join members on members.id = financial_entries.member_id
+          where financial_entries.entry_date >= ${range.from} and financial_entries.entry_date <= ${range.to}
+            and financial_entries.congregation_id is null
+            and (${tipoFiltro}::text = '' or financial_entries.type = ${tipoFiltro})
+            and (${membroFiltro}::text is null or members.name ilike '%' || ${membroFiltro} || '%' or financial_entries.requested_by ilike '%' || ${membroFiltro} || '%')
         `
       : congregacaoFiltro
         ? await sql`
             select financial_entries.type, financial_entries.category, financial_entries.amount
             from financial_entries
+            left join members on members.id = financial_entries.member_id
             join congregations on congregations.id = financial_entries.congregation_id
             where financial_entries.entry_date >= ${range.from} and financial_entries.entry_date <= ${range.to}
               and congregations.slug = ${congregacaoFiltro}
+              and (${tipoFiltro}::text = '' or financial_entries.type = ${tipoFiltro})
+              and (${membroFiltro}::text is null or members.name ilike '%' || ${membroFiltro} || '%' or financial_entries.requested_by ilike '%' || ${membroFiltro} || '%')
           `
         : await sql`
-            select type, category, amount
+            select financial_entries.type, financial_entries.category, financial_entries.amount
             from financial_entries
-            where entry_date >= ${range.from} and entry_date <= ${range.to}
+            left join members on members.id = financial_entries.member_id
+            where financial_entries.entry_date >= ${range.from} and financial_entries.entry_date <= ${range.to}
+              and (${tipoFiltro}::text = '' or financial_entries.type = ${tipoFiltro})
+              and (${membroFiltro}::text is null or members.name ilike '%' || ${membroFiltro} || '%' or financial_entries.requested_by ilike '%' || ${membroFiltro} || '%')
           `;
 
   let totalEntradas = 0;
@@ -104,6 +123,8 @@ export default async function AdminFinanceiroRelatorioPage({
     from: range.from,
     to: range.to,
     ...(congregacaoFiltro ? { congregacao: congregacaoFiltro } : {}),
+    ...(tipoFiltro ? { tipo: tipoFiltro } : {}),
+    ...(membroFiltro ? { membro: membroFiltro } : {}),
   }).toString();
 
   const presets = [
@@ -185,6 +206,32 @@ export default async function AdminFinanceiroRelatorioPage({
                   </option>
                 ))}
               </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-text-neutral/70">
+                Tipo
+              </label>
+              <select
+                name="tipo"
+                defaultValue={tipoFiltro}
+                className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-text-neutral"
+              >
+                <option value="">Entradas e saídas</option>
+                <option value="entrada">Só entradas</option>
+                <option value="saida">Só saídas</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-text-neutral/70">
+                Membro/Solicitante
+              </label>
+              <input
+                type="text"
+                name="membro"
+                defaultValue={membroFiltro ?? ""}
+                placeholder="Buscar por nome"
+                className="rounded-lg border border-black/10 px-3 py-2 text-sm"
+              />
             </div>
             <button
               type="submit"

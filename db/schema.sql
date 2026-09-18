@@ -554,3 +554,39 @@ values (
   'Olá! Gostaria de me inscrever no Congresso de Casais IBCI, com Maurício e Gineide.'
 )
 on conflict (slug) do nothing;
+
+-- Numeração sequencial e legível do membro (ex.: IBCI0001), exibida na
+-- Central do Membro no lugar do UUID técnico truncado. A sequência garante
+-- que novos membros sempre recebam o próximo número, mesmo que membros
+-- antigos sejam removidos.
+create sequence if not exists members_member_number_seq;
+
+alter table members add column if not exists member_number integer;
+
+-- Backfill único: numera quem ainda não tem número, por ordem de cadastro.
+with numerados as (
+  select id, row_number() over (order by created_at asc, id asc) as rn
+  from members
+  where member_number is null
+)
+update members
+set member_number = numerados.rn
+  + coalesce((select max(member_number) from members), 0)
+from numerados
+where members.id = numerados.id;
+
+select setval('members_member_number_seq', coalesce((select max(member_number) from members), 0));
+
+alter table members alter column member_number set default nextval('members_member_number_seq');
+alter table members alter column member_number set not null;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'members_member_number_unique'
+  ) then
+    alter table members add constraint members_member_number_unique unique (member_number);
+  end if;
+end $$;
+
+alter sequence members_member_number_seq owned by members.member_number;

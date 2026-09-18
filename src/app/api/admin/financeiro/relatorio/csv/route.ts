@@ -19,6 +19,9 @@ export async function GET(request: NextRequest) {
   const from = searchParams.get("from");
   const to = searchParams.get("to");
   const congregacao = searchParams.get("congregacao") || "";
+  const tipoParam = searchParams.get("tipo");
+  const tipo = tipoParam === "entrada" || tipoParam === "saida" ? tipoParam : "";
+  const membro = searchParams.get("membro")?.trim() || null;
 
   if (!from || !to) {
     return NextResponse.json({ error: "Informe o período (from/to)." }, { status: 400 });
@@ -31,9 +34,11 @@ export async function GET(request: NextRequest) {
                  financial_entries.amount, financial_entries.description, members.name as member_name
           from financial_entries
           left join members on members.id = financial_entries.member_id
-          where entry_date >= ${from} and entry_date <= ${to}
-            and congregation_id is null
-          order by entry_date asc
+          where financial_entries.entry_date >= ${from} and financial_entries.entry_date <= ${to}
+            and financial_entries.congregation_id is null
+            and (${tipo}::text = '' or financial_entries.type = ${tipo})
+            and (${membro}::text is null or members.name ilike '%' || ${membro} || '%' or financial_entries.requested_by ilike '%' || ${membro} || '%')
+          order by financial_entries.entry_date asc
         `
       : congregacao
         ? await sql`
@@ -44,6 +49,8 @@ export async function GET(request: NextRequest) {
             join congregations on congregations.id = financial_entries.congregation_id
             where financial_entries.entry_date >= ${from} and financial_entries.entry_date <= ${to}
               and congregations.slug = ${congregacao}
+              and (${tipo}::text = '' or financial_entries.type = ${tipo})
+              and (${membro}::text is null or members.name ilike '%' || ${membro} || '%' or financial_entries.requested_by ilike '%' || ${membro} || '%')
             order by financial_entries.entry_date asc
           `
         : await sql`
@@ -51,8 +58,10 @@ export async function GET(request: NextRequest) {
                    financial_entries.amount, financial_entries.description, members.name as member_name
             from financial_entries
             left join members on members.id = financial_entries.member_id
-            where entry_date >= ${from} and entry_date <= ${to}
-            order by entry_date asc
+            where financial_entries.entry_date >= ${from} and financial_entries.entry_date <= ${to}
+              and (${tipo}::text = '' or financial_entries.type = ${tipo})
+              and (${membro}::text is null or members.name ilike '%' || ${membro} || '%' or financial_entries.requested_by ilike '%' || ${membro} || '%')
+            order by financial_entries.entry_date asc
           `;
 
   const header = ["Data", "Tipo", "Categoria", "Valor", "Membro", "Descrição"];

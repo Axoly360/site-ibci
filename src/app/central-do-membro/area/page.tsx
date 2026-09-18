@@ -16,7 +16,7 @@ export default async function AreaDoMembroPage() {
   if (!session) redirect("/central-do-membro");
 
   const [member] = await sql`
-    select is_validated_member, is_leadership, church_role, name, email, phone,
+    select member_number, is_validated_member, is_leadership, church_role, name, email, phone,
            photo_url, marital_status, birthplace, profession, birthdate,
            baptism_date, time_at_church
     from members where id = ${session.memberId}

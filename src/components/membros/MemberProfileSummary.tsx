@@ -4,6 +4,7 @@ import { Pencil, Phone, UserRound } from "lucide-react";
 
 export interface MemberProfileSummaryData {
   id: string;
+  member_number: number;
   name: string;
   email: string;
   phone: string | null;
@@ -56,7 +57,7 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
 
         <div className="flex shrink-0 items-center gap-3">
           <span className="whitespace-nowrap rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white">
-            # ID: {member.id.slice(0, 8).toUpperCase()}
+            # ID: IBCI{String(member.member_number).padStart(4, "0")}
           </span>
           <Link
             href="/central-do-membro/perfil"
