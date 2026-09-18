@@ -7,21 +7,16 @@ import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
+import { parseBRDate } from "@/lib/masks";
 
 export const metadata: Metadata = {
   title: "Ministério Infantil | Painel IBCI",
   robots: { index: false, follow: false },
 };
 
-function formatDate(value: string | null) {
-  if (!value) return "—";
-  return new Date(value).toLocaleDateString("pt-BR", { timeZone: "UTC" });
-}
-
 function calcAge(birthdate: string | null): number | null {
-  if (!birthdate) return null;
-  const parsed = new Date(birthdate);
-  if (Number.isNaN(parsed.getTime())) return null;
+  const parsed = parseBRDate(birthdate);
+  if (!parsed) return null;
   const today = new Date();
   let age = today.getUTCFullYear() - parsed.getUTCFullYear();
   const monthDiff = today.getUTCMonth() - parsed.getUTCMonth();
@@ -58,16 +53,29 @@ export default async function AdminCriancasPage({
     join members on members.id = member_children.member_id
     where member_children.relationship = 'Filho(a)'
       and (${nome}::text is null or member_children.name ilike '%' || ${nome} || '%' or members.name ilike '%' || ${nome} || '%')
-    order by member_children.birthdate asc nulls last, member_children.name asc
+    order by member_children.name asc
   `;
 
+  // birthdate é texto "dd/mm/aaaa" (não ISO) — ordenar por ele direto no SQL
+  // dá uma ordem alfabética sem sentido (dia primeiro). Por isso a ordenação
+  // cronológica (mais novo primeiro) é feita aqui, depois de parsear com
+  // parseBRDate; quem não tem data informada vai para o fim da lista.
   // Sem data de nascimento a idade é desconhecida — mantém na lista (não dá
   // pra afirmar que passou da idade do Ministério Infantil) em vez de
   // esconder a criança por falta de dado.
-  const criancas = filhosCadastrados.filter((c) => {
-    const age = calcAge(c.birthdate);
-    return age === null || age <= IDADE_MAXIMA;
-  });
+  const criancas = filhosCadastrados
+    .filter((c) => {
+      const age = calcAge(c.birthdate);
+      return age === null || age <= IDADE_MAXIMA;
+    })
+    .sort((a, b) => {
+      const dateA = parseBRDate(a.birthdate);
+      const dateB = parseBRDate(b.birthdate);
+      if (!dateA && !dateB) return 0;
+      if (!dateA) return 1;
+      if (!dateB) return -1;
+      return dateB.getTime() - dateA.getTime();
+    });
 
   return (
     <div className="bg-bg-light">
@@ -144,7 +152,7 @@ export default async function AdminCriancasPage({
                           {age !== null ? `${age} anos` : "—"}
                         </td>
                         <td className="py-3 pr-4 text-text-neutral/70">
-                          {formatDate(c.birthdate)}
+                          {c.birthdate || "—"}
                         </td>
                         <td className="py-3 pr-4 text-text-neutral/70">{c.sex || "—"}</td>
                         <td className="py-3 pr-4 text-text-neutral/80">

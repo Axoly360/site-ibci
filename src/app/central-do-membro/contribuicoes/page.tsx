@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
 import Card from "@/components/ui/Card";
+import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import ContributionSummary from "@/components/membros/ContributionSummary";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
@@ -62,6 +63,7 @@ export default async function MinhasContribuicoesPage() {
       </section>
 
       <div className="mx-auto max-w-3xl space-y-8 px-4 py-16 sm:px-6 lg:px-8">
+        <BackToMemberArea />
         <ContributionSummary
           memberName={session.name}
           year={currentYear}

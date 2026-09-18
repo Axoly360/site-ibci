@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
+import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import FamilyMembersManager from "@/components/membros/FamilyMembersManager";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
@@ -28,6 +29,7 @@ export default async function GrupoFamiliarPage() {
         description="Cadastre seus familiares que também congregam na IBCI (cônjuge, filhos e outros) — isso facilita a entrada das crianças no Ministério Infantil e ajuda a diretoria a te conhecer melhor."
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+        <BackToMemberArea />
         <FamilyMembersManager familiares={familiares} />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
+import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import ConsentTermsList, { type ConsentTermView } from "@/components/membros/ConsentTermsList";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
@@ -47,6 +48,7 @@ export default async function ConsentimentoPage() {
         description="Leia e registre seu aceite aos termos da igreja, conforme a LGPD."
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+        <BackToMemberArea />
         <ConsentTermsList terms={terms} />
       </div>
     </div>

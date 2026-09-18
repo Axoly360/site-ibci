@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
+import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import HelpCenter from "@/components/help/HelpCenter";
 import { getSession } from "@/lib/session";
 import { getHelpArticles } from "@/data/helpArticles";
@@ -23,6 +24,7 @@ export default async function AjudaMembroPage() {
         description="Como usar a Central do Membro."
       />
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+        <BackToMemberArea />
         <HelpCenter articles={articles} />
       </div>
     </div>

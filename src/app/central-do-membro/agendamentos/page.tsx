@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
+import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import BookingRequestForm from "@/components/membros/BookingRequestForm";
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default async function AgendamentosPage() {
       </section>
 
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
+        <BackToMemberArea />
         <BookingRequestForm />
       </div>
     </div>

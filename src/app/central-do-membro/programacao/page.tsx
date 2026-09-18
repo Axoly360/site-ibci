@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
+import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import WeeklyScheduleSection from "@/components/home/WeeklyScheduleSection";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
@@ -28,6 +29,9 @@ export default async function ProgramacaoMembroPage() {
         title="Escala de Cultos & Avisos"
         description="Programação da semana e os principais avisos da liderança."
       />
+      <div className="mx-auto max-w-5xl px-4 pt-10 sm:px-6 lg:px-8">
+        <BackToMemberArea />
+      </div>
       <WeeklyScheduleSection items={items} />
     </div>
   );

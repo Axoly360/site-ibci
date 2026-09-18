@@ -5,6 +5,7 @@ import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
 import { getContent } from "@/lib/content";
 import PageBanner from "@/components/layout/PageBanner";
+import BackToMemberArea from "@/components/membros/BackToMemberArea";
 
 export const metadata: Metadata = {
   title: "Escala de Serviços | IBCI - Igreja Batista Central do Ibura",
@@ -32,6 +33,7 @@ export default async function EscalaDeServicosPage() {
         description="Acesso restrito a Pastores, Diáconos, Professores e Líderes."
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+        <BackToMemberArea />
         <div className="relative mx-auto aspect-[1024/1536] w-full max-w-xl overflow-hidden rounded-2xl shadow-lg">
           <Image
             src={imageUrl}

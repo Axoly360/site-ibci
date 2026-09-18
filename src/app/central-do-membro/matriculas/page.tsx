@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
 import Card from "@/components/ui/Card";
+import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default async function MatriculasPage() {
         description="Suas matrículas em cursos e turmas da IBCI."
       />
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+        <BackToMemberArea />
         <Card className="overflow-x-auto p-0">
           <table className="w-full text-left text-sm">
             <thead>

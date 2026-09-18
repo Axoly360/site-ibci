@@ -19,12 +19,16 @@ import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
+import { parseBRDate } from "@/lib/masks";
 
 export const metadata: Metadata = {
   title: "Perfil do Membro | Painel IBCI",
   robots: { index: false, follow: false },
 };
 
+/** Só para timestamptz (created_at, requested_at etc.) — nunca para
+ * birthdate/baptism_date/arrival_date, que já vêm salvos como "dd/mm/aaaa"
+ * e devem ser exibidos direto (ver parseBRDate em @/lib/masks). */
 function formatDate(value: string | null) {
   if (!value) return "—";
   return new Date(value).toLocaleDateString("pt-BR", { timeZone: "UTC" });
@@ -40,9 +44,8 @@ function formatCurrency(value: string | number) {
 }
 
 function calcAge(birthdate: string | null): number | null {
-  if (!birthdate) return null;
-  const parsed = new Date(birthdate);
-  if (Number.isNaN(parsed.getTime())) return null;
+  const parsed = parseBRDate(birthdate);
+  if (!parsed) return null;
   const today = new Date();
   let age = today.getUTCFullYear() - parsed.getUTCFullYear();
   const monthDiff = today.getUTCMonth() - parsed.getUTCMonth();
@@ -300,12 +303,12 @@ export default async function AdminMembroDetalhePage({
               <Field label="E-mail" value={member.email} />
               <Field label="Telefone / WhatsApp" value={member.phone} />
               <Field label="CPF" value={member.cpf} />
-              <Field label="Data de nascimento" value={formatDate(member.birthdate)} />
+              <Field label="Data de nascimento" value={member.birthdate} />
               <Field label="Estado civil" value={member.marital_status} />
               <Field label="Naturalidade" value={member.birthplace} />
               <Field label="Profissão" value={member.profession} />
-              <Field label="Batismo" value={formatDate(member.baptism_date)} />
-              <Field label="Chegada na IBCI" value={formatDate(member.arrival_date)} />
+              <Field label="Batismo" value={member.baptism_date} />
+              <Field label="Chegada na IBCI" value={member.arrival_date} />
               <Field label="Há quanto tempo na IBCI" value={member.time_at_church} />
               <div className="sm:col-span-2 lg:col-span-3">
                 <Field label="Endereço" value={member.address} />
@@ -332,7 +335,7 @@ export default async function AdminMembroDetalhePage({
                       <div>
                         <span className="font-semibold text-text-neutral">{f.name}</span>
                         {f.birthdate && (
-                          <span className="text-text-neutral/60"> · {formatDate(f.birthdate)}</span>
+                          <span className="text-text-neutral/60"> · {f.birthdate}</span>
                         )}
                         {age !== null && (
                           <span className="text-text-neutral/60"> · {age} anos</span>

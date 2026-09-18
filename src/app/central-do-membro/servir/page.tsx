@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import Card from "@/components/ui/Card";
+import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import VolunteerForm from "@/components/membros/VolunteerForm";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
@@ -44,6 +45,7 @@ export default async function ServirCadastroPage() {
         description="Conte pra gente onde você já serve ou gostaria de servir na IBCI."
       />
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
+        <BackToMemberArea />
         {missingTerms.length > 0 ? (
           <Card className="flex flex-col gap-3 p-6">
             <p className="flex items-center gap-2 font-heading text-lg font-semibold text-primary">
