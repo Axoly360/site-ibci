@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Check, ChevronDown, FileText, Lock, Send, Trash2, X } from "lucide-react";
+import { Check, ChevronDown, FileText, Lock, Send, Trash2, UserRound, X } from "lucide-react";
 import Card from "@/components/ui/Card";
 
 export interface MembershipRequestRow {
   id: string;
+  member_id: string;
   name: string;
   email: string;
   phone: string | null;
@@ -30,6 +32,8 @@ export interface ValidatedMemberRow {
   id: string;
   name: string;
   email: string;
+  cpf: string | null;
+  member_number: number;
   is_leadership: boolean;
   church_role: string | null;
   files: MemberFileRow[];
@@ -41,10 +45,12 @@ export default function MembershipQueueManager({
   pendentes,
   recentes,
   validados,
+  filtroAtivo = false,
 }: {
   pendentes: MembershipRequestRow[];
   recentes: MembershipRequestRow[];
   validados: ValidatedMemberRow[];
+  filtroAtivo?: boolean;
 }) {
   const router = useRouter();
   const [openId, setOpenId] = useState<string | null>(null);
@@ -99,22 +105,31 @@ export default function MembershipQueueManager({
             const open = openId === r.id;
             return (
               <Card key={r.id} className="p-4">
-                <button
-                  type="button"
-                  onClick={() => setOpenId(open ? null : r.id)}
-                  className="flex w-full items-center justify-between gap-4 text-left"
-                >
-                  <div>
-                    <p className="font-semibold text-text-neutral">{r.name}</p>
-                    <p className="text-sm text-text-neutral/60">
-                      {r.email} · solicitado em{" "}
-                      {new Date(r.requested_at).toLocaleDateString("pt-BR")}
-                    </p>
-                  </div>
-                  <ChevronDown
-                    className={`h-5 w-5 shrink-0 text-text-neutral/50 transition-transform ${open ? "rotate-180" : ""}`}
-                  />
-                </button>
+                <div className="flex items-center justify-between gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setOpenId(open ? null : r.id)}
+                    className="flex flex-1 items-center justify-between gap-4 text-left"
+                  >
+                    <div>
+                      <p className="font-semibold text-text-neutral">{r.name}</p>
+                      <p className="text-sm text-text-neutral/60">
+                        {r.email} · solicitado em{" "}
+                        {new Date(r.requested_at).toLocaleDateString("pt-BR")}
+                      </p>
+                    </div>
+                    <ChevronDown
+                      className={`h-5 w-5 shrink-0 text-text-neutral/50 transition-transform ${open ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  <Link
+                    href={`/admin/membros/${r.member_id}`}
+                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-black/10 px-3 py-1.5 text-xs font-semibold text-text-neutral hover:bg-black/5"
+                  >
+                    <UserRound className="h-3.5 w-3.5" />
+                    Ver perfil
+                  </Link>
+                </div>
 
                 {open && (
                   <div className="mt-4 grid grid-cols-1 gap-3 border-t border-black/5 pt-4 text-sm sm:grid-cols-2">
@@ -166,20 +181,29 @@ export default function MembershipQueueManager({
             <p className="text-sm text-text-neutral/60">Nenhuma decisão ainda.</p>
           )}
           {recentes.map((r) => (
-            <Card key={r.id} className="flex items-center justify-between p-4">
+            <Card key={r.id} className="flex items-center justify-between gap-4 p-4">
               <div>
                 <p className="font-semibold text-text-neutral">{r.name}</p>
                 <p className="text-sm text-text-neutral/60">{r.email}</p>
               </div>
-              <span
-                className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                  r.status === "aprovado"
-                    ? "bg-primary/10 text-primary"
-                    : "bg-red-50 text-red-600"
-                }`}
-              >
-                {r.status === "aprovado" ? "Aprovado" : "Recusado"}
-              </span>
+              <div className="flex shrink-0 items-center gap-3">
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                    r.status === "aprovado"
+                      ? "bg-primary/10 text-primary"
+                      : "bg-red-50 text-red-600"
+                  }`}
+                >
+                  {r.status === "aprovado" ? "Aprovado" : "Recusado"}
+                </span>
+                <Link
+                  href={`/admin/membros/${r.member_id}`}
+                  className="flex items-center gap-1.5 rounded-full border border-black/10 px-3 py-1.5 text-xs font-semibold text-text-neutral hover:bg-black/5"
+                >
+                  <UserRound className="h-3.5 w-3.5" />
+                  Ver perfil
+                </Link>
+              </div>
             </Card>
           ))}
         </div>
@@ -191,7 +215,11 @@ export default function MembershipQueueManager({
         </h2>
         <div className="mt-4 flex flex-col gap-2">
           {validados.length === 0 && (
-            <p className="text-sm text-text-neutral/60">Nenhum membro validado ainda.</p>
+            <p className="text-sm text-text-neutral/60">
+              {filtroAtivo
+                ? "Nenhum membro encontrado para esse filtro."
+                : "Nenhum membro validado ainda."}
+            </p>
           )}
           {validados.map((m) => (
             <ValidatedMemberCard
@@ -275,9 +303,20 @@ function ValidatedMemberCard({
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="font-semibold text-text-neutral">{member.name}</p>
-          <p className="text-sm text-text-neutral/60">{member.email}</p>
+          <p className="text-sm text-text-neutral/60">
+            {member.email}
+            {member.cpf ? ` · CPF ${member.cpf}` : ""} · IBCI
+            {String(member.member_number).padStart(4, "0")}
+          </p>
         </div>
         <div className="flex shrink-0 items-center gap-4">
+          <Link
+            href={`/admin/membros/${member.id}`}
+            className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+          >
+            <UserRound className="h-4 w-4" />
+            Ver perfil
+          </Link>
           <button
             type="button"
             disabled={loading}

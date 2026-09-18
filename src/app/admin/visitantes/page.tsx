@@ -27,7 +27,7 @@ function formatDate(value: string) {
 export default async function AdminVisitantesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ from?: string; to?: string; evento?: string }>;
+  searchParams: Promise<{ nome?: string; from?: string; to?: string; evento?: string }>;
 }) {
   const session = await getAdminSession();
   if (!session) redirect("/admin/entrar");
@@ -38,6 +38,7 @@ export default async function AdminVisitantesPage({
   // um erro de cast no Postgres, enquanto "null::date" é sempre válido — e o
   // Postgres não garante avaliação preguiçosa do OR, então o cast de ambos os
   // lados pode rodar mesmo quando o filtro não foi informado.
+  const nome = params.nome?.trim() || null;
   const from = params.from || null;
   const to = params.to || null;
   const eventoFiltro = params.evento || null;
@@ -67,6 +68,7 @@ export default async function AdminVisitantesPage({
                  location, event_slug, created_at
           from visitor_registrations
           where event_slug is null
+            and (${nome}::text is null or name ilike '%' || ${nome} || '%' or whatsapp ilike '%' || ${nome} || '%')
             and (${from}::date is null or created_at >= ${from}::date)
             and (${to}::date is null or created_at < (${to}::date + interval '1 day'))
           order by created_at desc
@@ -75,7 +77,8 @@ export default async function AdminVisitantesPage({
           select id, name, whatsapp, sex, first_visit, visit_times, is_christian, church_name,
                  location, event_slug, created_at
           from visitor_registrations
-          where (${from}::date is null or created_at >= ${from}::date)
+          where (${nome}::text is null or name ilike '%' || ${nome} || '%' or whatsapp ilike '%' || ${nome} || '%')
+            and (${from}::date is null or created_at >= ${from}::date)
             and (${to}::date is null or created_at < (${to}::date + interval '1 day'))
             and (${eventoFiltro}::text is null or event_slug = ${eventoFiltro})
           order by created_at desc
@@ -99,6 +102,18 @@ export default async function AdminVisitantesPage({
 
         <Card className="p-6">
           <form className="mb-6 flex flex-wrap items-end gap-3" method="get">
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-text-neutral/70">
+                Nome ou WhatsApp
+              </label>
+              <input
+                type="text"
+                name="nome"
+                defaultValue={nome ?? ""}
+                placeholder="Buscar por nome ou WhatsApp"
+                className="rounded-lg border border-black/10 px-3 py-2 text-sm"
+              />
+            </div>
             <div>
               <label className="mb-1 block text-xs font-semibold text-text-neutral/70">
                 De
@@ -145,6 +160,14 @@ export default async function AdminVisitantesPage({
             >
               Filtrar
             </button>
+            {(nome || from || to || eventoFiltro) && (
+              <Link
+                href="/admin/visitantes"
+                className="text-sm font-semibold text-text-neutral/60 hover:underline"
+              >
+                Limpar filtros
+              </Link>
+            )}
           </form>
 
           <div className="mb-4 text-sm font-semibold text-text-neutral/70">
