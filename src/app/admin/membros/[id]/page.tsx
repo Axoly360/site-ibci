@@ -98,6 +98,10 @@ export default async function AdminMembroDetalhePage({
   const session = await getAdminSession();
   if (!session) redirect("/admin/entrar");
   if (!hasPermission(session, "membros")) redirect("/admin");
+  // Resumo financeiro é sensível — só quem tem a permissão "financeiro"
+  // (Administrador geral ou o setor Financeiro) deve ver comprovantes e
+  // lançamentos do membro. Secretaria e outros setores não veem essa seção.
+  const podeVerFinanceiro = hasPermission(session, "financeiro");
 
   const { id } = await params;
 
@@ -143,21 +147,25 @@ export default async function AdminMembroDetalhePage({
       from volunteer_registrations
       where member_id = ${id}
     `,
-    sql`
-      select id, type, category, amount, status, note, file_url, created_at
-      from contribution_receipts
-      where member_id = ${id}
-      order by created_at desc
-    `,
-    sql`
-      select financial_entries.id, financial_entries.type, financial_entries.category,
-             financial_entries.amount, financial_entries.entry_date, financial_entries.description,
-             financial_entries.receipt_url, congregations.name as congregation_name
-      from financial_entries
-      left join congregations on congregations.id = financial_entries.congregation_id
-      where financial_entries.member_id = ${id}
-      order by financial_entries.entry_date desc
-    `,
+    podeVerFinanceiro
+      ? sql`
+          select id, type, category, amount, status, note, file_url, created_at
+          from contribution_receipts
+          where member_id = ${id}
+          order by created_at desc
+        `
+      : Promise.resolve([]),
+    podeVerFinanceiro
+      ? sql`
+          select financial_entries.id, financial_entries.type, financial_entries.category,
+                 financial_entries.amount, financial_entries.entry_date, financial_entries.description,
+                 financial_entries.receipt_url, congregations.name as congregation_name
+          from financial_entries
+          left join congregations on congregations.id = financial_entries.congregation_id
+          where financial_entries.member_id = ${id}
+          order by financial_entries.entry_date desc
+        `
+      : Promise.resolve([]),
     sql`
       select id, event_type, desired_date, message, status, requested_at, decided_at
       from booking_requests
@@ -257,20 +265,22 @@ export default async function AdminMembroDetalhePage({
                   >
                     {member.is_validated_member ? "Validado" : "Não validado"}
                   </span>
-                  {comprovantesPendentes > 0 && (
+                  {podeVerFinanceiro && comprovantesPendentes > 0 && (
                     <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
                       {comprovantesPendentes} comprovante(s) pendente(s)
                     </span>
                   )}
                 </div>
               </div>
-              <Link
-                href={`/admin/financeiro/lancamentos?nome=${encodeURIComponent(member.name)}`}
-                className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-secondary px-5 py-2.5 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-secondary-light"
-              >
-                <Banknote className="h-4 w-4" />
-                Ver no Financeiro
-              </Link>
+              {podeVerFinanceiro && (
+                <Link
+                  href={`/admin/financeiro/lancamentos?nome=${encodeURIComponent(member.name)}`}
+                  className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-secondary px-5 py-2.5 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-secondary-light"
+                >
+                  <Banknote className="h-4 w-4" />
+                  Ver no Financeiro
+                </Link>
+              )}
             </div>
 
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -356,7 +366,9 @@ export default async function AdminMembroDetalhePage({
             )}
           </SectionCard>
 
-          {/* Financeiro */}
+          {/* Financeiro — só quem tem a permissão "financeiro" (Administrador
+              geral ou setor Financeiro) vê esta seção. */}
+          {podeVerFinanceiro && (
           <SectionCard icon={<Banknote className="h-5 w-5" />} title="Financeiro">
             <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
               <div className="rounded-xl bg-primary/5 p-4 text-center">
@@ -469,6 +481,7 @@ export default async function AdminMembroDetalhePage({
               </div>
             )}
           </SectionCard>
+          )}
 
           {/* Eventos e agendamentos */}
           <SectionCard icon={<CalendarCheck className="h-5 w-5" />} title="Eventos e agendamentos">
