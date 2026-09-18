@@ -313,6 +313,47 @@ export default async function AdminMembroDetalhePage({
             </div>
           </Card>
 
+          {/* Grupo Familiar */}
+          <SectionCard icon={<Baby className="h-5 w-5" />} title="Grupo Familiar">
+            {familiares.length === 0 ? (
+              <p className="text-sm text-text-neutral/60">Nenhum familiar cadastrado.</p>
+            ) : (
+              <div className="flex flex-col gap-1.5">
+                {familiares.map((f) => {
+                  const isChild = f.relationship === "Filho(a)";
+                  const age = calcAge(f.birthdate);
+                  return (
+                    <div
+                      key={f.id}
+                      className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm ${
+                        isChild ? "border-sky-200 bg-sky-50/60" : "border-black/5"
+                      }`}
+                    >
+                      <div>
+                        <span className="font-semibold text-text-neutral">{f.name}</span>
+                        {f.birthdate && (
+                          <span className="text-text-neutral/60"> · {formatDate(f.birthdate)}</span>
+                        )}
+                        {age !== null && (
+                          <span className="text-text-neutral/60"> · {age} anos</span>
+                        )}
+                        {f.sex && <span className="text-text-neutral/50"> · {f.sex}</span>}
+                      </div>
+                      <span
+                        className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
+                          isChild ? "bg-sky-100 text-sky-700" : "bg-black/5 text-text-neutral/70"
+                        }`}
+                      >
+                        {f.relationship}
+                        {isChild && age !== null && age <= 12 ? " · Ministério Infantil" : ""}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </SectionCard>
+
           {/* Grupos/células */}
           <SectionCard icon={<Users className="h-5 w-5" />} title="Grupos e células">
             {grupos.length === 0 && gruposPendentes.length === 0 ? (
@@ -553,47 +594,6 @@ export default async function AdminMembroDetalhePage({
                     </div>
                   </div>
                 )}
-              </div>
-            )}
-          </SectionCard>
-
-          {/* Grupo Familiar */}
-          <SectionCard icon={<Baby className="h-5 w-5" />} title="Grupo Familiar">
-            {familiares.length === 0 ? (
-              <p className="text-sm text-text-neutral/60">Nenhum familiar cadastrado.</p>
-            ) : (
-              <div className="flex flex-col gap-1.5">
-                {familiares.map((f) => {
-                  const isChild = f.relationship === "Filho(a)";
-                  const age = calcAge(f.birthdate);
-                  return (
-                    <div
-                      key={f.id}
-                      className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm ${
-                        isChild ? "border-sky-200 bg-sky-50/60" : "border-black/5"
-                      }`}
-                    >
-                      <div>
-                        <span className="font-semibold text-text-neutral">{f.name}</span>
-                        {f.birthdate && (
-                          <span className="text-text-neutral/60"> · {formatDate(f.birthdate)}</span>
-                        )}
-                        {age !== null && (
-                          <span className="text-text-neutral/60"> · {age} anos</span>
-                        )}
-                        {f.sex && <span className="text-text-neutral/50"> · {f.sex}</span>}
-                      </div>
-                      <span
-                        className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-                          isChild ? "bg-sky-100 text-sky-700" : "bg-black/5 text-text-neutral/70"
-                        }`}
-                      >
-                        {f.relationship}
-                        {isChild && age !== null && age <= 12 ? " · Ministério Infantil" : ""}
-                      </span>
-                    </div>
-                  );
-                })}
               </div>
             )}
           </SectionCard>
