@@ -597,3 +597,27 @@ alter sequence members_member_number_seq owned by members.member_number;
 -- (só dado armazenado, sem impacto visível) para não quebrar nada que já
 -- referencia member_children; a mudança visível é só no rótulo da tela.
 alter table member_children add column if not exists relationship text not null default 'Filho(a)';
+
+-- Rate limit de login (admin, membro, congregação), persistido no banco
+-- porque em memória não funciona de forma confiável em ambiente serverless
+-- (cada invocação pode cair numa instância diferente). Ver src/lib/rateLimit.ts.
+create table if not exists login_attempts (
+  id uuid primary key default gen_random_uuid(),
+  scope text not null,
+  identifier text not null,
+  success boolean not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists login_attempts_lookup_idx on login_attempts (scope, identifier, created_at);
+
+-- Preserva comprovantes financeiros mesmo se o membro for excluído — mesmo
+-- tratamento já dado a financial_entries (member_id vira null, o registro
+-- fica). Antes, excluir um membro apagava o comprovante (contribution_receipts)
+-- em cascata, mas o lançamento correspondente em financial_entries continuava
+-- existindo — resultado: dinheiro registrado no relatório sem nenhum
+-- comprovante vinculado, quebrando o rastro de auditoria financeira.
+alter table contribution_receipts alter column member_id drop not null;
+alter table contribution_receipts drop constraint if exists contribution_receipts_member_id_fkey;
+alter table contribution_receipts
+  add constraint contribution_receipts_member_id_fkey
+  foreign key (member_id) references members(id) on delete set null;

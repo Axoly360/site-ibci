@@ -7,6 +7,9 @@ import {
   createAdminCookieValue,
   ROLES,
 } from "@/lib/admin-session";
+import { isLoginRateLimited, recordLoginAttempt, LOGIN_RATE_LIMIT_MESSAGE } from "@/lib/rateLimit";
+
+const SCOPE = "admin";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -19,6 +22,10 @@ export async function POST(request: NextRequest) {
       { error: "E-mail e senha são obrigatórios." },
       { status: 400 }
     );
+  }
+
+  if (await isLoginRateLimited(SCOPE, email)) {
+    return NextResponse.json({ error: LOGIN_RATE_LIMIT_MESSAGE }, { status: 429 });
   }
 
   const [admin] = await sql`select * from admin_users where email = ${email}`;
@@ -51,13 +58,16 @@ export async function POST(request: NextRequest) {
         }),
         adminCookieOptions
       );
+      await recordLoginAttempt(SCOPE, email, true);
       return response;
     }
 
+    await recordLoginAttempt(SCOPE, email, false);
     return NextResponse.json({ error: "E-mail ou senha inválidos." }, { status: 401 });
   }
 
   if (admin.status !== "ativo") {
+    await recordLoginAttempt(SCOPE, email, false);
     return NextResponse.json(
       { error: "Este acesso está desativado." },
       { status: 403 }
@@ -66,6 +76,7 @@ export async function POST(request: NextRequest) {
 
   const valid = await verifyPassword(password, admin.password_hash);
   if (!valid) {
+    await recordLoginAttempt(SCOPE, email, false);
     return NextResponse.json({ error: "E-mail ou senha inválidos." }, { status: 401 });
   }
 
@@ -81,5 +92,6 @@ export async function POST(request: NextRequest) {
     }),
     adminCookieOptions
   );
+  await recordLoginAttempt(SCOPE, email, true);
   return response;
 }

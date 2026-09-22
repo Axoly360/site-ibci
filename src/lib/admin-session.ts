@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
+import { getSessionSecret } from "@/lib/session-secret";
 
 export const ADMIN_COOKIE = "ibci_admin";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 12; // 12 horas
@@ -66,21 +67,8 @@ export interface AdminSessionPayload {
   permissions: Permission[];
 }
 
-/**
- * Chave de assinatura do cookie de sessão. Reaproveita ADMIN_PASSWORD (já
- * configurado) enquanto ADMIN_SESSION_SECRET não existir, para não exigir
- * uma nova variável de ambiente nesta migração.
- */
-function getSecret(): string {
-  const secret = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD;
-  if (!secret) {
-    throw new Error("ADMIN_SESSION_SECRET (ou ADMIN_PASSWORD) não configurado.");
-  }
-  return secret;
-}
-
 function sign(value: string): string {
-  return createHmac("sha256", getSecret()).update(value).digest("hex");
+  return createHmac("sha256", getSessionSecret()).update(value).digest("hex");
 }
 
 export function createAdminCookieValue(payload: AdminSessionPayload): string {

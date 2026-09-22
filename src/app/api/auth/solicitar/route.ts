@@ -45,12 +45,26 @@ export async function POST(request: NextRequest) {
   const confirmUrl = new URL("/api/auth/confirmar", request.url);
   confirmUrl.searchParams.set("token", token);
 
-  await sendConfirmationEmail({
-    to: email,
-    name,
-    confirmUrl: confirmUrl.toString(),
-    eventTitle: event?.title,
-  });
+  try {
+    await sendConfirmationEmail({
+      to: email,
+      name,
+      confirmUrl: confirmUrl.toString(),
+      eventTitle: event?.title,
+    });
+  } catch (err) {
+    // Sem isso, uma falha de envio (ex.: domínio do Resend não verificado)
+    // derrubava a rota com 500 genérico DEPOIS de já ter criado o cadastro e
+    // o token — a pessoa nunca recebia o e-mail e via um erro sem sentido.
+    console.error("Falha ao enviar e-mail de confirmação:", err);
+    return NextResponse.json(
+      {
+        error:
+          "Não foi possível enviar o e-mail de confirmação agora. Tente novamente em alguns minutos ou fale com a secretaria.",
+      },
+      { status: 502 }
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

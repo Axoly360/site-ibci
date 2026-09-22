@@ -39,7 +39,18 @@ export default async function AdminMembrosPage({
            membership_requests.phone, membership_requests.cpf,
            membership_requests.birthdate, membership_requests.address,
            membership_requests.time_at_church, membership_requests.note,
-           membership_requests.requested_at, membership_requests.status
+           membership_requests.requested_at, membership_requests.status,
+           (
+             -- Mesmo CPF já usado por outra conta — sinaliza pro admin
+             -- decidir com essa informação em mãos (cadastro duplicado da
+             -- mesma pessoa física, com e-mails diferentes, já aconteceu na
+             -- prática e nada avisava sobre isso antes de aprovar).
+             select string_agg(outros.name, ', ')
+             from members outros
+             where outros.id <> members.id
+               and outros.cpf is not null and outros.cpf <> ''
+               and outros.cpf = membership_requests.cpf
+           ) as cpf_duplicado_de
     from membership_requests
     join members on members.id = membership_requests.member_id
     where membership_requests.status = 'pendente'

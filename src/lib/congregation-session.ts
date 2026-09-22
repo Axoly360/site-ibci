@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
+import { getSessionSecret } from "@/lib/session-secret";
 
 export const CONGREGATION_COOKIE = "ibci_congregacao";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 12; // 12 horas
@@ -13,17 +14,8 @@ export interface CongregationSessionPayload {
   congregationName: string;
 }
 
-/** Reaproveita o mesmo segredo já usado pra assinar a sessão do admin. */
-function getSecret(): string {
-  const secret = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD;
-  if (!secret) {
-    throw new Error("ADMIN_SESSION_SECRET (ou ADMIN_PASSWORD) não configurado.");
-  }
-  return secret;
-}
-
 function sign(value: string): string {
-  return createHmac("sha256", getSecret()).update(value).digest("hex");
+  return createHmac("sha256", getSessionSecret()).update(value).digest("hex");
 }
 
 export function createCongregationCookieValue(payload: CongregationSessionPayload): string {

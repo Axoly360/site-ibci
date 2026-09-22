@@ -25,9 +25,9 @@ export default async function AdminFinanceiroPage() {
            contribution_receipts.category, contribution_receipts.sender_type,
            contribution_receipts.type, contribution_receipts.amount,
            contribution_receipts.status, contribution_receipts.created_at,
-           members.name, members.email
+           coalesce(members.name, 'Membro excluído') as name, members.email
     from contribution_receipts
-    join members on members.id = contribution_receipts.member_id
+    left join members on members.id = contribution_receipts.member_id
     order by (contribution_receipts.status = 'pendente') desc, contribution_receipts.created_at desc
   `;
 

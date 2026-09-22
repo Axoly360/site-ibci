@@ -66,8 +66,11 @@ export async function POST(
         code,
         qrBase64: qrBuffer.toString("base64"),
       });
-    } catch {
+    } catch (err) {
       // Ignorado de propósito — a pessoa ainda vê o QR na tela de confirmação.
+      // Mas loga, senão uma falha de e-mail em massa (ex.: domínio do Resend
+      // não verificado) passa despercebida indefinidamente.
+      console.error("Falha ao enviar QR Code do evento por e-mail:", err);
     }
   }
 

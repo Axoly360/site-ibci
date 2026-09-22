@@ -39,7 +39,7 @@ export async function sendConfirmationEmail({
     ? `Confirme seu e-mail para concluir sua inscrição em <strong>${eventTitle}</strong>.`
     : "Confirme seu e-mail para acessar sua conta na IBCI.";
 
-  await getResend().emails.send({
+  const { error } = await getResend().emails.send({
     from: FROM,
     to,
     subject: "Confirme seu e-mail — IBCI",
@@ -58,6 +58,12 @@ export async function sendConfirmationEmail({
       </div>
     `,
   });
+  // O SDK do Resend não lança exceção para todo erro de API (ex.: domínio
+  // não verificado) — ele devolve { error } normalmente. Sem este check, o
+  // chamador nunca fica sabendo que o e-mail não foi enviado de verdade.
+  if (error) {
+    throw new Error(`Falha ao enviar e-mail de confirmação: ${error.message}`);
+  }
 }
 
 interface SendCheckinQrEmailParams {
@@ -76,7 +82,7 @@ export async function sendCheckinQrEmail({
   code,
   qrBase64,
 }: SendCheckinQrEmailParams) {
-  await getResend().emails.send({
+  const { error } = await getResend().emails.send({
     from: FROM,
     to,
     subject: `Seu QR Code de entrada — ${eventTitle}`,
@@ -100,4 +106,7 @@ export async function sendCheckinQrEmail({
       },
     ],
   });
+  if (error) {
+    throw new Error(`Falha ao enviar e-mail do QR Code: ${error.message}`);
+  }
 }

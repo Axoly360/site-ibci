@@ -29,6 +29,22 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Confere ANTES de mexer em password_hash: se o e-mail já é de um membro
+  // validado, para aqui sem tocar na senha dele. Antes, o upsert abaixo
+  // sobrescrevia password_hash de qualquer conta com esse e-mail — inclusive
+  // já validada — e só depois checava is_validated_member, ou seja,
+  // qualquer pessoa que soubesse o e-mail de um membro validado conseguia
+  // trocar a senha dele e logar na conta (sequestro de conta).
+  const [existente] = await sql`
+    select is_validated_member from members where email = ${email}
+  `;
+  if (existente?.is_validated_member) {
+    return NextResponse.json(
+      { error: "Este e-mail já é de um membro validado." },
+      { status: 409 }
+    );
+  }
+
   const passwordHash = await hashPassword(password);
 
   const [member] = await sql`
@@ -38,13 +54,6 @@ export async function POST(request: NextRequest) {
       set name = excluded.name, password_hash = excluded.password_hash
     returning id, is_validated_member
   `;
-
-  if (member.is_validated_member) {
-    return NextResponse.json(
-      { error: "Este e-mail já é de um membro validado." },
-      { status: 409 }
-    );
-  }
 
   const [pendente] = await sql`
     select id from membership_requests

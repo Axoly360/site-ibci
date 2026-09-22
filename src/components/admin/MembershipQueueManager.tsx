@@ -3,7 +3,17 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Check, ChevronDown, FileText, Lock, Send, Trash2, UserRound, X } from "lucide-react";
+import {
+  AlertTriangle,
+  Check,
+  ChevronDown,
+  FileText,
+  Lock,
+  Send,
+  Trash2,
+  UserRound,
+  X,
+} from "lucide-react";
 import Card from "@/components/ui/Card";
 
 export interface MembershipRequestRow {
@@ -19,6 +29,7 @@ export interface MembershipRequestRow {
   note: string | null;
   requested_at: string;
   status: string;
+  cpf_duplicado_de?: string | null;
 }
 
 export interface MemberFileRow {
@@ -69,7 +80,7 @@ export default function MembershipQueueManager({
   const deleteMember = async (memberId: string, name: string) => {
     if (
       !confirm(
-        `Excluir definitivamente o cadastro de ${name}? Essa ação não pode ser desfeita — todos os dados dele (perfil, filhos, grupos, consentimentos, voluntariado) serão apagados. Lançamentos financeiros já registrados são mantidos, sem o vínculo com o nome.`
+        `Excluir definitivamente o cadastro de ${name}? Essa ação não pode ser desfeita — todos os dados dele (perfil, filhos, grupos, consentimentos, voluntariado) serão apagados. Lançamentos financeiros e comprovantes já registrados são mantidos, sem o vínculo com o nome.`
       )
     ) {
       return;
@@ -130,6 +141,17 @@ export default function MembershipQueueManager({
                     Ver perfil
                   </Link>
                 </div>
+
+                {r.cpf_duplicado_de && (
+                  <div className="mt-3 flex items-start gap-2 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>
+                      Este CPF já está cadastrado em outra conta:{" "}
+                      <strong>{r.cpf_duplicado_de}</strong>. Confira se não é a mesma
+                      pessoa com um e-mail diferente antes de aprovar.
+                    </span>
+                  </div>
+                )}
 
                 {open && (
                   <div className="mt-4 grid grid-cols-1 gap-3 border-t border-black/5 pt-4 text-sm sm:grid-cols-2">

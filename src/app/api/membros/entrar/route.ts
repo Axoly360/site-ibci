@@ -6,6 +6,9 @@ import {
   createSessionCookieValue,
   sessionCookieOptions,
 } from "@/lib/session";
+import { isLoginRateLimited, recordLoginAttempt, LOGIN_RATE_LIMIT_MESSAGE } from "@/lib/rateLimit";
+
+const SCOPE = "membro";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -20,9 +23,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  if (await isLoginRateLimited(SCOPE, email)) {
+    return NextResponse.json({ error: LOGIN_RATE_LIMIT_MESSAGE }, { status: 429 });
+  }
+
   const [member] = await sql`select * from members where email = ${email}`;
 
   if (!member || !member.password_hash || !(await verifyPassword(password, member.password_hash))) {
+    await recordLoginAttempt(SCOPE, email, false);
     return NextResponse.json({ error: "E-mail ou senha inválidos." }, { status: 401 });
   }
 
@@ -39,5 +47,6 @@ export async function POST(request: NextRequest) {
     }),
     sessionCookieOptions
   );
+  await recordLoginAttempt(SCOPE, email, true);
   return response;
 }

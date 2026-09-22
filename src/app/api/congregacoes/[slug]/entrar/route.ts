@@ -6,6 +6,9 @@ import {
   congregationCookieOptions,
   createCongregationCookieValue,
 } from "@/lib/congregation-session";
+import { isLoginRateLimited, recordLoginAttempt, LOGIN_RATE_LIMIT_MESSAGE } from "@/lib/rateLimit";
+
+const SCOPE = "congregacao";
 
 export async function POST(
   request: NextRequest,
@@ -20,6 +23,13 @@ export async function POST(
     return NextResponse.json({ error: "E-mail e senha são obrigatórios." }, { status: 400 });
   }
 
+  // Identificador inclui o slug: um bloqueio numa congregação não afeta
+  // o mesmo e-mail tentando logar em outra por engano.
+  const rateLimitId = `${slug}:${email}`;
+  if (await isLoginRateLimited(SCOPE, rateLimitId)) {
+    return NextResponse.json({ error: LOGIN_RATE_LIMIT_MESSAGE }, { status: 429 });
+  }
+
   const [congregation] = await sql`select id, name, slug from congregations where slug = ${slug}`;
   if (!congregation) {
     return NextResponse.json({ error: "Congregação não encontrada." }, { status: 404 });
@@ -31,14 +41,17 @@ export async function POST(
   `;
 
   if (!user) {
+    await recordLoginAttempt(SCOPE, rateLimitId, false);
     return NextResponse.json({ error: "E-mail ou senha inválidos." }, { status: 401 });
   }
   if (user.status !== "ativo") {
+    await recordLoginAttempt(SCOPE, rateLimitId, false);
     return NextResponse.json({ error: "Este acesso está desativado." }, { status: 403 });
   }
 
   const valid = await verifyPassword(password, user.password_hash);
   if (!valid) {
+    await recordLoginAttempt(SCOPE, rateLimitId, false);
     return NextResponse.json({ error: "E-mail ou senha inválidos." }, { status: 401 });
   }
 
@@ -55,5 +68,6 @@ export async function POST(
     }),
     congregationCookieOptions
   );
+  await recordLoginAttempt(SCOPE, rateLimitId, true);
   return response;
 }
