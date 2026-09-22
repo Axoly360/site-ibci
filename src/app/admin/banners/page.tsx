@@ -23,14 +23,14 @@ export default async function AdminBannersPage() {
   const otherSlots = [
     {
       key: "highlight-pepe",
-      label: "Destaque — Projeto PEPE",
+      label: "Destaque Meio 01",
       currentImage: blocks["highlight-pepe"]?.image_url ?? "/highlight-pepe.png",
       currentTitle: blocks["highlight-pepe"]?.title ?? "Projeto PEPE IBCI",
       currentLink: blocks["highlight-pepe"]?.link_url ?? "/para-voce/projeto-pepe",
     },
     {
       key: "highlight-evento-principal",
-      label: "Destaque — Congregação Milagres",
+      label: "Destaque Meio 02",
       currentImage:
         blocks["highlight-evento-principal"]?.image_url ?? "/highlight-evento-principal.png",
       currentTitle:
@@ -40,7 +40,7 @@ export default async function AdminBannersPage() {
     },
     {
       key: "banner-principal",
-      label: "Banner Principal",
+      label: "Banner Final",
       currentImage: blocks["banner-principal"]?.image_url ?? "/banner-principal.png",
       currentTitle: blocks["banner-principal"]?.title ?? "Congresso de Casais",
       currentLink:
@@ -75,7 +75,7 @@ export default async function AdminBannersPage() {
 
           <div>
             <h2 className="mb-3 font-heading text-xl font-bold text-primary">
-              Destaques e Banner Principal
+              Destaques Banners Meio
             </h2>
             <div className="flex flex-col gap-6">
               {otherSlots.map((slot) => (
