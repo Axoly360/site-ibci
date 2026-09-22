@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Send } from "lucide-react";
+import Image from "next/image";
+import { CheckCircle2, Pencil, Send } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 
@@ -19,8 +20,59 @@ export interface BannerSlotConfig {
   currentVideo?: string | null;
 }
 
-export default function BannerManager({ slot }: { slot: BannerSlotConfig }) {
+/** Card fechado (miniatura + texto + link), no mesmo formato do Hero — só
+ * "Editar" pois essas posições são fixas (sem adicionar/remover). */
+function BannerCollapsedCard({
+  slot,
+  onEdit,
+}: {
+  slot: BannerSlotConfig;
+  onEdit: () => void;
+}) {
+  return (
+    <Card className="flex items-center justify-between gap-4 p-5">
+      <div className="flex min-w-0 items-center gap-3">
+        {slot.currentImage && (
+          <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-lg bg-black/5">
+            <Image
+              src={slot.currentImage}
+              alt={slot.currentTitle ?? ""}
+              fill
+              unoptimized={slot.currentImage.startsWith("http")}
+              className="object-cover"
+            />
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-text-neutral">
+            {slot.currentTitle || "Sem texto alternativo"}
+          </p>
+          <p className="truncate text-xs text-text-neutral/60">
+            {slot.currentLink || "Sem link (não clicável)"}
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={onEdit}
+        className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark"
+      >
+        <Pencil className="h-4 w-4" />
+        Editar
+      </button>
+    </Card>
+  );
+}
+
+export default function BannerManager({
+  slot,
+  collapsible = false,
+}: {
+  slot: BannerSlotConfig;
+  collapsible?: boolean;
+}) {
   const router = useRouter();
+  const [editing, setEditing] = useState(!collapsible);
   const imageRef = useRef<HTMLInputElement>(null);
   const imageMobileRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(slot.currentTitle ?? "");
@@ -58,12 +110,20 @@ export default function BannerManager({ slot }: { slot: BannerSlotConfig }) {
       if (imageMobileRef.current) imageMobileRef.current.value = "";
       setDone(true);
       router.refresh();
-      setTimeout(() => setDone(false), 3000);
+      if (collapsible) {
+        setEditing(false);
+      } else {
+        setTimeout(() => setDone(false), 3000);
+      }
     } else {
       const data = await res.json().catch(() => null);
       setError(data?.error ?? `Não foi possível salvar (${res.status}).`);
     }
   };
+
+  if (collapsible && !editing) {
+    return <BannerCollapsedCard slot={slot} onEdit={() => setEditing(true)} />;
+  }
 
   return (
     <Card className="p-6">
@@ -165,6 +225,15 @@ export default function BannerManager({ slot }: { slot: BannerSlotConfig }) {
           <Send className="h-4 w-4" />
           {loading ? "Salvando..." : "Salvar"}
         </Button>
+        {collapsible && (
+          <button
+            type="button"
+            onClick={() => setEditing(false)}
+            className="text-sm font-semibold text-text-neutral/60"
+          >
+            Cancelar
+          </button>
+        )}
         {done && (
           <span className="flex items-center gap-1.5 text-sm font-semibold text-primary">
             <CheckCircle2 className="h-4 w-4" />

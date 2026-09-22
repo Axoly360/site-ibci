@@ -79,7 +79,7 @@ export default async function AdminBannersPage() {
             </h2>
             <div className="flex flex-col gap-6">
               {otherSlots.map((slot) => (
-                <BannerManager key={slot.key} slot={slot} />
+                <BannerManager key={slot.key} slot={slot} collapsible />
               ))}
             </div>
           </div>
