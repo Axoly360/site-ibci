@@ -7,6 +7,7 @@ import CongregationFinanceiroManager from "@/components/admin/CongregationFinanc
 import CongregationBudgetForm from "@/components/admin/CongregationBudgetForm";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export const metadata: Metadata = {
   title: "Financeiro da Congregação | Painel IBCI",
@@ -37,6 +38,7 @@ export default async function AdminCongregacaoFinanceiroPage({
     where congregation_id = ${congregation.id}
     order by (status = 'pendente') desc, entry_date desc
   `;
+  for (const s of submissoes) s.receipt_url = resolvePrivateFileUrl(s.receipt_url);
 
   return (
     <div className="bg-bg-light">

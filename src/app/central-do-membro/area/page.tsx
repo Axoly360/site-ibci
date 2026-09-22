@@ -6,6 +6,7 @@ import DashboardCategoryTiles from "@/components/membros/DashboardCategoryTiles"
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
 import { hasMissingConsent } from "@/lib/consentGate";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export const metadata: Metadata = {
   title: "Área do Membro | IBCI - Igreja Batista Central do Ibura",
@@ -59,7 +60,9 @@ export default async function AreaDoMembroPage() {
       </section>
 
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-        <MemberProfileSummary member={{ id: session.memberId, ...member }} />
+        <MemberProfileSummary
+          member={{ id: session.memberId, ...member, photo_url: resolvePrivateFileUrl(member.photo_url) }}
+        />
         <MemberGroupsCard groups={groups} />
         <DashboardCategoryTiles isLeadership={member.is_leadership} />
       </div>

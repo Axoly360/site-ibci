@@ -10,6 +10,7 @@ import DashboardCategoryTiles from "@/components/membros/DashboardCategoryTiles"
 import Card from "@/components/ui/Card";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 function AdminAccessCard() {
   return (
@@ -141,7 +142,9 @@ export default async function CentralDoMembroPage() {
             </p>
           </div>
 
-          <MemberProfileSummary member={{ id: session.memberId, ...member }} />
+          <MemberProfileSummary
+            member={{ id: session.memberId, ...member, photo_url: resolvePrivateFileUrl(member.photo_url) }}
+          />
           <MemberGroupsCard groups={groups} />
           <DashboardCategoryTiles isLeadership={member.is_leadership} />
 

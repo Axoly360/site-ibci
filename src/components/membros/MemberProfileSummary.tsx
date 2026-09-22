@@ -38,7 +38,7 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
               src={member.photo_url}
               alt={member.name}
               fill
-              unoptimized={member.photo_url.startsWith("http")}
+              unoptimized
               className="object-cover"
             />
           ) : (

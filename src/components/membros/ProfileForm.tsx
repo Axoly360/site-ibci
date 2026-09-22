@@ -97,7 +97,7 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
               src={photoUrl}
               alt={profile.name}
               fill
-              unoptimized={photoUrl.startsWith("http")}
+              unoptimized
               className="object-cover"
             />
           ) : (

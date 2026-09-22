@@ -20,6 +20,7 @@ import Card from "@/components/ui/Card";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
 import { parseBRDate } from "@/lib/masks";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export const metadata: Metadata = {
   title: "Perfil do Membro | Painel IBCI",
@@ -129,6 +130,7 @@ export default async function AdminMembroDetalhePage({
     where id = ${id}
   `;
   if (!member) notFound();
+  member.photo_url = resolvePrivateFileUrl(member.photo_url);
 
   const [
     grupos,
@@ -218,6 +220,9 @@ export default async function AdminMembroDetalhePage({
     `,
   ]);
 
+  for (const c of comprovantes) c.file_url = resolvePrivateFileUrl(c.file_url);
+  for (const f of arquivos) f.file_url = resolvePrivateFileUrl(f.file_url);
+
   const voluntariado = voluntariadoRows[0] as
     | { ministries: string[]; note: string | null; updated_at: string }
     | undefined;
@@ -252,7 +257,7 @@ export default async function AdminMembroDetalhePage({
                     src={member.photo_url}
                     alt={member.name}
                     fill
-                    unoptimized={member.photo_url.startsWith("http")}
+                    unoptimized
                     className="object-cover"
                   />
                 ) : (

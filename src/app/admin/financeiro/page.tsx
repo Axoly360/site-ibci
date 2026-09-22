@@ -8,6 +8,7 @@ import Card from "@/components/ui/Card";
 import ComprovantesManager from "@/components/admin/ComprovantesManager";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export const metadata: Metadata = {
   title: "Financeiro | Painel IBCI",
@@ -30,6 +31,7 @@ export default async function AdminFinanceiroPage() {
     left join members on members.id = contribution_receipts.member_id
     order by (contribution_receipts.status = 'pendente') desc, contribution_receipts.created_at desc
   `;
+  for (const c of comprovantes) c.file_url = resolvePrivateFileUrl(c.file_url);
 
   return (
     <div className="bg-bg-light">

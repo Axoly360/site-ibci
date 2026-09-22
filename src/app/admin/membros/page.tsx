@@ -9,6 +9,7 @@ import EscalaUploadPanel from "@/components/admin/EscalaUploadPanel";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
 import { getContent } from "@/lib/content";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export const metadata: Metadata = {
   title: "Membros | Painel IBCI",
@@ -88,6 +89,7 @@ export default async function AdminMembrosPage({
   `;
   const arquivosPorMembro = new Map<string, typeof arquivos>();
   for (const arquivo of arquivos) {
+    arquivo.file_url = resolvePrivateFileUrl(arquivo.file_url);
     const lista = arquivosPorMembro.get(arquivo.member_id) ?? [];
     lista.push(arquivo);
     arquivosPorMembro.set(arquivo.member_id, lista);

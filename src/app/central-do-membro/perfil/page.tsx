@@ -6,6 +6,7 @@ import ProfileForm from "@/components/membros/ProfileForm";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
 import { hasMissingConsent } from "@/lib/consentGate";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export const metadata: Metadata = {
   title: "Meu Cadastro | IBCI - Igreja Batista Central do Ibura",
@@ -35,7 +36,7 @@ export default async function PerfilPage() {
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <BackToMemberArea />
-        <ProfileForm profile={member} />
+        <ProfileForm profile={{ ...member, photo_url: resolvePrivateFileUrl(member.photo_url) }} />
       </div>
     </div>
   );

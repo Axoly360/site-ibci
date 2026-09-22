@@ -6,6 +6,7 @@ import Card from "@/components/ui/Card";
 import CongregacaoLancamentoForm from "@/components/congregacoes/CongregacaoLancamentoForm";
 import { getCongregationSession } from "@/lib/congregation-session";
 import { sql } from "@/lib/db";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export const metadata: Metadata = {
   title: "Prestação de Contas | Congregação IBCI",
@@ -70,6 +71,7 @@ export default async function CongregacaoFinanceiroPage({
     order by entry_date desc, created_at desc
     limit 30
   `;
+  for (const entry of lancamentos) entry.receipt_url = resolvePrivateFileUrl(entry.receipt_url);
 
   return (
     <div className="bg-bg-light">

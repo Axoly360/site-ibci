@@ -9,6 +9,7 @@ import LancamentoForm, { type InitialComprovante } from "@/components/admin/Lanc
 import LancamentoActions from "@/components/admin/LancamentoActions";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export const metadata: Metadata = {
   title: "Lançamentos | Painel IBCI",
@@ -181,6 +182,7 @@ export default async function AdminLancamentosPage({
             order by financial_entries.entry_date desc, financial_entries.created_at desc
             limit ${limit}
           `;
+  for (const entry of recentes) entry.receipt_url = resolvePrivateFileUrl(entry.receipt_url);
 
   return (
     <div className="bg-bg-light">

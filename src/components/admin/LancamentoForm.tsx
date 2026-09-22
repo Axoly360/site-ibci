@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2, FileText, Send } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export interface MemberOption {
   id: string;
@@ -196,7 +197,7 @@ export default function LancamentoForm({
           </span>
           {existingReceiptUrl && (
             <a
-              href={existingReceiptUrl}
+              href={resolvePrivateFileUrl(existingReceiptUrl) ?? undefined}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 font-semibold text-secondary hover:underline"

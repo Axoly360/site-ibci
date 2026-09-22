@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
-import { deleteStoredFile } from "@/lib/privateFiles";
+import { deleteStoredFile } from "@/lib/privateFilesServer";
 
 export async function DELETE(
   request: NextRequest,

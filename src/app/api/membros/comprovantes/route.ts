@@ -3,6 +3,7 @@ import { put } from "@vercel/blob";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { isImageOrPdfFile, sanitizeFileName } from "@/lib/fileValidation";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 const TYPES = ["entrada", "saida"];
 
@@ -18,6 +19,7 @@ export async function GET() {
     where member_id = ${session.memberId}
     order by created_at desc
   `;
+  for (const r of receipts) r.file_url = resolvePrivateFileUrl(r.file_url);
 
   return NextResponse.json({ receipts });
 }
