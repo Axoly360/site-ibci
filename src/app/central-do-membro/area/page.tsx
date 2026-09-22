@@ -5,6 +5,7 @@ import MemberGroupsCard from "@/components/membros/MemberGroupsCard";
 import DashboardCategoryTiles from "@/components/membros/DashboardCategoryTiles";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
+import { hasMissingConsent } from "@/lib/consentGate";
 
 export const metadata: Metadata = {
   title: "Área do Membro | IBCI - Igreja Batista Central do Ibura",
@@ -22,6 +23,9 @@ export default async function AreaDoMembroPage() {
     from members where id = ${session.memberId}
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");
+  if (await hasMissingConsent(session.memberId)) {
+    redirect("/central-do-membro/consentimento");
+  }
 
   const groups = await sql`
     select mg.id, mg.name, mg.leader_name, mg.meeting_day, mg.location

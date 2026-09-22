@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
 import { getContent } from "@/lib/content";
+import { hasMissingConsent } from "@/lib/consentGate";
 import PageBanner from "@/components/layout/PageBanner";
 import BackToMemberArea from "@/components/membros/BackToMemberArea";
 
@@ -22,6 +23,9 @@ export default async function EscalaDeServicosPage() {
   `;
   if (!member?.is_validated_member || !member?.is_leadership) {
     redirect("/central-do-membro/area");
+  }
+  if (await hasMissingConsent(session.memberId)) {
+    redirect("/central-do-membro/consentimento");
   }
 
   const imageUrl = await getContent("escala.image_url", "/escala-setembro-2026.jpeg");

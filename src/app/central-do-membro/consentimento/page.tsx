@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { AlertTriangle } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import ConsentTermsList, { type ConsentTermView } from "@/components/membros/ConsentTermsList";
@@ -40,6 +41,7 @@ export default async function ConsentimentoPage() {
     body: texts[term.bodyContentKey] ?? "",
     acceptedAt: acceptedByKey.get(term.key) ?? null,
   }));
+  const hasPending = terms.some((t) => !t.acceptedAt);
 
   return (
     <div className="bg-bg-light">
@@ -49,6 +51,15 @@ export default async function ConsentimentoPage() {
       />
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <BackToMemberArea />
+        {hasPending && (
+          <div className="mb-6 flex items-start gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>
+              Você precisa aceitar os termos abaixo para continuar usando a Central do
+              Membro.
+            </span>
+          </div>
+        )}
         <ConsentTermsList terms={terms} />
       </div>
     </div>

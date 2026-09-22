@@ -6,6 +6,7 @@ import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import ContributionSummary from "@/components/membros/ContributionSummary";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
+import { hasMissingConsent } from "@/lib/consentGate";
 
 export const metadata: Metadata = {
   title: "Contribuições e Saídas | IBCI - Igreja Batista Central do Ibura",
@@ -28,6 +29,9 @@ export default async function MinhasContribuicoesPage() {
     select is_validated_member from members where id = ${session.memberId}
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");
+  if (await hasMissingConsent(session.memberId)) {
+    redirect("/central-do-membro/consentimento");
+  }
 
   // Só busca lançamentos vinculados ao próprio membro logado — o memberId
   // vem da sessão assinada no servidor, nunca de um parâmetro do client.

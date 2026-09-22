@@ -5,6 +5,7 @@ import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import ProfileForm from "@/components/membros/ProfileForm";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
+import { hasMissingConsent } from "@/lib/consentGate";
 
 export const metadata: Metadata = {
   title: "Meu Cadastro | IBCI - Igreja Batista Central do Ibura",
@@ -22,6 +23,9 @@ export default async function PerfilPage() {
     from members where id = ${session.memberId}
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");
+  if (await hasMissingConsent(session.memberId)) {
+    redirect("/central-do-membro/consentimento");
+  }
 
   return (
     <div className="bg-bg-light">
