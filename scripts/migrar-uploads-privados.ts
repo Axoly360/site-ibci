@@ -195,7 +195,7 @@ async function apagarPublicosJaMigrados() {
         continue;
       }
       try {
-        await del(publicUrl);
+        await del(publicUrl, { token: process.env.BLOB_READ_WRITE_TOKEN });
         console.log(`[apagado] ${publicUrl}`);
       } catch (err) {
         console.log(`[erro] ${publicUrl}: ${err instanceof Error ? err.message : String(err)}`);
