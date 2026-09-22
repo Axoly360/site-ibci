@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
+import { sql } from "@/lib/db";
 
 export const SESSION_COOKIE = "ibci_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 90; // 90 dias
@@ -8,6 +9,10 @@ export interface SessionPayload {
   memberId: string;
   name: string;
   email: string;
+  /** Comparado com members.session_version no banco — redefinir a senha
+   * incrementa a versão e invalida qualquer cookie de sessão antigo, mesmo
+   * dentro dos 90 dias de validade. */
+  sessionVersion: number;
 }
 
 function getSecret(): string {
@@ -58,5 +63,15 @@ export async function getSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const value = cookieStore.get(SESSION_COOKIE)?.value;
   if (!value) return null;
-  return verifySessionCookieValue(value);
+  const payload = verifySessionCookieValue(value);
+  if (!payload) return null;
+
+  const [member] = await sql`
+    select session_version from members where id = ${payload.memberId}
+  `;
+  if (!member || member.session_version !== payload.sessionVersion) {
+    return null;
+  }
+
+  return payload;
 }

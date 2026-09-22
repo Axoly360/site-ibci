@@ -14,14 +14,21 @@ export async function GET(request: NextRequest) {
 
   const [row] = await sql`
     select login_tokens.member_id, login_tokens.event_slug, login_tokens.next_path,
-           login_tokens.expires_at, login_tokens.used_at, members.name, members.email
+           login_tokens.expires_at, login_tokens.used_at, members.name, members.email,
+           members.session_version
     from login_tokens
     join members on members.id = login_tokens.member_id
     where login_tokens.token = ${token}
   `;
 
   if (!row || row.used_at || new Date(row.expires_at) < new Date()) {
-    const invalidUrl = new URL("/para-voce/eventos", request.url);
+    // Se o token já identificava um evento específico, volta pra página
+    // daquele evento (não pra listagem geral) — a pessoa não perde o
+    // contexto do que estava tentando se inscrever.
+    const fallbackPath = row?.event_slug
+      ? `/para-voce/eventos/${row.event_slug}`
+      : "/para-voce/eventos";
+    const invalidUrl = new URL(fallbackPath, request.url);
     invalidUrl.searchParams.set("erro", "link-invalido");
     return NextResponse.redirect(invalidUrl);
   }
@@ -52,6 +59,7 @@ export async function GET(request: NextRequest) {
       memberId: row.member_id,
       name: row.name,
       email: row.email,
+      sessionVersion: row.session_version,
     }),
     sessionCookieOptions
   );

@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Lock, Send } from "lucide-react";
 import Button from "@/components/ui/Button";
 
@@ -34,7 +35,11 @@ export default function MemberLoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto flex max-w-sm flex-col gap-3">
+      <label htmlFor="member-login-email" className="sr-only">
+        E-mail
+      </label>
       <input
+        id="member-login-email"
         type="email"
         required
         placeholder="Seu e-mail"
@@ -42,7 +47,11 @@ export default function MemberLoginForm() {
         onChange={(e) => setEmail(e.target.value)}
         className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm text-text-neutral outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
+      <label htmlFor="member-login-password" className="sr-only">
+        Senha
+      </label>
       <input
+        id="member-login-password"
         type="password"
         required
         placeholder="Senha"
@@ -60,6 +69,12 @@ export default function MemberLoginForm() {
           {error}
         </p>
       )}
+      <Link
+        href="/esqueci-senha?tipo=membro"
+        className="text-center text-sm font-semibold text-secondary hover:underline"
+      >
+        Esqueci minha senha
+      </Link>
     </form>
   );
 }

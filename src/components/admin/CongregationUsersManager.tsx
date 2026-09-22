@@ -94,7 +94,7 @@ export default function CongregationUsersManager({
             placeholder="Senha inicial (avise a pessoa por fora)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            minLength={6}
+            minLength={8}
             className="w-full rounded-lg border border-black/10 bg-bg-light px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
           <Button type="submit" disabled={loading}>

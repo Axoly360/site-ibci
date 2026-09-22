@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { CalendarDays, MapPin, MessageCircle } from "lucide-react";
+import { CalendarDays, MapPin, MessageCircle, XCircle } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import InscricaoForm from "@/components/eventos/InscricaoForm";
 import Button from "@/components/ui/Button";
@@ -13,6 +13,7 @@ import { churchInfo } from "@/data/churchInfo";
 
 interface EventoPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ erro?: string }>;
 }
 
 export async function generateMetadata({
@@ -27,10 +28,19 @@ export async function generateMetadata({
   };
 }
 
-export default async function EventoPage({ params }: EventoPageProps) {
+export default async function EventoPage({ params, searchParams }: EventoPageProps) {
   const { slug } = await params;
+  const { erro } = await searchParams;
   const event = await getEventBySlug(slug);
   if (!event) notFound();
+
+  const linkInvalidoAviso = erro === "link-invalido" && (
+    <div className="mx-auto mb-8 flex max-w-2xl items-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+      <XCircle className="h-5 w-5 shrink-0" />
+      Esse link de confirmação é inválido ou já expirou. Preencha o formulário
+      abaixo de novo para receber um novo link.
+    </div>
+  );
 
   // Eventos com contato externo (ex.: pagos, combinados com um responsável)
   // não usam o fluxo de conta/e-mail nem o banco de dados.
@@ -120,6 +130,7 @@ export default async function EventoPage({ params }: EventoPageProps) {
       <PageBanner title={event.title} />
 
       <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 lg:px-8">
+        {linkInvalidoAviso}
         {event.imageUrl && (
           <div className="mx-auto mb-8 overflow-hidden rounded-2xl">
             <Image

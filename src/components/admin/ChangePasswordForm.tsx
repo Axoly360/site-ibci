@@ -43,7 +43,7 @@ export default function ChangePasswordForm() {
       <input
         type="password"
         required
-        minLength={6}
+        minLength={8}
         placeholder="Nova senha"
         value={novaSenha}
         onChange={(e) => setNovaSenha(e.target.value)}

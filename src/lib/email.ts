@@ -66,6 +66,37 @@ export async function sendConfirmationEmail({
   }
 }
 
+interface SendPasswordResetEmailParams {
+  to: string;
+  name: string;
+  resetUrl: string;
+}
+
+export async function sendPasswordResetEmail({ to, name, resetUrl }: SendPasswordResetEmailParams) {
+  const { error } = await getResend().emails.send({
+    from: FROM,
+    to,
+    subject: "Redefinir sua senha — IBCI",
+    html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+        <h2 style="color: #123B2C;">Olá, ${name}!</h2>
+        <p>Recebemos um pedido para redefinir sua senha. Se foi você, clique no botão abaixo — o link vale por 30 minutos.</p>
+        <p style="margin: 24px 0;">
+          <a href="${resetUrl}" style="background: #D4AF37; color: #123B2C; padding: 12px 24px; border-radius: 999px; text-decoration: none; font-weight: bold;">
+            Redefinir senha
+          </a>
+        </p>
+        <p style="color: #666; font-size: 14px;">
+          Se você não pediu isso, pode ignorar este e-mail — sua senha continua a mesma.
+        </p>
+      </div>
+    `,
+  });
+  if (error) {
+    throw new Error(`Falha ao enviar e-mail de redefinição de senha: ${error.message}`);
+  }
+}
+
 interface SendMembershipDecisionEmailParams {
   to: string;
   name: string;

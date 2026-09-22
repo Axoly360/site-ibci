@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
       memberId: member.id,
       name: member.name,
       email: member.email,
+      sessionVersion: member.session_version,
     }),
     sessionCookieOptions
   );

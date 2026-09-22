@@ -675,3 +675,21 @@ end $$;
 -- não invalidava sessões antigas (roubadas ou não) — elas continuavam
 -- válidas até expirar sozinhas (12h).
 alter table admin_users add column if not exists session_version integer not null default 0;
+
+-- Fluxo de "esqueci minha senha" (membro e admin) — antes não existia
+-- nenhum jeito de redefinir a senha sem outro admin fazer isso manualmente.
+create table if not exists password_reset_tokens (
+  token text primary key,
+  scope text not null check (scope in ('admin', 'membro')),
+  account_id uuid not null,
+  expires_at timestamptz not null,
+  used_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index if not exists password_reset_tokens_account_idx on password_reset_tokens (scope, account_id);
+
+-- Mesmo mecanismo de session_version do admin, agora para membros: sem
+-- isso, redefinir a senha (fluxo de "esqueci minha senha" acima) não
+-- derrubava uma sessão de membro já aberta, que ficaria valendo por até 90
+-- dias mesmo depois da troca de senha.
+alter table members add column if not exists session_version integer not null default 0;

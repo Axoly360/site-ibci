@@ -100,7 +100,7 @@ export default function MembershipRequestForm() {
             id="mrf-password"
             required
             type="password"
-            minLength={6}
+            minLength={8}
             placeholder="Crie uma senha"
             value={form.password}
             onChange={set("password")}
@@ -115,7 +115,7 @@ export default function MembershipRequestForm() {
             id="mrf-confirm-password"
             required
             type="password"
-            minLength={6}
+            minLength={8}
             placeholder="Confirme a senha"
             value={form.confirmPassword}
             onChange={set("confirmPassword")}

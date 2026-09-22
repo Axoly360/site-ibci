@@ -18,9 +18,9 @@ export async function POST(request: NextRequest) {
   const senhaAtual = typeof body?.senhaAtual === "string" ? body.senhaAtual : "";
   const novaSenha = typeof body?.novaSenha === "string" ? body.novaSenha : "";
 
-  if (novaSenha.length < 6) {
+  if (novaSenha.length < 8) {
     return NextResponse.json(
-      { error: "A nova senha precisa ter pelo menos 6 caracteres." },
+      { error: "A nova senha precisa ter pelo menos 8 caracteres." },
       { status: 400 }
     );
   }
