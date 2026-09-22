@@ -3,9 +3,10 @@ import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import BannerManager from "@/components/admin/BannerManager";
+import HeroBannerManager from "@/components/admin/HeroBannerManager";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { getContentBlocks } from "@/lib/contentBlocks";
-import { heroBanners } from "@/data/heroBanners";
+import { getHeroBanners } from "@/lib/heroBanners";
 
 export const metadata: Metadata = {
   title: "Banners | Painel IBCI",
@@ -17,17 +18,7 @@ export default async function AdminBannersPage() {
   if (!session) redirect("/admin/entrar");
   if (!hasPermission(session, "banners")) redirect("/admin");
 
-  const blocks = await getContentBlocks();
-
-  const heroSlots = heroBanners.map((banner) => ({
-    key: banner.id,
-    label: `Hero — ${banner.placeholderTitle ?? banner.id}`,
-    hasMobileImage: true,
-    currentImage: blocks[banner.id]?.image_url ?? banner.srcDesktop ?? null,
-    currentImageMobile: blocks[banner.id]?.image_mobile_url ?? banner.srcMobile ?? null,
-    currentTitle: blocks[banner.id]?.title ?? banner.alt ?? null,
-    currentLink: blocks[banner.id]?.link_url ?? banner.href ?? null,
-  }));
+  const [blocks, heroBanners] = await Promise.all([getContentBlocks(), getHeroBanners()]);
 
   const otherSlots = [
     {
@@ -79,11 +70,7 @@ export default async function AdminBannersPage() {
             <h2 className="mb-3 font-heading text-xl font-bold text-primary">
               Hero (carrossel do topo)
             </h2>
-            <div className="flex flex-col gap-6">
-              {heroSlots.map((slot) => (
-                <BannerManager key={slot.key} slot={slot} />
-              ))}
-            </div>
+            <HeroBannerManager banners={heroBanners} />
           </div>
 
           <div>

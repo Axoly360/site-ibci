@@ -693,3 +693,45 @@ create index if not exists password_reset_tokens_account_idx on password_reset_t
 -- derrubava uma sessão de membro já aberta, que ficaria valendo por até 90
 -- dias mesmo depois da troca de senha.
 alter table members add column if not exists session_version integer not null default 0;
+
+-- Hero banners (carrossel do topo da home) migrado de array estático
+-- (src/data/heroBanners.ts, removido) para tabela com CRUD completo no
+-- admin — antes só existiam 3 slots fixos no código; agora dá pra ter 1,
+-- 2, 3 ou mais banners ativos, na ordem que quiser.
+create table if not exists hero_banners (
+  id uuid primary key default gen_random_uuid(),
+  image_desktop_url text not null,
+  image_mobile_url text not null,
+  alt_text text,
+  href_url text,
+  position integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+-- Semente única: preserva os 3 banners que já existiam, incluindo
+-- qualquer imagem/título/link já trocado pelo admin em content_blocks
+-- (mesma key usada antes). Roda só se a tabela ainda estiver vazia.
+insert into hero_banners (image_desktop_url, image_mobile_url, alt_text, href_url, position)
+select * from (
+  select
+    coalesce((select image_url from content_blocks where key = 'uma-familia-para-pertencer'), '/hero-1-desktop.png') as image_desktop_url,
+    coalesce((select image_mobile_url from content_blocks where key = 'uma-familia-para-pertencer'), '/hero-1-mobile.png') as image_mobile_url,
+    coalesce((select title from content_blocks where key = 'uma-familia-para-pertencer'), 'Igreja Batista Central do Ibura — Uma família para pertencer. Transmissão ao vivo às quartas-feiras 19h e domingos 8h30–19h00.') as alt_text,
+    (select link_url from content_blocks where key = 'uma-familia-para-pertencer') as href_url,
+    0 as position
+  union all
+  select
+    coalesce((select image_url from content_blocks where key = 'congresso-de-casais'), '/hero-2-desktop.png'),
+    coalesce((select image_mobile_url from content_blocks where key = 'congresso-de-casais'), '/hero-2-mobile.png'),
+    coalesce((select title from content_blocks where key = 'congresso-de-casais'), 'Congresso de Casais — 12 e 13 de setembro, das 10h às 12h, no Hotel Porto da Serra, Gravatá. Inscrições com Maurício e Gineide. Investimento R$ 350,00 por casal.'),
+    coalesce((select link_url from content_blocks where key = 'congresso-de-casais'), '/para-voce/eventos/congresso-de-casais'),
+    1
+  union all
+  select
+    coalesce((select image_url from content_blocks where key = 'conferencia-aniversario-57-anos'), '/hero-3-desktop.png'),
+    coalesce((select image_mobile_url from content_blocks where key = 'conferencia-aniversario-57-anos'), '/hero-3-mobile.png'),
+    coalesce((select title from content_blocks where key = 'conferencia-aniversario-57-anos'), 'Conferência de Aniversário — 57 Anos. Preletoras: Solange Paiva, Evily Menezes e Nivânia Gonçalves.'),
+    (select link_url from content_blocks where key = 'conferencia-aniversario-57-anos'),
+    2
+) as seed
+where not exists (select 1 from hero_banners);

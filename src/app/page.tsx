@@ -12,7 +12,7 @@ import { getEvents } from "@/lib/events";
 import { getWeeklySchedule } from "@/lib/weeklySchedule";
 import { getSermonVideos } from "@/lib/sermonVideos";
 import { getQuickAccessCards } from "@/lib/quickAccess";
-import { heroBanners } from "@/data/heroBanners";
+import { getHeroBanners } from "@/lib/heroBanners";
 import {
   HOME_SECTION_ORDER_KEY,
   parseHomeSectionOrder,
@@ -21,7 +21,7 @@ import {
 import type { ReactNode } from "react";
 
 export default async function Home() {
-  const [texts, blocks, eventsList, scheduleItems, sermonVideos, quickAccessCards] =
+  const [texts, blocks, eventsList, scheduleItems, sermonVideos, quickAccessCards, heroBanners] =
     await Promise.all([
       getAllContent(),
       getContentBlocks(),
@@ -29,19 +29,8 @@ export default async function Home() {
       getWeeklySchedule(),
       getSermonVideos(),
       getQuickAccessCards(),
+      getHeroBanners(),
     ]);
-
-  const mergedHeroBanners = heroBanners.map((banner) => {
-    const override = blocks[banner.id];
-    if (!override) return banner;
-    return {
-      ...banner,
-      srcDesktop: override.image_url ?? banner.srcDesktop,
-      srcMobile: override.image_mobile_url ?? banner.srcMobile,
-      alt: override.title ?? banner.alt,
-      href: override.link_url ?? banner.href,
-    };
-  });
 
   const pepe = {
     image: blocks["highlight-pepe"]?.image_url ?? "/highlight-pepe.png",
@@ -116,7 +105,7 @@ export default async function Home() {
 
   return (
     <>
-      <HeroSection banners={mergedHeroBanners} />
+      <HeroSection banners={heroBanners} />
       {slot1}
       <HighlightBannersSection pepe={pepe} eventoPrincipal={eventoPrincipal} />
       {slot2}
