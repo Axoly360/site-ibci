@@ -621,3 +621,57 @@ alter table contribution_receipts drop constraint if exists contribution_receipt
 alter table contribution_receipts
   add constraint contribution_receipts_member_id_fkey
   foreign key (member_id) references members(id) on delete set null;
+
+-- CHECK constraints em colunas "status"/"type"/"relationship" que até aqui
+-- só eram validadas pela aplicação — nenhum valor errado é esperado (o
+-- código sempre grava um dos valores abaixo), mas sem isso qualquer rota
+-- nova ou correção manual no banco pode gravar um valor fora do padrão e
+-- quebrar silenciosamente uma tela que filtra por esse valor exato (ex.:
+-- Ministério Infantil filtra por relationship = 'Filho(a)'). Usa um bloco
+-- por constraint pra rodar de novo sem erro (idempotente).
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'admin_users_status_check') then
+    alter table admin_users add constraint admin_users_status_check
+      check (status in ('ativo', 'inativo'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'congregation_users_status_check') then
+    alter table congregation_users add constraint congregation_users_status_check
+      check (status in ('ativo', 'inativo'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'membership_requests_status_check') then
+    alter table membership_requests add constraint membership_requests_status_check
+      check (status in ('pendente', 'aprovado', 'recusado'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'group_join_requests_status_check') then
+    alter table group_join_requests add constraint group_join_requests_status_check
+      check (status in ('pendente', 'aprovado', 'recusado'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'congregation_requests_status_check') then
+    alter table congregation_requests add constraint congregation_requests_status_check
+      check (status in ('pendente', 'aprovado', 'recusado'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'contribution_receipts_status_check') then
+    alter table contribution_receipts add constraint contribution_receipts_status_check
+      check (status in ('pendente', 'aprovado'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'contribution_receipts_type_check') then
+    alter table contribution_receipts add constraint contribution_receipts_type_check
+      check (type is null or type in ('entrada', 'saida'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'congregation_financial_submissions_status_check') then
+    alter table congregation_financial_submissions add constraint congregation_financial_submissions_status_check
+      check (status in ('pendente', 'aprovado'));
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'member_children_relationship_check') then
+    alter table member_children add constraint member_children_relationship_check
+      check (relationship in ('Cônjuge', 'Filho(a)', 'Pai', 'Mãe', 'Outro'));
+  end if;
+end $$;
+
+-- Versão da sessão do admin: incrementada ao trocar a própria senha, e
+-- comparada com o valor gravado no cookie a cada requisição
+-- (getAdminSession, em src/lib/admin-session.ts). Sem isso, trocar a senha
+-- não invalidava sessões antigas (roubadas ou não) — elas continuavam
+-- válidas até expirar sozinhas (12h).
+alter table admin_users add column if not exists session_version integer not null default 0;

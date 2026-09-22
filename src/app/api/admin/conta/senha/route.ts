@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/password";
-import { getAdminSession } from "@/lib/admin-session";
+import {
+  ADMIN_COOKIE,
+  adminCookieOptions,
+  createAdminCookieValue,
+  getAdminSession,
+} from "@/lib/admin-session";
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSession();
@@ -26,7 +31,22 @@ export async function POST(request: NextRequest) {
   }
 
   const novoHash = await hashPassword(novaSenha);
-  await sql`update admin_users set password_hash = ${novoHash} where id = ${session.id}`;
+  // Incrementa session_version: invalida qualquer outro cookie de sessão
+  // deste admin que já exista (ex.: sessão roubada) — ver getAdminSession().
+  const [updated] = await sql`
+    update admin_users
+    set password_hash = ${novoHash}, session_version = session_version + 1
+    where id = ${session.id}
+    returning session_version
+  `;
 
-  return NextResponse.json({ ok: true });
+  // Reemite o cookie da PRÓPRIA sessão atual com a nova versão — senão o
+  // admin que acabou de trocar a senha seria deslogado no ato.
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set(
+    ADMIN_COOKIE,
+    createAdminCookieValue({ ...session, sessionVersion: updated.session_version }),
+    adminCookieOptions
+  );
+  return response;
 }

@@ -78,10 +78,11 @@ export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string
     <Card className="mx-auto max-w-md space-y-4 p-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="visitante-nome" className="mb-1 block text-sm font-semibold text-text-neutral">
             Nome completo
           </label>
           <input
+            id="visitante-nome"
             type="text"
             required
             value={name}
@@ -91,10 +92,11 @@ export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="visitante-whatsapp" className="mb-1 block text-sm font-semibold text-text-neutral">
             WhatsApp
           </label>
           <input
+            id="visitante-whatsapp"
             type="tel"
             required
             value={whatsapp}
@@ -105,10 +107,11 @@ export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="visitante-sexo" className="mb-1 block text-sm font-semibold text-text-neutral">
             Sexo
           </label>
           <select
+            id="visitante-sexo"
             value={sex}
             onChange={(e) => setSex(e.target.value)}
             className="w-full rounded-lg border border-black/10 px-3 py-2.5 text-sm"
@@ -199,10 +202,11 @@ export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="visitante-local" className="mb-1 block text-sm font-semibold text-text-neutral">
             Bairro/Cidade
           </label>
           <input
+            id="visitante-local"
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}

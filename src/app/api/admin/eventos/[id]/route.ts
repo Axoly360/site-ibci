@@ -3,8 +3,7 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
-
-const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpeg"];
+import { isImageFile, sanitizeFileName } from "@/lib/fileValidation";
 
 export async function POST(
   request: NextRequest,
@@ -51,7 +50,7 @@ export async function POST(
 
   let imageUrl: string | undefined;
   if (file && typeof file !== "string") {
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    if (!(await isImageFile(file))) {
       return NextResponse.json({ error: "Envie a imagem em PNG ou JPEG." }, { status: 400 });
     }
     if (file.size > 10 * 1024 * 1024) {
@@ -61,7 +60,7 @@ export async function POST(
       );
     }
     try {
-      const blob = await put(`eventos/${slug}/${Date.now()}-${file.name}`, file, {
+      const blob = await put(`eventos/${slug}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
         access: "public",
       });
       imageUrl = blob.url;

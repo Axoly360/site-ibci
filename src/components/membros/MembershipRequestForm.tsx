@@ -68,14 +68,22 @@ export default function MembershipRequestForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto flex max-w-xl flex-col gap-3">
+      <label htmlFor="mrf-name" className="sr-only">
+        Nome completo
+      </label>
       <input
+        id="mrf-name"
         required
         placeholder="Nome completo"
         value={form.name}
         onChange={set("name")}
         className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
+      <label htmlFor="mrf-email" className="sr-only">
+        E-mail
+      </label>
       <input
+        id="mrf-email"
         required
         type="email"
         placeholder="E-mail"
@@ -84,64 +92,108 @@ export default function MembershipRequestForm() {
         className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <input
-          required
-          type="password"
-          minLength={6}
-          placeholder="Crie uma senha"
-          value={form.password}
-          onChange={set("password")}
-          className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-        />
-        <input
-          required
-          type="password"
-          minLength={6}
-          placeholder="Confirme a senha"
-          value={form.confirmPassword}
-          onChange={set("confirmPassword")}
-          className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-        />
+        <div>
+          <label htmlFor="mrf-password" className="sr-only">
+            Crie uma senha
+          </label>
+          <input
+            id="mrf-password"
+            required
+            type="password"
+            minLength={6}
+            placeholder="Crie uma senha"
+            value={form.password}
+            onChange={set("password")}
+            className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
+        <div>
+          <label htmlFor="mrf-confirm-password" className="sr-only">
+            Confirme a senha
+          </label>
+          <input
+            id="mrf-confirm-password"
+            required
+            type="password"
+            minLength={6}
+            placeholder="Confirme a senha"
+            value={form.confirmPassword}
+            onChange={set("confirmPassword")}
+            className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <input
-          placeholder="Telefone / WhatsApp"
-          value={form.phone}
-          onChange={set("phone")}
-          className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-        />
-        <input
-          placeholder="CPF"
-          inputMode="numeric"
-          maxLength={14}
-          value={form.cpf}
-          onChange={setCPF}
-          className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-        />
+        <div>
+          <label htmlFor="mrf-phone" className="sr-only">
+            Telefone / WhatsApp
+          </label>
+          <input
+            id="mrf-phone"
+            placeholder="Telefone / WhatsApp"
+            value={form.phone}
+            onChange={set("phone")}
+            className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
+        <div>
+          <label htmlFor="mrf-cpf" className="sr-only">
+            CPF
+          </label>
+          <input
+            id="mrf-cpf"
+            placeholder="CPF"
+            inputMode="numeric"
+            maxLength={14}
+            value={form.cpf}
+            onChange={setCPF}
+            className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <input
-          placeholder="Data de nascimento (dd/mm/aaaa)"
-          inputMode="numeric"
-          maxLength={10}
-          value={form.birthdate}
-          onChange={setBirthdate}
-          className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-        />
-        <input
-          placeholder="Há quanto tempo frequenta a IBCI"
-          value={form.timeAtChurch}
-          onChange={set("timeAtChurch")}
-          className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-        />
+        <div>
+          <label htmlFor="mrf-birthdate" className="sr-only">
+            Data de nascimento
+          </label>
+          <input
+            id="mrf-birthdate"
+            placeholder="Data de nascimento (dd/mm/aaaa)"
+            inputMode="numeric"
+            maxLength={10}
+            value={form.birthdate}
+            onChange={setBirthdate}
+            className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
+        <div>
+          <label htmlFor="mrf-time-at-church" className="sr-only">
+            Há quanto tempo frequenta a IBCI
+          </label>
+          <input
+            id="mrf-time-at-church"
+            placeholder="Há quanto tempo frequenta a IBCI"
+            value={form.timeAtChurch}
+            onChange={set("timeAtChurch")}
+            className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
       </div>
+      <label htmlFor="mrf-address" className="sr-only">
+        Endereço
+      </label>
       <input
+        id="mrf-address"
         placeholder="Endereço"
         value={form.address}
         onChange={set("address")}
         className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
+      <label htmlFor="mrf-note" className="sr-only">
+        Quer contar mais alguma coisa?
+      </label>
       <textarea
+        id="mrf-note"
         placeholder="Quer contar mais alguma coisa? (opcional)"
         value={form.note}
         onChange={set("note")}

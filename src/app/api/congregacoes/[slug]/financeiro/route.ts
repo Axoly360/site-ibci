@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { sql } from "@/lib/db";
 import { getCongregationSession } from "@/lib/congregation-session";
+import { isImageOrPdfFile, sanitizeFileName } from "@/lib/fileValidation";
 
 const TYPES = ["entrada", "saida"];
-const ALLOWED_RECEIPT_TYPES = ["application/pdf", "image/png", "image/jpeg"];
 
 export async function POST(
   request: NextRequest,
@@ -43,7 +43,7 @@ export async function POST(
 
   let receiptUrl: string | null = null;
   if (file && typeof file !== "string") {
-    if (!ALLOWED_RECEIPT_TYPES.includes(file.type)) {
+    if (!(await isImageOrPdfFile(file))) {
       return NextResponse.json(
         { error: "Envie o comprovante em PDF, PNG ou JPEG." },
         { status: 400 }
@@ -56,7 +56,7 @@ export async function POST(
       );
     }
     try {
-      const blob = await put(`congregacoes/${slug}/${Date.now()}-${file.name}`, file, {
+      const blob = await put(`congregacoes/${slug}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
         access: "public",
       });
       receiptUrl = blob.url;

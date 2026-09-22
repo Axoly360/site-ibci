@@ -58,12 +58,13 @@ export default function TornarMembroForm({ initialName }: { initialName: string 
 
       <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
         <div>
-          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-secondary">
+          <label htmlFor="tmf-name" className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-secondary">
             Nome completo
           </label>
           <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
             <UserRound className="h-4 w-4 shrink-0 text-white/40" />
             <input
+              id="tmf-name"
               required
               placeholder="Digite seu nome completo"
               value={name}
@@ -75,12 +76,13 @@ export default function TornarMembroForm({ initialName }: { initialName: string 
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-secondary">
+            <label htmlFor="tmf-phone" className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-secondary">
               Telefone / WhatsApp
             </label>
             <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
               <MessageCircle className="h-4 w-4 shrink-0 text-white/40" />
               <input
+                id="tmf-phone"
                 placeholder="(00) 0 0000-0000"
                 value={phone}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPhone(e.target.value)}
@@ -89,12 +91,13 @@ export default function TornarMembroForm({ initialName }: { initialName: string 
             </div>
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-secondary">
+            <label htmlFor="tmf-cpf" className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-secondary">
               CPF
             </label>
             <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
               <FileText className="h-4 w-4 shrink-0 text-white/40" />
               <input
+                id="tmf-cpf"
                 inputMode="numeric"
                 maxLength={14}
                 placeholder="000.000.000-00"

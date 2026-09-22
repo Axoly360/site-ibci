@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       const [created] = await sql`
         insert into admin_users (name, email, password_hash, role, permissions, status)
         values (${name}, ${email}, ${passwordHash}, ${role}, ${ROLES[role]}, 'ativo')
-        returning id, name, email, role, permissions
+        returning id, name, email, role, permissions, session_version
       `;
       const response = NextResponse.json({ ok: true });
       response.cookies.set(
@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
           email: created.email,
           role: created.role,
           permissions: created.permissions,
+          sessionVersion: created.session_version,
         }),
         adminCookieOptions
       );
@@ -89,6 +90,7 @@ export async function POST(request: NextRequest) {
       email: admin.email,
       role: admin.role,
       permissions: admin.permissions,
+      sessionVersion: admin.session_version,
     }),
     adminCookieOptions
   );

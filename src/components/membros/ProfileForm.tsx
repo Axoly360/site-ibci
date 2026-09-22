@@ -125,10 +125,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+        <label htmlFor="pf-name" className="mb-1.5 block text-sm font-semibold text-text-neutral">
           Nome completo
         </label>
         <input
+          id="pf-name"
           required
           value={form.name}
           onChange={set("name")}
@@ -137,10 +138,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+        <label htmlFor="pf-email" className="mb-1.5 block text-sm font-semibold text-text-neutral">
           E-mail
         </label>
         <input
+          id="pf-email"
           disabled
           value={profile.email}
           className="w-full rounded-lg border border-black/10 bg-black/5 px-4 py-3 text-sm text-text-neutral/60"
@@ -149,18 +151,20 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="pf-phone" className="mb-1.5 block text-sm font-semibold text-text-neutral">
             Telefone / WhatsApp
           </label>
           <input
+            id="pf-phone"
             value={form.phone}
             onChange={set("phone")}
             className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">CPF</label>
+          <label htmlFor="pf-cpf" className="mb-1.5 block text-sm font-semibold text-text-neutral">CPF</label>
           <input
+            id="pf-cpf"
             inputMode="numeric"
             maxLength={14}
             value={form.cpf}
@@ -171,10 +175,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+        <label htmlFor="pf-address" className="mb-1.5 block text-sm font-semibold text-text-neutral">
           Endereço
         </label>
         <input
+          id="pf-address"
           value={form.address}
           onChange={set("address")}
           className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -183,10 +188,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="pf-birthdate" className="mb-1.5 block text-sm font-semibold text-text-neutral">
             Nascimento
           </label>
           <input
+            id="pf-birthdate"
             placeholder="dd/mm/aaaa"
             inputMode="numeric"
             maxLength={10}
@@ -196,10 +202,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="pf-baptism" className="mb-1.5 block text-sm font-semibold text-text-neutral">
             Batismo
           </label>
           <input
+            id="pf-baptism"
             placeholder="dd/mm/aaaa"
             inputMode="numeric"
             maxLength={10}
@@ -209,10 +216,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="pf-arrival" className="mb-1.5 block text-sm font-semibold text-text-neutral">
             Chegada na igreja
           </label>
           <input
+            id="pf-arrival"
             placeholder="dd/mm/aaaa"
             inputMode="numeric"
             maxLength={10}
@@ -224,10 +232,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+        <label htmlFor="pf-time-at-church" className="mb-1.5 block text-sm font-semibold text-text-neutral">
           Há quanto tempo frequenta a IBCI
         </label>
         <input
+          id="pf-time-at-church"
           value={form.timeAtChurch}
           onChange={set("timeAtChurch")}
           className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -236,10 +245,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="pf-marital-status" className="mb-1.5 block text-sm font-semibold text-text-neutral">
             Estado civil
           </label>
           <select
+            id="pf-marital-status"
             value={form.maritalStatus}
             onChange={(e) =>
               setForm((prev) => ({ ...prev, maritalStatus: e.target.value }))
@@ -255,10 +265,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
           </select>
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="pf-birthplace" className="mb-1.5 block text-sm font-semibold text-text-neutral">
             Naturalidade
           </label>
           <input
+            id="pf-birthplace"
             placeholder="Cidade / UF"
             value={form.birthplace}
             onChange={set("birthplace")}
@@ -266,10 +277,11 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          <label htmlFor="pf-profession" className="mb-1.5 block text-sm font-semibold text-text-neutral">
             Profissão
           </label>
           <input
+            id="pf-profession"
             value={form.profession}
             onChange={set("profession")}
             className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"

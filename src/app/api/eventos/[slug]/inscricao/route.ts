@@ -27,6 +27,18 @@ export async function POST(
     return NextResponse.json({ error: "Informe seu telefone/WhatsApp." }, { status: 400 });
   }
 
+  // Não bloqueia duas pessoas diferentes usando o mesmo telefone (comum
+  // numa família) — só evita gerar um segundo código pra o mesmo
+  // nome+telefone+evento em caso de duplo clique/refresh na mesma inscrição.
+  const [recente] = await sql`
+    select code from event_attendees
+    where event_slug = ${slug} and name = ${name} and phone = ${phone}
+      and created_at > now() - interval '1 minute'
+  `;
+  if (recente) {
+    return NextResponse.json({ ok: true, code: recente.code });
+  }
+
   let code = "";
   let inserted = false;
   for (let attempt = 0; attempt < 5 && !inserted; attempt++) {

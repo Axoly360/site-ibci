@@ -25,6 +25,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Informe seu WhatsApp." }, { status: 400 });
   }
 
+  // Não é uma constraint única de verdade (duas pessoas da mesma família
+  // podem legitimamente usar o mesmo WhatsApp em cadastros diferentes) — só
+  // evita o caso comum de duplo clique/refresh gerando dois registros
+  // idênticos em questão de segundos.
+  const [recente] = await sql`
+    select id from visitor_registrations
+    where name = ${name} and whatsapp = ${whatsapp}
+      and created_at > now() - interval '1 minute'
+  `;
+  if (recente) {
+    return NextResponse.json({ ok: true });
+  }
+
   await sql`
     insert into visitor_registrations
       (name, whatsapp, sex, first_visit, visit_times, is_christian, church_name, location, event_slug)

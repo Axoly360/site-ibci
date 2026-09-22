@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/session";
+import { isImageFile } from "@/lib/fileValidation";
 
 export async function POST(request: NextRequest) {
   const session = await getSession();
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
   if (!file || typeof file === "string") {
     return NextResponse.json({ error: "Nenhuma imagem enviada." }, { status: 400 });
   }
-  if (!file.type.startsWith("image/")) {
+  if (!(await isImageFile(file))) {
     return NextResponse.json({ error: "Envie um arquivo de imagem." }, { status: 400 });
   }
   if (file.size > 5 * 1024 * 1024) {

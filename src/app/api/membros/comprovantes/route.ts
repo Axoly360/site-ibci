@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/session";
+import { isImageOrPdfFile, sanitizeFileName } from "@/lib/fileValidation";
 
-const ALLOWED_TYPES = ["application/pdf", "image/png", "image/jpeg"];
 const TYPES = ["entrada", "saida"];
 
 export async function GET() {
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
   if (!file || typeof file === "string") {
     return NextResponse.json({ error: "Nenhum arquivo enviado." }, { status: 400 });
   }
-  if (!ALLOWED_TYPES.includes(file.type)) {
+  if (!(await isImageOrPdfFile(file))) {
     return NextResponse.json(
       { error: "Envie um arquivo em PDF, PNG ou JPEG." },
       { status: 400 }
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
 
   let blob;
   try {
-    blob = await put(`comprovantes/${session.memberId}/${Date.now()}-${file.name}`, file, {
+    blob = await put(`comprovantes/${session.memberId}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
       access: "public",
     });
   } catch {

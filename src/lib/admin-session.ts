@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 import { getSessionSecret } from "@/lib/session-secret";
+import { sql } from "@/lib/db";
 
 export const ADMIN_COOKIE = "ibci_admin";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 12; // 12 horas
@@ -65,6 +66,10 @@ export interface AdminSessionPayload {
   email: string;
   role: string;
   permissions: Permission[];
+  /** Comparado com admin_users.session_version no banco a cada requisição —
+   * trocar a senha incrementa a versão, derrubando qualquer cookie antigo
+   * (roubado ou não) que ainda carregue a versão anterior. */
+  sessionVersion: number;
 }
 
 function sign(value: string): string {
@@ -104,7 +109,22 @@ export async function getAdminSession(): Promise<AdminSessionPayload | null> {
   const cookieStore = await cookies();
   const value = cookieStore.get(ADMIN_COOKIE)?.value;
   if (!value) return null;
-  return verifyAdminCookieValue(value);
+  const payload = verifyAdminCookieValue(value);
+  if (!payload) return null;
+
+  // Confere a versão da sessão e o status no banco — se a senha foi trocada
+  // depois que este cookie foi emitido (session_version incrementada) ou o
+  // acesso foi desativado nesse meio-tempo, o cookie fica invalidado mesmo
+  // sendo uma assinatura HMAC válida (antes, desativar um admin só surtia
+  // efeito no próximo login, nunca numa sessão já aberta).
+  const [admin] = await sql`
+    select session_version, status from admin_users where id = ${payload.id}
+  `;
+  if (!admin || admin.session_version !== payload.sessionVersion || admin.status !== "ativo") {
+    return null;
+  }
+
+  return payload;
 }
 
 export function hasPermission(

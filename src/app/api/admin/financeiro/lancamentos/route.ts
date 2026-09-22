@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { sql } from "@/lib/db";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
+import { isImageOrPdfFile, sanitizeFileName } from "@/lib/fileValidation";
 
 const TYPES = ["entrada", "saida"];
-const ALLOWED_RECEIPT_TYPES = ["application/pdf", "image/png", "image/jpeg"];
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSession();
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
 
   let receiptUrl: string | null = existingReceiptUrl;
   if (file && typeof file !== "string") {
-    if (!ALLOWED_RECEIPT_TYPES.includes(file.type)) {
+    if (!(await isImageOrPdfFile(file))) {
       return NextResponse.json(
         { error: "Envie o comprovante em PDF, PNG ou JPEG." },
         { status: 400 }
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
       );
     }
     try {
-      const blob = await put(`financeiro/${Date.now()}-${file.name}`, file, {
+      const blob = await put(`financeiro/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
         access: "public",
       });
       receiptUrl = blob.url;
@@ -149,22 +149,43 @@ export async function POST(request: NextRequest) {
     returning id
   `;
 
+  // Reivindica o comprovante/prestação de contas com um UPDATE atômico
+  // (`where status != 'aprovado'`) em vez de confiar só na checagem lá em
+  // cima — fecha a janela de corrida entre "checar" e "marcar aprovado" se
+  // duas abas/pessoas aprovarem o mesmo comprovante quase ao mesmo tempo.
+  // Se perder a corrida, desfaz o lançamento recém-criado (evita duplicar).
   if (comprovanteId) {
-    await sql`
+    const [claimed] = await sql`
       update contribution_receipts
       set status = 'aprovado', financial_entry_id = ${entry.id},
           approved_by = ${session!.id}, approved_at = now()
-      where id = ${comprovanteId}
+      where id = ${comprovanteId} and status != 'aprovado'
+      returning id
     `;
+    if (!claimed) {
+      await sql`delete from financial_entries where id = ${entry.id}`;
+      return NextResponse.json(
+        { error: "Este comprovante já foi lançado (por outra aba ou usuário)." },
+        { status: 409 }
+      );
+    }
   }
 
   if (congregacaoSubmissaoId) {
-    await sql`
+    const [claimed] = await sql`
       update congregation_financial_submissions
       set status = 'aprovado', financial_entry_id = ${entry.id},
           approved_by = ${session!.id}, approved_at = now()
-      where id = ${congregacaoSubmissaoId}
+      where id = ${congregacaoSubmissaoId} and status != 'aprovado'
+      returning id
     `;
+    if (!claimed) {
+      await sql`delete from financial_entries where id = ${entry.id}`;
+      return NextResponse.json(
+        { error: "Esta prestação de contas já foi lançada (por outra aba ou usuário)." },
+        { status: 409 }
+      );
+    }
   }
 
   return NextResponse.json({ ok: true, id: entry.id });
