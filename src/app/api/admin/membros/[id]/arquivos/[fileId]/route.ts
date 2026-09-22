@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { del } from "@vercel/blob";
 import { sql } from "@/lib/db";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
+import { deleteStoredFile } from "@/lib/privateFiles";
 
 export async function DELETE(
   request: NextRequest,
@@ -19,7 +19,7 @@ export async function DELETE(
   }
 
   try {
-    await del(file.file_url);
+    await deleteStoredFile(file.file_url);
   } catch {
     // Segue removendo o registro mesmo se o arquivo já não existir no armazenamento.
   }

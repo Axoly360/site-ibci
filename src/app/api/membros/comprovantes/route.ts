@@ -71,8 +71,9 @@ export async function POST(request: NextRequest) {
   let blob;
   try {
     blob = await put(`comprovantes/${session.memberId}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
-      access: "public",
+      access: "private",
       addRandomSuffix: true,
+      token: process.env.BLOB_PRIVATE_READ_WRITE_TOKEN,
     });
   } catch {
     return NextResponse.json(
@@ -85,11 +86,11 @@ export async function POST(request: NextRequest) {
     insert into contribution_receipts
       (member_id, file_name, file_url, note, category, sender_type, type, amount)
     values (
-      ${session.memberId}, ${file.name}, ${blob.url},
+      ${session.memberId}, ${file.name}, ${blob.pathname},
       ${typeof note === "string" && note ? note : null},
       ${category}, ${senderType || null}, ${type}, ${amount}
     )
   `;
 
-  return NextResponse.json({ ok: true, url: blob.url });
+  return NextResponse.json({ ok: true });
 }

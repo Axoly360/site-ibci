@@ -36,8 +36,9 @@ export async function POST(
   let blob;
   try {
     blob = await put(`membros/${id}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
-      access: "public",
+      access: "private",
       addRandomSuffix: true,
+      token: process.env.BLOB_PRIVATE_READ_WRITE_TOKEN,
     });
   } catch {
     return NextResponse.json(
@@ -48,8 +49,8 @@ export async function POST(
 
   await sql`
     insert into member_files (member_id, file_name, file_url, uploaded_by)
-    values (${id}, ${file.name}, ${blob.url}, ${session!.id})
+    values (${id}, ${file.name}, ${blob.pathname}, ${session!.id})
   `;
 
-  return NextResponse.json({ ok: true, url: blob.url, name: file.name });
+  return NextResponse.json({ ok: true, name: file.name });
 }

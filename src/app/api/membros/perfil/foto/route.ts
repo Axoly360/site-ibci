@@ -3,6 +3,7 @@ import { put } from "@vercel/blob";
 import { sql } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { isImageFile } from "@/lib/fileValidation";
+import { resolvePrivateFileUrl } from "@/lib/privateFiles";
 
 export async function POST(request: NextRequest) {
   const session = await getSession();
@@ -36,8 +37,9 @@ export async function POST(request: NextRequest) {
   let blob;
   try {
     blob = await put(`membros/${session.memberId}/foto-${Date.now()}`, file, {
-      access: "public",
+      access: "private",
       addRandomSuffix: true,
+      token: process.env.BLOB_PRIVATE_READ_WRITE_TOKEN,
     });
   } catch {
     return NextResponse.json(
@@ -46,7 +48,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  await sql`update members set photo_url = ${blob.url} where id = ${session.memberId}`;
+  await sql`update members set photo_url = ${blob.pathname} where id = ${session.memberId}`;
 
-  return NextResponse.json({ ok: true, url: blob.url });
+  return NextResponse.json({ ok: true, url: resolvePrivateFileUrl(blob.pathname) });
 }

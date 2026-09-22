@@ -117,10 +117,11 @@ export async function POST(request: NextRequest) {
     }
     try {
       const blob = await put(`financeiro/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
-        access: "public",
+        access: "private",
         addRandomSuffix: true,
+        token: process.env.BLOB_PRIVATE_READ_WRITE_TOKEN,
       });
-      receiptUrl = blob.url;
+      receiptUrl = blob.pathname;
     } catch {
       return NextResponse.json(
         { error: "Armazenamento de arquivos ainda não configurado." },
