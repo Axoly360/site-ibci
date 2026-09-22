@@ -122,6 +122,11 @@ export default async function CentralDoMembroPage() {
                   </Link>
                   .
                 </>
+              ) : latestRequest?.status === "aprovado" ? (
+                <>
+                  <strong>{session.name}</strong>, seu acesso de membro foi revogado pela
+                  diretoria. Fale com a secretaria da IBCI se achar que isso foi um engano.
+                </>
               ) : (
                 <>
                   <strong>{session.name}</strong>, você ainda não é um membro da IBCI.

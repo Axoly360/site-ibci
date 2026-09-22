@@ -3,6 +3,7 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { setContent } from "@/lib/content";
+import { isImageOrPdfFile, sanitizeFileName } from "@/lib/fileValidation";
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSession();
@@ -22,10 +23,18 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+  if (!(await isImageOrPdfFile(file))) {
+    return NextResponse.json(
+      { error: "Envie uma imagem (PNG, JPEG, GIF, WEBP) ou um PDF." },
+      { status: 400 }
+    );
+  }
 
   let blob;
   try {
-    blob = await put(`escala/${Date.now()}-${file.name}`, file, { access: "public" });
+    blob = await put(`escala/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
+      access: "public",
+    });
   } catch {
     return NextResponse.json(
       { error: "Armazenamento de arquivos ainda não configurado." },

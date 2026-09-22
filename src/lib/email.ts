@@ -66,6 +66,44 @@ export async function sendConfirmationEmail({
   }
 }
 
+interface SendMembershipDecisionEmailParams {
+  to: string;
+  name: string;
+  decision: "aprovado" | "recusado";
+}
+
+export async function sendMembershipDecisionEmail({
+  to,
+  name,
+  decision,
+}: SendMembershipDecisionEmailParams) {
+  const isApproved = decision === "aprovado";
+  const subject = isApproved
+    ? "Seu cadastro de membro foi aprovado — IBCI"
+    : "Sobre o seu cadastro de membro — IBCI";
+  const body = isApproved
+    ? `Seu cadastro de membro na IBCI foi <strong>aprovado</strong> pela diretoria. Você já tem acesso completo à Central do Membro — entre com seu e-mail e senha para ver seus dados, grupos, contribuições e mais.`
+    : `Analisamos seu cadastro de membro na IBCI e, desta vez, ele não foi aprovado. Se quiser, você pode enviar novos dados a qualquer momento pela Central do Membro, ou falar com a secretaria para entender melhor.`;
+
+  const { error } = await getResend().emails.send({
+    from: FROM,
+    to,
+    subject,
+    html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+        <h2 style="color: #123B2C;">Olá, ${name}!</h2>
+        <p>${body}</p>
+        <p style="color: #666; font-size: 14px;">
+          Qualquer dúvida, fale com a secretaria da IBCI.
+        </p>
+      </div>
+    `,
+  });
+  if (error) {
+    throw new Error(`Falha ao enviar e-mail de decisão de cadastro: ${error.message}`);
+  }
+}
+
 interface SendCheckinQrEmailParams {
   to: string;
   name: string;

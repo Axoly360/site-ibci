@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
+import { sendMembershipDecisionEmail } from "@/lib/email";
 
 export async function POST(
   request: NextRequest,
@@ -34,6 +35,18 @@ export async function POST(
 
   if (decision === "aprovado") {
     await sql`update members set is_validated_member = true where id = ${req_.member_id}`;
+  }
+
+  // Avisa a pessoa por e-mail — nice-to-have: se o envio falhar (ex.:
+  // domínio do Resend não verificado), a decisão já foi salva e não deve
+  // ser desfeita por causa disso, só loga o erro.
+  const [member] = await sql`select name, email from members where id = ${req_.member_id}`;
+  if (member) {
+    try {
+      await sendMembershipDecisionEmail({ to: member.email, name: member.name, decision });
+    } catch (err) {
+      console.error("Falha ao enviar e-mail de decisão de cadastro:", err);
+    }
   }
 
   return NextResponse.json({ ok: true });

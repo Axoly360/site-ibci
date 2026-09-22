@@ -3,6 +3,7 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { setContentBlock } from "@/lib/contentBlocks";
+import { isImageFile, sanitizeFileName } from "@/lib/fileValidation";
 
 async function uploadIfPresent(
   formData: FormData,
@@ -14,7 +15,10 @@ async function uploadIfPresent(
   if (file.size > 10 * 1024 * 1024) {
     throw new Error(`Arquivo de "${field}" maior que 10 MB não é permitido.`);
   }
-  const blob = await put(`banners/${keyPrefix}/${Date.now()}-${file.name}`, file, {
+  if (!(await isImageFile(file))) {
+    throw new Error(`Arquivo de "${field}" precisa ser uma imagem (PNG, JPEG, GIF ou WEBP).`);
+  }
+  const blob = await put(`banners/${keyPrefix}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
     access: "public",
   });
   return blob.url;

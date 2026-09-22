@@ -6,6 +6,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
 import LancamentoForm, { type InitialComprovante } from "@/components/admin/LancamentoForm";
+import LancamentoActions from "@/components/admin/LancamentoActions";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { sql } from "@/lib/db";
 
@@ -313,6 +314,7 @@ export default async function AdminLancamentosPage({
                     <th className="py-2 pr-4">Descrição</th>
                     <th className="py-2 pr-4">Comprovante</th>
                     <th className="py-2 pr-4 text-right">Valor</th>
+                    <th className="py-2 pr-4">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -362,6 +364,19 @@ export default async function AdminLancamentosPage({
                       </td>
                       <td className="py-3 pr-4 text-right font-semibold text-text-neutral">
                         {formatCurrency(entry.amount)}
+                      </td>
+                      <td className="py-3 pr-4">
+                        <LancamentoActions
+                          entry={{
+                            id: entry.id,
+                            type: entry.type,
+                            category: entry.category,
+                            amount: entry.amount,
+                            entry_date: entry.entry_date,
+                            description: entry.description,
+                            requested_by: entry.requested_by,
+                          }}
+                        />
                       </td>
                     </tr>
                   ))}

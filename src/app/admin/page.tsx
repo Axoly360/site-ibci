@@ -22,6 +22,7 @@ import PageBanner from "@/components/layout/PageBanner";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
+import { sql } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Painel IBCI",
@@ -34,6 +35,8 @@ interface AdminLink {
   title: string;
   description: string;
   show: boolean;
+  /** Nº de itens pendentes de decisão — mostrado como badge no card. */
+  pendingCount?: number;
 }
 
 interface Sector {
@@ -49,6 +52,31 @@ export default async function AdminPage() {
   if (!session) {
     redirect("/admin/entrar");
   }
+
+  // Contadores de pendência por setor — só consulta o que o admin logado
+  // realmente tem permissão de ver, pra não gastar query à toa nem vazar
+  // número de outro setor. Sem isso, o único jeito de saber que havia
+  // pendência era entrar em cada tela uma por uma.
+  const [membrosPendentes, gruposPendentes, financeiroPendente, congregacoesPendentes] =
+    await Promise.all([
+      hasPermission(session, "membros")
+        ? sql`select count(*)::int as count from membership_requests where status = 'pendente'`
+        : Promise.resolve([{ count: 0 }]),
+      hasPermission(session, "membros")
+        ? sql`select count(*)::int as count from group_join_requests where status = 'pendente'`
+        : Promise.resolve([{ count: 0 }]),
+      hasPermission(session, "financeiro")
+        ? sql`
+            select
+              (select count(*)::int from contribution_receipts where status = 'pendente') +
+              (select count(*)::int from congregation_financial_submissions where status = 'pendente')
+              as count
+          `
+        : Promise.resolve([{ count: 0 }]),
+      hasPermission(session, "congregacoes")
+        ? sql`select count(*)::int as count from congregation_requests where status = 'pendente'`
+        : Promise.resolve([{ count: 0 }]),
+    ]);
 
   const sectors: Sector[] = [
     {
@@ -113,6 +141,7 @@ export default async function AdminPage() {
           title: "Membros",
           description: "Validar cadastros, arquivos e a escala de serviços.",
           show: hasPermission(session, "membros"),
+          pendingCount: membrosPendentes[0]?.count ?? 0,
         },
         {
           href: "/admin/grupos",
@@ -120,6 +149,7 @@ export default async function AdminPage() {
           title: "Grupos",
           description: "Grupos/células da igreja e quem faz parte de cada um.",
           show: hasPermission(session, "membros"),
+          pendingCount: gruposPendentes[0]?.count ?? 0,
         },
         {
           href: "/admin/servir",
@@ -170,6 +200,7 @@ export default async function AdminPage() {
           title: "Financeiro",
           description: "Comprovantes, lançamentos e relatório de dízimos e ofertas.",
           show: hasPermission(session, "financeiro"),
+          pendingCount: financeiroPendente[0]?.count ?? 0,
         },
       ],
     },
@@ -185,6 +216,7 @@ export default async function AdminPage() {
           title: "Congregações",
           description: "Filiais da IBCI — responsáveis, solicitações e prestação de contas.",
           show: hasPermission(session, "congregacoes"),
+          pendingCount: congregacoesPendentes[0]?.count ?? 0,
         },
       ],
     },
@@ -239,7 +271,12 @@ export default async function AdminPage() {
                   const Icon = link.icon;
                   return (
                     <Link key={link.href} href={link.href}>
-                      <Card className="flex h-full flex-col items-start gap-3 p-6">
+                      <Card className="relative flex h-full flex-col items-start gap-3 p-6">
+                        {!!link.pendingCount && (
+                          <span className="absolute right-4 top-4 flex min-w-[1.5rem] items-center justify-center rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">
+                            {link.pendingCount}
+                          </span>
+                        )}
                         <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
                           <Icon className="h-5 w-5" />
                         </span>
@@ -247,6 +284,13 @@ export default async function AdminPage() {
                           {link.title}
                         </h3>
                         <p className="text-sm text-text-neutral/70">{link.description}</p>
+                        {!!link.pendingCount && (
+                          <p className="text-xs font-semibold text-amber-700">
+                            {link.pendingCount === 1
+                              ? "1 pendência aguardando"
+                              : `${link.pendingCount} pendências aguardando`}
+                          </p>
+                        )}
                       </Card>
                     </Link>
                   );

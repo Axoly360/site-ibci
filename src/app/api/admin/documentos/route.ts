@@ -3,6 +3,7 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { setContent } from "@/lib/content";
+import { sniffFileType } from "@/lib/fileValidation";
 
 const DOC_TYPES = ["estatuto", "regimento"] as const;
 
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
   if (!file || typeof file === "string") {
     return NextResponse.json({ error: "Nenhum arquivo enviado." }, { status: 400 });
   }
-  if (file.type !== "application/pdf") {
+  if ((await sniffFileType(file)) !== "application/pdf") {
     return NextResponse.json({ error: "Envie o documento em PDF." }, { status: 400 });
   }
   if (file.size > 10 * 1024 * 1024) {

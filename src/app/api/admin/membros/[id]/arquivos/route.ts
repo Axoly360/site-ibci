@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { sql } from "@/lib/db";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
+import { isSafeDocumentFile, sanitizeFileName } from "@/lib/fileValidation";
 
 export async function POST(
   request: NextRequest,
@@ -25,10 +26,16 @@ export async function POST(
       { status: 400 }
     );
   }
+  if (!(await isSafeDocumentFile(file))) {
+    return NextResponse.json(
+      { error: "Tipo de arquivo não suportado. Envie imagem, PDF ou documento do Office." },
+      { status: 400 }
+    );
+  }
 
   let blob;
   try {
-    blob = await put(`membros/${id}/${Date.now()}-${file.name}`, file, {
+    blob = await put(`membros/${id}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
       access: "public",
     });
   } catch {
