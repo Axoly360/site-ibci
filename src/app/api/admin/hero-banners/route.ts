@@ -54,9 +54,11 @@ export async function POST(request: NextRequest) {
     const [desktopBlob, mobileBlob] = await Promise.all([
       put(`hero-banners/${Date.now()}-${sanitizeFileName(imageDesktop.name)}`, imageDesktop, {
         access: "public",
+        addRandomSuffix: true,
       }),
       put(`hero-banners/${Date.now()}-mobile-${sanitizeFileName(imageMobile.name)}`, imageMobile, {
         access: "public",
+        addRandomSuffix: true,
       }),
     ]);
     desktopUrl = desktopBlob.url;

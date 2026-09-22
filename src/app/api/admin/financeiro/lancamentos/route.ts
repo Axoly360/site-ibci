@@ -118,6 +118,7 @@ export async function POST(request: NextRequest) {
     try {
       const blob = await put(`financeiro/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
         access: "public",
+        addRandomSuffix: true,
       });
       receiptUrl = blob.url;
     } catch {

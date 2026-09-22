@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
   try {
     blob = await put(`membros/${session.memberId}/foto-${Date.now()}`, file, {
       access: "public",
+      addRandomSuffix: true,
     });
   } catch {
     return NextResponse.json(

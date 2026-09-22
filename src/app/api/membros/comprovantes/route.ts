@@ -72,6 +72,7 @@ export async function POST(request: NextRequest) {
   try {
     blob = await put(`comprovantes/${session.memberId}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
       access: "public",
+      addRandomSuffix: true,
     });
   } catch {
     return NextResponse.json(

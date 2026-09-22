@@ -47,7 +47,7 @@ export async function POST(
       const blob = await put(
         `hero-banners/${Date.now()}-${sanitizeFileName(imageDesktop.name)}`,
         imageDesktop,
-        { access: "public" }
+        { access: "public", addRandomSuffix: true }
       );
       desktopUrl = blob.url;
     }
@@ -67,7 +67,7 @@ export async function POST(
       const blob = await put(
         `hero-banners/${Date.now()}-mobile-${sanitizeFileName(imageMobile.name)}`,
         imageMobile,
-        { access: "public" }
+        { access: "public", addRandomSuffix: true }
       );
       mobileUrl = blob.url;
     }

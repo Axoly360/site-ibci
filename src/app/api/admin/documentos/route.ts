@@ -35,7 +35,10 @@ export async function POST(request: NextRequest) {
 
   let blob;
   try {
-    blob = await put(`documentos/${docType}-${Date.now()}.pdf`, file, { access: "public" });
+    blob = await put(`documentos/${docType}-${Date.now()}.pdf`, file, {
+      access: "public",
+      addRandomSuffix: true,
+    });
   } catch {
     return NextResponse.json(
       { error: "Armazenamento de arquivos ainda não configurado." },

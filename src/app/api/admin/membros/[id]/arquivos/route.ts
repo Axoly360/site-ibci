@@ -37,6 +37,7 @@ export async function POST(
   try {
     blob = await put(`membros/${id}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
       access: "public",
+      addRandomSuffix: true,
     });
   } catch {
     return NextResponse.json(

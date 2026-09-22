@@ -62,6 +62,7 @@ export async function POST(
     try {
       const blob = await put(`eventos/${slug}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
         access: "public",
+        addRandomSuffix: true,
       });
       imageUrl = blob.url;
     } catch {

@@ -20,6 +20,7 @@ async function uploadIfPresent(
   }
   const blob = await put(`banners/${keyPrefix}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
     access: "public",
+    addRandomSuffix: true,
   });
   return blob.url;
 }

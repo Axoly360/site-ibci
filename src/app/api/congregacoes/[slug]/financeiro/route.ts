@@ -58,6 +58,7 @@ export async function POST(
     try {
       const blob = await put(`congregacoes/${slug}/${Date.now()}-${sanitizeFileName(file.name)}`, file, {
         access: "public",
+        addRandomSuffix: true,
       });
       receiptUrl = blob.url;
     } catch {
