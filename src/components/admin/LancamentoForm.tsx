@@ -76,6 +76,7 @@ export default function LancamentoForm({
   // parâmetro na URL, mas reaproveita esta mesma instância do formulário).
   useEffect(() => {
     if (!initialComprovante) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza o formulário quando outro comprovante é selecionado na mesma instância
     setType(initialComprovante.type);
     setCategory(initialComprovante.category);
     setAmount(initialComprovante.amount);

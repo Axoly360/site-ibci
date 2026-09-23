@@ -24,6 +24,7 @@ export default function CheckinPanel({ eventSlug }: { eventSlug: string }) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- busca inicial + polling, não deriva de props/state
     loadCounts();
     const interval = setInterval(loadCounts, 8000);
     return () => clearInterval(interval);
