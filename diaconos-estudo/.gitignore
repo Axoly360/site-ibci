@@ -6,3 +6,6 @@ dist-ssr
 
 # Material de origem (apostila com autoria própria, foto pessoal) — nunca publicar
 material/
+
+.vercel
+.env*
