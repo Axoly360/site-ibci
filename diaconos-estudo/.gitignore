@@ -1,0 +1,8 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+
+# Material de origem (apostila com autoria própria, foto pessoal) — nunca publicar
+material/
