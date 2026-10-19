@@ -172,6 +172,23 @@ const secretariaArticles: HelpArticle[] = [
     ],
   },
   {
+    slug: "admin-secretaria-diaconos",
+    title: "Diáconos",
+    audience: "admin",
+    category: "Secretaria",
+    permission: "diaconos",
+    tags: ["diáconos", "diaconisas", "ministério diaconal", "escala"],
+    blocks: [
+      p("Em Admin → Diáconos fica o ministério diaconal da igreja, em três abas: Solicitações, Diáconos e Escala."),
+      p("Solicitações: quando o membro marca \"Sou diácono\" ou \"Sou diaconisa\" em Meu Cadastro, o pedido chega aqui como Solicitado. Em Analisar você confere, preenche os dados (consagração, área de atuação, congregação) e Confirma; ou Recusa. Enquanto não for confirmado, a pessoa não conta como diácono."),
+      ul([
+        "Diáconos: lista dos confirmados, com situação (Ativo, Afastado ou Emérito), área de atuação, congregação e data de consagração. Use Editar para atualizar.",
+        "Escala: escale diáconos ativos por data e culto, com o posto de cada um (ex.: Recepção). A lista mostra só as datas de hoje em diante.",
+      ]),
+      p("Este acesso é da Secretaria e do Administrador geral. Se uma conta já existia, edite e salve o administrador em Administradores para ela receber a nova permissão."),
+    ],
+  },
+  {
     slug: "admin-secretaria-visitantes",
     title: "Visitantes",
     audience: "admin",

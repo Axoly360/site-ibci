@@ -21,7 +21,15 @@ export interface ProfileData {
   marital_status: string | null;
   birthplace: string | null;
   profession: string | null;
+  deacon_kind: string | null;
+  deacon_status: string | null;
 }
+
+const DEACON_STATUS_LABEL: Record<string, string> = {
+  ativo: "ativo",
+  afastado: "afastado",
+  emerito: "emérito",
+};
 
 const MARITAL_STATUS_OPTIONS = ["Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viúvo(a)"];
 
@@ -42,7 +50,9 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
     maritalStatus: profile.marital_status ?? "",
     birthplace: profile.birthplace ?? "",
     profession: profile.profession ?? "",
+    deaconKind: profile.deacon_kind ?? "",
   });
+  const deaconConfirmed = profile.deacon_status && profile.deacon_status !== "solicitado";
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -287,6 +297,35 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
             className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
+      </div>
+
+      <div>
+        <label htmlFor="pf-deacon" className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          Ministério diaconal
+        </label>
+        {deaconConfirmed ? (
+          <p className="rounded-lg border border-black/10 bg-black/5 px-4 py-3 text-sm text-text-neutral/80">
+            {profile.deacon_kind} ({DEACON_STATUS_LABEL[profile.deacon_status ?? ""] ?? profile.deacon_status})
+          </p>
+        ) : (
+          <>
+            <select
+              id="pf-deacon"
+              value={form.deaconKind}
+              onChange={(e) => setForm((prev) => ({ ...prev, deaconKind: e.target.value }))}
+              className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            >
+              <option value="">Não sou diácono / diaconisa</option>
+              <option value="Diácono">Sou diácono</option>
+              <option value="Diaconisa">Sou diaconisa</option>
+            </select>
+            {form.deaconKind && (
+              <p className="mt-1.5 text-xs text-text-neutral/60">
+                Sua informação será conferida e confirmada pela Secretaria.
+              </p>
+            )}
+          </>
+        )}
       </div>
 
       <div className="mt-2 flex items-center gap-3">

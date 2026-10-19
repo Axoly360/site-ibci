@@ -735,3 +735,27 @@ select * from (
     2
 ) as seed
 where not exists (select 1 from hero_banners);
+
+-- Ministério diaconal: diáconos e diaconisas. O membro solicita pelo próprio
+-- cadastro (status 'solicitado'); Secretaria/Admin geral confirma.
+create table if not exists deacon_profiles (
+  member_id uuid primary key references members(id) on delete cascade,
+  kind text not null default 'Diácono',
+  status text not null default 'solicitado',
+  consecration_date text,
+  area text,
+  congregation_id uuid references congregations(id) on delete set null,
+  notes text,
+  requested_at timestamptz not null default now(),
+  approved_at timestamptz
+);
+
+-- Escala dos diáconos por culto/data.
+create table if not exists deacon_schedule (
+  id uuid primary key default gen_random_uuid(),
+  service_date date not null,
+  service_label text not null,
+  member_id uuid not null references members(id) on delete cascade,
+  post text,
+  created_at timestamptz not null default now()
+);

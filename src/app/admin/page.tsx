@@ -57,7 +57,13 @@ export default async function AdminPage() {
   // realmente tem permissão de ver, pra não gastar query à toa nem vazar
   // número de outro setor. Sem isso, o único jeito de saber que havia
   // pendência era entrar em cada tela uma por uma.
-  const [membrosPendentes, gruposPendentes, financeiroPendente, congregacoesPendentes] =
+  const [
+    membrosPendentes,
+    gruposPendentes,
+    financeiroPendente,
+    congregacoesPendentes,
+    diaconosPendentes,
+  ] =
     await Promise.all([
       hasPermission(session, "membros")
         ? sql`select count(*)::int as count from membership_requests where status = 'pendente'`
@@ -75,6 +81,9 @@ export default async function AdminPage() {
         : Promise.resolve([{ count: 0 }]),
       hasPermission(session, "congregacoes")
         ? sql`select count(*)::int as count from congregation_requests where status = 'pendente'`
+        : Promise.resolve([{ count: 0 }]),
+      hasPermission(session, "diaconos")
+        ? sql`select count(*)::int as count from deacon_profiles where status = 'solicitado'`
         : Promise.resolve([{ count: 0 }]),
     ]);
 
@@ -164,6 +173,14 @@ export default async function AdminPage() {
           title: "Visitantes",
           description: "Cadastros espontâneos para follow-up da recepção.",
           show: hasPermission(session, "visitantes"),
+        },
+        {
+          href: "/admin/diaconos",
+          icon: ShieldCheck,
+          title: "Diáconos",
+          description: "Ministério diaconal: solicitações, cadastro dos diáconos e escala.",
+          show: hasPermission(session, "diaconos"),
+          pendingCount: diaconosPendentes[0]?.count ?? 0,
         },
         {
           href: "/admin/eventos",

@@ -49,5 +49,27 @@ export async function POST(request: NextRequest) {
     where id = ${session.memberId}
   `;
 
+  // Solicitação de ministério diaconal: só mexe enquanto não confirmada pela
+  // Secretaria; depois de confirmado, o membro não altera por aqui.
+  if (typeof body?.deaconKind === "string") {
+    const deaconKind = body.deaconKind.trim();
+    const [deacon] = await sql`
+      select status from deacon_profiles where member_id = ${session.memberId}
+    `;
+    if (deaconKind === "Diácono" || deaconKind === "Diaconisa") {
+      if (!deacon) {
+        await sql`
+          insert into deacon_profiles (member_id, kind) values (${session.memberId}, ${deaconKind})
+        `;
+      } else if (deacon.status === "solicitado") {
+        await sql`
+          update deacon_profiles set kind = ${deaconKind} where member_id = ${session.memberId}
+        `;
+      }
+    } else if (deaconKind === "" && deacon?.status === "solicitado") {
+      await sql`delete from deacon_profiles where member_id = ${session.memberId}`;
+    }
+  }
+
   return NextResponse.json({ ok: true });
 }
