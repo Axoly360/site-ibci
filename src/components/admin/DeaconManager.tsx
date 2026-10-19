@@ -18,6 +18,7 @@ export interface DeaconRow {
   congregationId: string | null;
   congregationName: string | null;
   notes: string | null;
+  isBoard: boolean;
 }
 
 export interface DeaconScheduleRow {
@@ -163,6 +164,7 @@ function DeaconList({
                 {row.name}{" "}
                 <span className="text-xs font-semibold text-secondary">
                   {row.kind} · {STATUS_LABEL[row.status] ?? row.status}
+                  {row.isBoard ? " · Diretoria" : ""}
                 </span>
               </p>
               <p className="text-sm text-text-neutral/60">
@@ -227,6 +229,7 @@ function DeaconForm({
   const [area, setArea] = useState(row.area ?? "");
   const [congregationId, setCongregationId] = useState(row.congregationId ?? "");
   const [notes, setNotes] = useState(row.notes ?? "");
+  const [isBoard, setIsBoard] = useState(row.isBoard);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -237,7 +240,7 @@ function DeaconForm({
     const res = await fetch(`/api/admin/diaconos/${row.memberId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ kind, status, consecrationDate, area, congregationId, notes }),
+      body: JSON.stringify({ kind, status, consecrationDate, area, congregationId, notes, isBoard }),
     });
     setLoading(false);
     if (res.ok) {
@@ -331,6 +334,20 @@ function DeaconForm({
             className={`${inputClass} resize-none`}
           />
         </div>
+
+        <label className="flex items-start gap-2 text-sm text-text-neutral">
+          <input
+            type="checkbox"
+            checked={isBoard}
+            onChange={(e) => setIsBoard(e.target.checked)}
+            disabled={status !== "ativo"}
+            className="mt-0.5"
+          />
+          <span>
+            <strong>Diretoria diaconal</strong> — pode montar a escala e as atividades pela Área
+            dos Diáconos (só para diáconos ativos).
+          </span>
+        </label>
 
         <div className="mt-2 flex items-center gap-3">
           <Button type="submit" size="sm" disabled={loading}>

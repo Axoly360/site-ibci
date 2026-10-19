@@ -24,6 +24,7 @@ export default async function AdminDiaconosPage() {
       select deacon_profiles.member_id, members.name, members.email, members.phone,
              deacon_profiles.kind, deacon_profiles.status, deacon_profiles.consecration_date,
              deacon_profiles.area, deacon_profiles.congregation_id, deacon_profiles.notes,
+             deacon_profiles.is_board,
              congregations.name as congregation_name
       from deacon_profiles
       join members on members.id = deacon_profiles.member_id
@@ -53,6 +54,7 @@ export default async function AdminDiaconosPage() {
     congregationId: p.congregation_id,
     congregationName: p.congregation_name,
     notes: p.notes,
+    isBoard: Boolean(p.is_board),
   }));
 
   const schedule: DeaconScheduleRow[] = scheduleRows.map((s) => ({

@@ -759,3 +759,33 @@ create table if not exists deacon_schedule (
   post text,
   created_at timestamptz not null default now()
 );
+
+-- Diretoria do ministério diaconal: diáconos marcados pela Secretaria que
+-- podem montar a escala e as atividades pela Área dos Diáconos.
+alter table deacon_profiles add column if not exists is_board boolean not null default false;
+
+-- Observação livre de cada item da escala (ex.: local da visita).
+alter table deacon_schedule add column if not exists notes text;
+
+-- Catálogo editável pela diretoria: atividades (cultos, visitas, reunião)
+-- e tarefas (Pátio, Recepção...).
+create table if not exists deacon_catalog (
+  id uuid primary key default gen_random_uuid(),
+  kind text not null,
+  name text not null,
+  position int not null default 0,
+  unique (kind, name)
+);
+
+insert into deacon_catalog (kind, name, position) values
+  ('atividade', 'Culto de domingo - manhã', 1),
+  ('atividade', 'Culto de domingo - noite', 2),
+  ('atividade', 'Culto de quarta-feira', 3),
+  ('atividade', 'Visita semanal a necessitados', 4),
+  ('atividade', 'Visita semanal a enfermos', 5),
+  ('atividade', 'Reunião mensal do ministério', 6),
+  ('tarefa', 'Pátio', 1),
+  ('tarefa', 'Recepção', 2),
+  ('tarefa', 'Direção de culto', 3),
+  ('tarefa', 'Pregação', 4)
+on conflict (kind, name) do nothing;

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import Card from "@/components/ui/Card";
@@ -31,6 +33,7 @@ export default async function AreaDosDiaconosPage() {
 
   const [me] = await sql`
     select deacon_profiles.kind, deacon_profiles.status, deacon_profiles.consecration_date,
+           deacon_profiles.is_board,
            deacon_profiles.area, deacon_profiles.notes, congregations.name as congregation_name
     from deacon_profiles
     left join congregations on congregations.id = deacon_profiles.congregation_id
@@ -41,7 +44,7 @@ export default async function AreaDosDiaconosPage() {
   const [upcoming, roster] = await Promise.all([
     sql`
       select deacon_schedule.service_date::text as service_date, deacon_schedule.service_label,
-             deacon_schedule.post, deacon_schedule.member_id, members.name
+             deacon_schedule.post, deacon_schedule.notes, deacon_schedule.member_id, members.name
       from deacon_schedule
       join members on members.id = deacon_schedule.member_id
       where deacon_schedule.service_date >= current_date
@@ -68,6 +71,23 @@ export default async function AreaDosDiaconosPage() {
       />
       <div className="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-16 sm:px-6 lg:px-8">
         <BackToMemberArea />
+
+        {me.is_board && (
+          <Link
+            href="/central-do-membro/diaconos/gerenciar"
+            className="flex items-center justify-between gap-3 rounded-2xl bg-primary px-5 py-4 text-white shadow-sm transition-colors hover:bg-primary-dark"
+          >
+            <span>
+              <span className="block font-heading text-base font-bold">
+                Gerenciar escala e atividades
+              </span>
+              <span className="block text-sm text-white/80">
+                Diretoria diaconal: monte a escala do mês e ajuste atividades e tarefas.
+              </span>
+            </span>
+            <ArrowRight className="h-5 w-5 shrink-0" />
+          </Link>
+        )}
 
         <section>
           <h2 className="mb-3 font-heading text-xl font-bold text-primary">Meus dados</h2>
@@ -102,7 +122,11 @@ export default async function AreaDosDiaconosPage() {
                   <p className="font-semibold text-text-neutral">
                     {formatDate(s.service_date)} · {s.service_label}
                   </p>
-                  {s.post && <p className="text-sm text-text-neutral/70">{s.post}</p>}
+                  {(s.post || s.notes) && (
+                    <p className="text-sm text-text-neutral/70">
+                      {[s.post, s.notes].filter(Boolean).join(" — ")}
+                    </p>
+                  )}
                 </Card>
               ))}
             </div>
@@ -125,6 +149,7 @@ export default async function AreaDosDiaconosPage() {
                   <p className="text-text-neutral">
                     {s.name}
                     {s.post ? <span className="text-text-neutral/60"> · {s.post}</span> : null}
+                    {s.notes ? <span className="text-text-neutral/60"> — {s.notes}</span> : null}
                   </p>
                 </Card>
               ))}

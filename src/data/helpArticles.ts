@@ -185,6 +185,7 @@ const secretariaArticles: HelpArticle[] = [
         "Diáconos: lista dos confirmados, com situação (Ativo, Afastado ou Emérito), área de atuação, congregação e data de consagração. Use Editar para atualizar.",
         "Escala: escale diáconos ativos por data e culto, com o posto de cada um (ex.: Recepção). A lista mostra só as datas de hoje em diante.",
       ]),
+      p("Diretoria diaconal: ao editar um diácono ativo, marque a caixa \"Diretoria diaconal\". Quem está marcado ganha, na Área dos Diáconos, o botão Gerenciar escala e atividades, para montar a escala do mês e ajustar as listas de atividades (cultos, visitas, reunião mensal) e de tarefas (Pátio, Recepção, Direção de culto, Pregação) sem depender do painel admin."),
       p("Este acesso é da Secretaria e do Administrador geral. Se uma conta já existia, edite e salve o administrador em Administradores para ela receber a nova permissão."),
     ],
   },
@@ -415,6 +416,7 @@ const membroArticles: HelpArticle[] = [
     blocks: [
       p("Em Meu Cadastro, no campo Ministério diaconal, escolha \"Sou diácono\" ou \"Sou diaconisa\" e salve. A Secretaria confere e confirma a sua informação; até lá, você continua como membro."),
       p("Depois de confirmado, aparece uma etiqueta ao lado do seu nome na Área do Membro e o botão Área dos Diáconos, com seus dados no ministério, a sua escala, a escala dos próximos cultos e o corpo de diáconos."),
+      p("Se você faz parte da diretoria diaconal (marcado pela Secretaria), a Área dos Diáconos também mostra o botão Gerenciar escala e atividades: escolha o mês, escale diáconos por data, atividade e tarefa, e adicione ou remova atividades e tarefas das listas."),
       p("Para corrigir os dados do ministério (consagração, área de atuação, congregação), fale com a Secretaria."),
     ],
   },

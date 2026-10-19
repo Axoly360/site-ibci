@@ -35,6 +35,7 @@ export async function POST(
       area = ${text(body?.area) || null},
       congregation_id = ${congregationId || null},
       notes = ${text(body?.notes) || null},
+      is_board = ${Boolean(body?.isBoard) && status === "ativo"},
       approved_at = case
         when ${status} <> 'solicitado' then coalesce(approved_at, now())
         else null
