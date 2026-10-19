@@ -406,6 +406,18 @@ const membroArticles: HelpArticle[] = [
       p("A foto de perfil deve ser quadrada, com no mínimo 400 × 400 px, em qualquer formato de imagem comum, até 5 MB."),
     ],
   },
+  {
+    slug: "membro-diaconos",
+    title: "Sou Diácono ou Diaconisa",
+    audience: "membro",
+    category: "Perfil",
+    tags: ["diácono", "diaconisa", "ministério diaconal", "escala"],
+    blocks: [
+      p("Em Meu Cadastro, no campo Ministério diaconal, escolha \"Sou diácono\" ou \"Sou diaconisa\" e salve. A Secretaria confere e confirma a sua informação; até lá, você continua como membro."),
+      p("Depois de confirmado, aparece uma etiqueta ao lado do seu nome na Área do Membro e o botão Área dos Diáconos, com seus dados no ministério, a sua escala, a escala dos próximos cultos e o corpo de diáconos."),
+      p("Para corrigir os dados do ministério (consagração, área de atuação, congregação), fale com a Secretaria."),
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------

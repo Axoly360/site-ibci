@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Pencil, Phone, UserRound } from "lucide-react";
+import { Pencil, Phone, ShieldCheck, UserRound } from "lucide-react";
 
 export interface MemberProfileSummaryData {
   id: string;
@@ -17,6 +17,8 @@ export interface MemberProfileSummaryData {
   time_at_church: string | null;
   is_leadership: boolean;
   church_role: string | null;
+  deacon_kind?: string | null;
+  deacon_status?: string | null;
 }
 
 function Field({ label, value }: { label: string; value: string | null }) {
@@ -29,6 +31,15 @@ function Field({ label, value }: { label: string; value: string | null }) {
 }
 
 export default function MemberProfileSummary({ member }: { member: MemberProfileSummaryData }) {
+  const deaconApproved = Boolean(member.deacon_kind) && member.deacon_status !== "solicitado" && Boolean(member.deacon_status);
+  const deaconActive = member.deacon_status === "ativo";
+  const deaconTag =
+    member.deacon_status === "emerito"
+      ? `${member.deacon_kind} emérito`
+      : member.deacon_status === "afastado"
+        ? `${member.deacon_kind} (afastado)`
+        : member.deacon_kind;
+
   return (
     <div className="rounded-2xl border-t-4 border-secondary bg-primary-dark p-6 shadow-lg sm:p-8">
       <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-center sm:text-left">
@@ -50,15 +61,32 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
 
         <div className="flex-1">
           <h2 className="font-heading text-2xl font-bold text-white">{member.name}</h2>
-          <p className="text-sm font-semibold text-secondary">
-            {member.is_leadership ? member.church_role || "Liderança" : "Membro"}
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+            <p className="text-sm font-semibold text-secondary">
+              {member.is_leadership ? member.church_role || "Liderança" : "Membro"}
+            </p>
+            {deaconApproved && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-primary">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                {deaconTag}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="flex shrink-0 items-center gap-3">
           <span className="whitespace-nowrap rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white">
             # ID: IBCI{String(member.member_number).padStart(4, "0")}
           </span>
+          {deaconActive && (
+            <Link
+              href="/central-do-membro/diaconos"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-secondary px-5 py-2.5 text-sm font-bold text-secondary transition-colors hover:bg-secondary hover:text-primary"
+            >
+              <ShieldCheck className="h-4 w-4" />
+              Área dos Diáconos
+            </Link>
+          )}
           <Link
             href="/central-do-membro/perfil"
             className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-secondary px-5 py-2.5 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-secondary-light"

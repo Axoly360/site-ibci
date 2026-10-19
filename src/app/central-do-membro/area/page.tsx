@@ -20,7 +20,9 @@ export default async function AreaDoMembroPage() {
   const [member] = await sql`
     select member_number, is_validated_member, is_leadership, church_role, name, email, phone,
            photo_url, marital_status, birthplace, profession, birthdate,
-           baptism_date, time_at_church
+           baptism_date, time_at_church,
+           (select kind from deacon_profiles where member_id = members.id) as deacon_kind,
+           (select status from deacon_profiles where member_id = members.id) as deacon_status
     from members where id = ${session.memberId}
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");
