@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, Pencil, Phone, ShieldCheck, UserRound } from "lucide-react";
+import { BookOpen, HandHeart, Pencil, Phone, ShieldCheck, UserRound, type LucideIcon } from "lucide-react";
 
 export interface MemberProfileSummaryData {
   id: string;
@@ -31,6 +31,13 @@ function Field({ label, value }: { label: string; value: string | null }) {
   );
 }
 
+type BadgeKey = "pastor" | "diacono" | "professor";
+
+// Hierarquia das insígnias, da esquerda para a direita: o ofício mais antigo/
+// de maior autoridade vem primeiro (Pastor, depois Diácono, depois Professor).
+// Ao criar uma insígnia nova, é aqui que ela entra na ordem.
+const BADGE_ORDER: BadgeKey[] = ["pastor", "diacono", "professor"];
+
 export default function MemberProfileSummary({ member }: { member: MemberProfileSummaryData }) {
   const deaconApproved = Boolean(member.deacon_kind) && member.deacon_status !== "solicitado" && Boolean(member.deacon_status);
   const deaconActive = member.deacon_status === "ativo";
@@ -42,6 +49,26 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
       : member.deacon_status === "afastado"
         ? `${member.deacon_kind} (afastado)`
         : member.deacon_kind;
+
+  const roleText = member.is_leadership ? member.church_role || "Liderança" : "Membro";
+  const isPastor = member.is_leadership && /pastor/i.test(member.church_role ?? "");
+  const pastorLabel = /pastora/i.test(member.church_role ?? "") ? "Pastora" : "Pastor";
+  // Quando o cargo é só "Pastor(a)", a insígnia já diz isso; a linha de texto some para não repetir.
+  const showRoleText = !(isPastor && /^\s*pastora?\s*$/i.test(member.church_role ?? ""));
+
+  const badges: { key: BadgeKey; label: string; Icon: LucideIcon }[] = [];
+  if (isPastor) badges.push({ key: "pastor", label: pastorLabel, Icon: HandHeart });
+  if (deaconApproved) {
+    badges.push({ key: "diacono", label: deaconTag ?? "Diácono", Icon: ShieldCheck });
+  }
+  if (teacherApproved) {
+    badges.push({
+      key: "professor",
+      label: teacherActive ? "Professor(a)" : "Professor(a) (afastado)",
+      Icon: BookOpen,
+    });
+  }
+  badges.sort((a, b) => BADGE_ORDER.indexOf(a.key) - BADGE_ORDER.indexOf(b.key));
 
   return (
     <div className="rounded-2xl border-t-4 border-secondary bg-primary-dark p-6 shadow-lg sm:p-8">
@@ -62,48 +89,49 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
           )}
         </div>
 
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <h2 className="font-heading text-2xl font-bold text-white">{member.name}</h2>
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-            <p className="text-sm font-semibold text-secondary">
-              {member.is_leadership ? member.church_role || "Liderança" : "Membro"}
-            </p>
-            {deaconApproved && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-primary">
-                <ShieldCheck className="h-3.5 w-3.5" />
-                {deaconTag}
-              </span>
-            )}
-            {teacherApproved && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-primary">
-                <BookOpen className="h-3.5 w-3.5" />
-                {teacherActive ? "Professor(a)" : "Professor(a) (afastado)"}
-              </span>
-            )}
-          </div>
+          {showRoleText && <p className="text-sm font-semibold text-secondary">{roleText}</p>}
+          {badges.length > 0 && (
+            <div className="mt-1.5 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+              {badges.map(({ key, label, Icon }) => (
+                <span
+                  key={key}
+                  className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-primary"
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {label}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex shrink-0 flex-wrap items-center justify-center gap-3 sm:justify-end">
           <span className="whitespace-nowrap rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white">
             # ID: IBCI{String(member.member_number).padStart(4, "0")}
           </span>
-          {deaconActive && (
-            <Link
-              href="/central-do-membro/diaconos"
-              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-secondary px-5 py-2.5 text-sm font-bold text-secondary transition-colors hover:bg-secondary hover:text-primary"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              Área dos Diáconos
-            </Link>
-          )}
-          {teacherActive && (
-            <Link
-              href="/central-do-membro/professor"
-              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-secondary px-5 py-2.5 text-sm font-bold text-secondary transition-colors hover:bg-secondary hover:text-primary"
-            >
-              <BookOpen className="h-4 w-4" />
-              Área do Professor
-            </Link>
+          {(deaconActive || teacherActive) && (
+            <div className="flex flex-col gap-2">
+              {deaconActive && (
+                <Link
+                  href="/central-do-membro/diaconos"
+                  className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-secondary px-5 py-2.5 text-sm font-bold text-secondary transition-colors hover:bg-secondary hover:text-primary"
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  Área dos Diáconos
+                </Link>
+              )}
+              {teacherActive && (
+                <Link
+                  href="/central-do-membro/professor"
+                  className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-secondary px-5 py-2.5 text-sm font-bold text-secondary transition-colors hover:bg-secondary hover:text-primary"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Área do Professor
+                </Link>
+              )}
+            </div>
           )}
           <Link
             href="/central-do-membro/perfil"
