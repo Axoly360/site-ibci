@@ -244,6 +244,13 @@ export default async function AdminPage() {
       titleColor: "text-slate-700",
       links: [
         {
+          href: "/admin/estatisticas",
+          icon: Users,
+          title: "Estatísticas",
+          description: "Visão geral da igreja em números: membros, famílias, ministérios e finanças.",
+          show: hasPermission(session, "admins"),
+        },
+        {
           href: "/admin/administradores",
           icon: Lock,
           title: "Administradores",

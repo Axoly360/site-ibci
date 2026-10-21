@@ -45,6 +45,7 @@ const SECTORS: NavSector[] = [
 const SINGLE_LINKS: NavItem[] = [
   { href: "/admin/financeiro", label: "Financeiro", permission: "financeiro" },
   { href: "/admin/congregacoes", label: "Congregações", permission: "congregacoes" },
+  { href: "/admin/estatisticas", label: "Estatísticas", permission: "admins" },
   { href: "/admin/administradores", label: "Administradores", permission: "admins" },
 ];
 

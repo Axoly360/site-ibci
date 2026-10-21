@@ -321,6 +321,24 @@ const administracaoArticles: HelpArticle[] = [
       p("Só quem tem o papel Administrador geral enxerga esta tela."),
     ],
   },
+  {
+    slug: "admin-administracao-estatisticas",
+    title: "Estatísticas da Igreja",
+    audience: "admin",
+    category: "Administração",
+    permission: "admins",
+    tags: ["estatísticas", "painel", "dashboard", "números", "gráficos"],
+    blocks: [
+      p("Em Admin → Estatísticas o Administrador geral vê a igreja em números, num só lugar: membros ativos, idade média e faixa etária, sexo, estado civil, batismos por ano, crianças e média por família, grupos, voluntários por ministério, diáconos, visitantes, eventos e, para quem tem acesso ao Financeiro, entradas, saídas e saldo."),
+      p("Os botões 3, 6 e 12 meses mudam o período dos gráficos mensais. Só aparecem números agregados, nunca listas de pessoas."),
+      ul([
+        "Sexo: só conta quem preencheu o campo em Meu Cadastro; os demais aparecem como \"Não informado\".",
+        "Idade: usa a data de nascimento do cadastro; o card mostra quantos membros têm a data informada.",
+        "Se uma seção não carregar, o painel avisa no topo em vez de mostrar zero.",
+        "Presença nos cultos e salas da EBD ainda não são registradas, então não aparecem.",
+      ]),
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
