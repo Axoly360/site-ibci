@@ -73,5 +73,17 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Solicitação de professor da EBD: só enquanto não confirmada pela Secretaria.
+  if (typeof body?.isTeacher === "boolean") {
+    const [teacher] = await sql`
+      select status from teacher_profiles where member_id = ${session.memberId}
+    `;
+    if (body.isTeacher && !teacher) {
+      await sql`insert into teacher_profiles (member_id) values (${session.memberId})`;
+    } else if (!body.isTeacher && teacher?.status === "solicitado") {
+      await sql`delete from teacher_profiles where member_id = ${session.memberId}`;
+    }
+  }
+
   return NextResponse.json({ ok: true });
 }

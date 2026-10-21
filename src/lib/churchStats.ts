@@ -36,6 +36,8 @@ export interface ChurchStats {
   groups: Count[];
   ministries: Count[];
   ebdClasses: Count[];
+  ebdAttendance: { byClass: Count[]; avgOverall: number | null; sessions: number };
+  pendingTeacherRequests: number;
   deacons: { ativo: number; afastado: number; emerito: number; solicitado: number; board: number };
   finance: null | {
     income: number;
@@ -134,6 +136,8 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     groupRows,
     ministryRows,
     ebdRows,
+    attendanceRows,
+    teacherReqRow,
     deaconRows,
     boardRow,
     financeRows,
@@ -200,6 +204,27 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
             group by c.id, c.name
             order by count desc, c.name asc`,
       [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    ),
+    safe(
+      "Presença na EBD",
+      () =>
+        sql`select c.name, count(s.id)::int as sessions, coalesce(sum(s.present), 0)::int as present
+            from ebd_classes c
+            join (
+              select s.id, s.class_id, count(a.enrollment_id) as present
+              from ebd_sessions s
+              left join ebd_attendance a on a.session_id = s.id
+              where s.session_date >= ${startMonth}::date
+              group by s.id
+            ) s on s.class_id = c.id
+            group by c.id, c.name
+            order by c.name asc`,
+      [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    ),
+    safe(
+      "Pedidos de professor",
+      () => sql`select count(*)::int as count from teacher_profiles where status = 'solicitado'`,
+      [{ count: 0 }] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
     ),
     safe(
       "Diáconos",
@@ -385,6 +410,22 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     groups: groupRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
     ministries: ministryRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
     ebdClasses: ebdRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
+    ebdAttendance: (() => {
+      const totalSessions = attendanceRows.reduce((s, r) => s + Number(r.sessions), 0);
+      const totalPresent = attendanceRows.reduce((s, r) => s + Number(r.present), 0);
+      return {
+        byClass: attendanceRows
+          .filter((r) => Number(r.sessions) > 0)
+          .map((r) => ({
+            label: String(r.name),
+            value: Math.round((Number(r.present) / Number(r.sessions)) * 10) / 10,
+          }))
+          .sort((a, b) => b.value - a.value),
+        avgOverall: totalSessions ? Math.round((totalPresent / totalSessions) * 10) / 10 : null,
+        sessions: totalSessions,
+      };
+    })(),
+    pendingTeacherRequests: Number(teacherReqRow[0]?.count ?? 0),
     deacons: {
       ativo: deaconByStatus.get("ativo") ?? 0,
       afastado: deaconByStatus.get("afastado") ?? 0,

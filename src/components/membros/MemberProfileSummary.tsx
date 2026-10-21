@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Pencil, Phone, ShieldCheck, UserRound } from "lucide-react";
+import { BookOpen, Pencil, Phone, ShieldCheck, UserRound } from "lucide-react";
 
 export interface MemberProfileSummaryData {
   id: string;
@@ -19,6 +19,7 @@ export interface MemberProfileSummaryData {
   church_role: string | null;
   deacon_kind?: string | null;
   deacon_status?: string | null;
+  teacher_status?: string | null;
 }
 
 function Field({ label, value }: { label: string; value: string | null }) {
@@ -33,6 +34,8 @@ function Field({ label, value }: { label: string; value: string | null }) {
 export default function MemberProfileSummary({ member }: { member: MemberProfileSummaryData }) {
   const deaconApproved = Boolean(member.deacon_kind) && member.deacon_status !== "solicitado" && Boolean(member.deacon_status);
   const deaconActive = member.deacon_status === "ativo";
+  const teacherApproved = Boolean(member.teacher_status) && member.teacher_status !== "solicitado";
+  const teacherActive = member.teacher_status === "ativo";
   const deaconTag =
     member.deacon_status === "emerito"
       ? `${member.deacon_kind} emérito`
@@ -71,6 +74,12 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
                 {deaconTag}
               </span>
             )}
+            {teacherApproved && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-primary">
+                <BookOpen className="h-3.5 w-3.5" />
+                {teacherActive ? "Professor(a)" : "Professor(a) (afastado)"}
+              </span>
+            )}
           </div>
         </div>
 
@@ -85,6 +94,15 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
             >
               <ShieldCheck className="h-4 w-4" />
               Área dos Diáconos
+            </Link>
+          )}
+          {teacherActive && (
+            <Link
+              href="/central-do-membro/professor"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-secondary px-5 py-2.5 text-sm font-bold text-secondary transition-colors hover:bg-secondary hover:text-primary"
+            >
+              <BookOpen className="h-4 w-4" />
+              Área do Professor
             </Link>
           )}
           <Link

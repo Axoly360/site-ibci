@@ -22,7 +22,8 @@ export default async function PerfilPage() {
            time_at_church, baptism_date, arrival_date, photo_url,
            marital_status, birthplace, profession, sex,
            (select kind from deacon_profiles where member_id = members.id) as deacon_kind,
-           (select status from deacon_profiles where member_id = members.id) as deacon_status
+           (select status from deacon_profiles where member_id = members.id) as deacon_status,
+           (select status from teacher_profiles where member_id = members.id) as teacher_status
     from members where id = ${session.memberId}
   `;
   if (!member?.is_validated_member) redirect("/central-do-membro");

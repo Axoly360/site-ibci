@@ -24,6 +24,7 @@ export interface ProfileData {
   sex: string | null;
   deacon_kind: string | null;
   deacon_status: string | null;
+  teacher_status: string | null;
 }
 
 const DEACON_STATUS_LABEL: Record<string, string> = {
@@ -53,7 +54,9 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
     profession: profile.profession ?? "",
     sex: profile.sex ?? "",
     deaconKind: profile.deacon_kind ?? "",
+    isTeacher: Boolean(profile.teacher_status),
   });
+  const teacherConfirmed = profile.teacher_status && profile.teacher_status !== "solicitado";
   const deaconConfirmed = profile.deacon_status && profile.deacon_status !== "solicitado";
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [error, setError] = useState("");
@@ -338,6 +341,34 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
               <option value="Diaconisa">Sou diaconisa</option>
             </select>
             {form.deaconKind && (
+              <p className="mt-1.5 text-xs text-text-neutral/60">
+                Sua informação será conferida e confirmada pela Secretaria.
+              </p>
+            )}
+          </>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="pf-teacher" className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          Ensino na EBD
+        </label>
+        {teacherConfirmed ? (
+          <p className="rounded-lg border border-black/10 bg-black/5 px-4 py-3 text-sm text-text-neutral/80">
+            Professor(a) da EBD ({profile.teacher_status === "afastado" ? "afastado" : "ativo"})
+          </p>
+        ) : (
+          <>
+            <select
+              id="pf-teacher"
+              value={form.isTeacher ? "sim" : ""}
+              onChange={(e) => setForm((prev) => ({ ...prev, isTeacher: e.target.value === "sim" }))}
+              className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            >
+              <option value="">Não sou professor(a) da EBD</option>
+              <option value="sim">Sou professor(a) da EBD</option>
+            </select>
+            {form.isTeacher && (
               <p className="mt-1.5 text-xs text-text-neutral/60">
                 Sua informação será conferida e confirmada pela Secretaria.
               </p>

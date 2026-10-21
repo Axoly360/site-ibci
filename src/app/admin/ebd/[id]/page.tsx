@@ -27,8 +27,10 @@ export default async function AdminEbdSalaPage({
 
   const [students, availableMembers, availableChildren, pendingRequests] = await Promise.all([
     sql`
-      select e.id, coalesce(m.name, c.name) as name,
-             case when e.member_id is not null then 'Membro' else 'Criança' end as kind,
+      select e.id, coalesce(m.name, c.name, e.guest_name) as name,
+             case when e.member_id is not null then 'Membro'
+                  when e.child_id is not null then 'Criança'
+                  else 'Sem cadastro (adicionado pelo professor)' end as kind,
              p.name as parent_name
       from ebd_enrollments e
       left join members m on m.id = e.member_id

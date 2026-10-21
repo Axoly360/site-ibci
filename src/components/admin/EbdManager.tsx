@@ -17,10 +17,19 @@ export interface EbdClass {
   description: string | null;
   student_count: number;
   pending_count: number;
+  teacher_member_ids: string[];
 }
+
+export interface TeacherOption {
+  id: string;
+  name: string;
+}
+
+const MAX_TEACHERS = 3;
 
 interface Fields {
   name: string;
+  teacherMemberIds: string[];
   teacherName: string;
   audience: string;
   meetingTime: string;
@@ -30,6 +39,7 @@ interface Fields {
 
 const emptyFields: Fields = {
   name: "",
+  teacherMemberIds: [],
   teacherName: "",
   audience: "",
   meetingTime: "",
@@ -42,7 +52,32 @@ const inputClass =
 
 const AUDIENCES = ["Crianças", "Adolescentes", "Jovens", "Adultos", "Melhor Idade", "Novos convertidos"];
 
-function FieldsInputs({ fields, onChange }: { fields: Fields; onChange: (f: Fields) => void }) {
+function FieldsInputs({
+  fields,
+  onChange,
+  teachers,
+}: {
+  fields: Fields;
+  onChange: (f: Fields) => void;
+  teachers: TeacherOption[];
+}) {
+  const typedCount = fields.teacherName
+    .split(",")
+    .map((n) => n.trim())
+    .filter(Boolean).length;
+  const chosen = fields.teacherMemberIds.length;
+  const total = chosen + typedCount;
+
+  const toggleTeacher = (id: string) => {
+    const has = fields.teacherMemberIds.includes(id);
+    onChange({
+      ...fields,
+      teacherMemberIds: has
+        ? fields.teacherMemberIds.filter((t) => t !== id)
+        : [...fields.teacherMemberIds, id],
+    });
+  };
+
   return (
     <>
       <input
@@ -52,13 +87,46 @@ function FieldsInputs({ fields, onChange }: { fields: Fields; onChange: (f: Fiel
         onChange={(e) => onChange({ ...fields, name: e.target.value })}
         className={inputClass}
       />
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+
+      <div className="rounded-lg border border-black/10 bg-bg-light p-4">
+        <p className="text-sm font-semibold text-text-neutral">
+          Professores da sala{" "}
+          <span className={total > MAX_TEACHERS ? "text-red-600" : "text-text-neutral/60"}>
+            ({total} de {MAX_TEACHERS})
+          </span>
+        </p>
+        {teachers.length === 0 ? (
+          <p className="mt-2 text-xs text-text-neutral/60">
+            Nenhum professor aprovado ainda. Aprove pedidos em Admin → Professores ou digite o nome
+            abaixo.
+          </p>
+        ) : (
+          <div className="mt-2 flex flex-col gap-1.5">
+            {teachers.map((t) => {
+              const checked = fields.teacherMemberIds.includes(t.id);
+              return (
+                <label key={t.id} className="flex items-center gap-2 text-sm text-text-neutral">
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    disabled={!checked && total >= MAX_TEACHERS}
+                    onChange={() => toggleTeacher(t.id)}
+                  />
+                  {t.name}
+                </label>
+              );
+            })}
+          </div>
+        )}
         <input
-          placeholder="Professor(a)"
+          placeholder="Professor sem cadastro (nome; vários separados por vírgula)"
           value={fields.teacherName}
           onChange={(e) => onChange({ ...fields, teacherName: e.target.value })}
-          className={inputClass}
+          className={`${inputClass} mt-3`}
         />
+      </div>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <input
           list="ebd-audiences"
           placeholder="Público (ex.: Jovens)"
@@ -71,8 +139,6 @@ function FieldsInputs({ fields, onChange }: { fields: Fields; onChange: (f: Fiel
             <option key={a} value={a} />
           ))}
         </datalist>
-      </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <input
           placeholder="Horário (ex.: Domingo, 10h)"
           value={fields.meetingTime}
@@ -97,7 +163,13 @@ function FieldsInputs({ fields, onChange }: { fields: Fields; onChange: (f: Fiel
   );
 }
 
-export default function EbdManager({ classes }: { classes: EbdClass[] }) {
+export default function EbdManager({
+  classes,
+  teachers,
+}: {
+  classes: EbdClass[];
+  teachers: TeacherOption[];
+}) {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [fields, setFields] = useState<Fields>(emptyFields);
@@ -142,7 +214,7 @@ export default function EbdManager({ classes }: { classes: EbdClass[] }) {
             </button>
           </div>
           <form onSubmit={handleCreate} className="flex flex-col gap-3">
-            <FieldsInputs fields={fields} onChange={setFields} />
+            <FieldsInputs fields={fields} onChange={setFields} teachers={teachers} />
             <Button type="submit" disabled={loading}>
               <Plus className="h-4 w-4" />
               {loading ? "Criando..." : "Criar sala"}
@@ -166,6 +238,7 @@ export default function EbdManager({ classes }: { classes: EbdClass[] }) {
               <EditCard
                 key={c.id}
                 item={c}
+                teachers={teachers}
                 onCancel={() => setEditingId(null)}
                 onSaved={() => {
                   setEditingId(null);
@@ -231,16 +304,30 @@ export default function EbdManager({ classes }: { classes: EbdClass[] }) {
 
 function EditCard({
   item,
+  teachers,
   onCancel,
   onSaved,
 }: {
   item: EbdClass;
+  teachers: TeacherOption[];
   onCancel: () => void;
   onSaved: () => void;
 }) {
+  // teacher_name junta os professores escolhidos e os digitados; ao editar, só
+  // os nomes que não são de professores escolhidos voltam para o campo de texto.
+  const chosenNames = teachers
+    .filter((t) => item.teacher_member_ids.includes(t.id))
+    .map((t) => t.name);
+  const typedNames = (item.teacher_name ?? "")
+    .split(",")
+    .map((n) => n.trim())
+    .filter((n) => n && !chosenNames.includes(n))
+    .join(", ");
+
   const [fields, setFields] = useState<Fields>({
     name: item.name,
-    teacherName: item.teacher_name ?? "",
+    teacherMemberIds: item.teacher_member_ids.filter((id) => teachers.some((t) => t.id === id)),
+    teacherName: typedNames,
     audience: item.audience ?? "",
     meetingTime: item.meeting_time ?? "",
     location: item.location ?? "",
@@ -276,7 +363,7 @@ function EditCard({
             <X className="h-4 w-4" />
           </button>
         </div>
-        <FieldsInputs fields={fields} onChange={setFields} />
+        <FieldsInputs fields={fields} onChange={setFields} teachers={teachers} />
         <div className="flex items-center gap-3">
           <Button type="submit" size="sm" disabled={loading}>
             {loading ? "Salvando..." : "Salvar"}

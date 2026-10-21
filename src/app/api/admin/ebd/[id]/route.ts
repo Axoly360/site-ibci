@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
+import { MAX_EBD_TEACHERS, resolveEbdTeachers, setEbdClassTeachers } from "@/lib/ebdTeacher";
 
 function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
@@ -22,16 +23,25 @@ export async function POST(
     return NextResponse.json({ error: "Nome da sala é obrigatório." }, { status: 400 });
   }
 
+  const teachers = await resolveEbdTeachers(body?.teacherMemberIds, text(body?.teacherName));
+  if (teachers.tooMany) {
+    return NextResponse.json(
+      { error: `Cada sala pode ter até ${MAX_EBD_TEACHERS} professores.` },
+      { status: 400 }
+    );
+  }
+
   await sql`
     update ebd_classes set
       name = ${name},
-      teacher_name = ${text(body?.teacherName) || null},
+      teacher_name = ${teachers.displayName},
       audience = ${text(body?.audience) || null},
       meeting_time = ${text(body?.meetingTime) || null},
       location = ${text(body?.location) || null},
       description = ${text(body?.description) || null}
     where id = ${id}
   `;
+  await setEbdClassTeachers(id, teachers.memberIds);
   return NextResponse.json({ ok: true });
 }
 

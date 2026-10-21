@@ -44,6 +44,7 @@ export default async function EstatisticasPage({
     { label: "Cadastros aguardando validação", value: members.pending, href: "/admin/membros" },
     { label: "Pedidos de grupo pendentes", value: stats.pendingGroupRequests, href: "/admin/grupos" },
     { label: "Pedidos de sala da EBD", value: stats.pendingEbdRequests, href: "/admin/ebd" },
+    { label: "Pedidos de professor da EBD", value: stats.pendingTeacherRequests, href: "/admin/professores" },
     { label: "Solicitações de diácono", value: stats.deacons.solicitado, href: "/admin/diaconos" },
     ...(finance
       ? [{ label: "Comprovantes aguardando conferência", value: stats.pendingReceipts, href: "/admin/financeiro" }]
@@ -195,6 +196,17 @@ export default async function EstatisticasPage({
             </ChartCard>
             <ChartCard title="Alunos por sala da EBD">
               <BarList items={stats.ebdClasses} />
+            </ChartCard>
+            <ChartCard title="Presença média por domingo na EBD">
+              {stats.ebdAttendance.avgOverall !== null && (
+                <p className="mb-4 text-sm text-text-neutral/70">
+                  Média geral:{" "}
+                  <strong className="text-primary">{stats.ebdAttendance.avgOverall}</strong> presentes
+                  por sala e domingo ({stats.ebdAttendance.sessions} chamadas nos últimos {months}{" "}
+                  meses).
+                </p>
+              )}
+              <BarList items={stats.ebdAttendance.byClass} />
             </ChartCard>
             <ChartCard title="Voluntários por ministério">
               <BarList items={stats.ministries} />

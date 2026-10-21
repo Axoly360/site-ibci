@@ -186,6 +186,23 @@ const secretariaArticles: HelpArticle[] = [
     ],
   },
   {
+    slug: "admin-secretaria-professores",
+    title: "Professores da EBD",
+    audience: "admin",
+    category: "Secretaria",
+    permission: "membros",
+    tags: ["professores", "ebd", "aprovação", "salas", "chamada"],
+    blocks: [
+      p("O membro marca \"Sou professor(a) da EBD\" em Meu Cadastro e o pedido chega em Admin → Professores. Você confere e Aprova ou Recusa. Depois de aprovado, o membro ganha uma insígnia no perfil e o botão Área do Professor."),
+      p("Para o professor ver a sala, atribua-o em Admin → EBD (Nova sala ou Editar): cada sala aceita até 3 professores, escolhidos entre os aprovados, mais professores sem cadastro, digitados pelo nome. Afastar tira o acesso à Área do Professor sem apagar o cadastro."),
+      ul([
+        "Na Área do Professor, ele vê as salas dele, os alunos e lança a chamada de cada domingo.",
+        "Ele também pode adicionar alunos sem cadastro no site: entram direto na sala, sem precisar de aprovação (aparecem em Admin → EBD → Ver alunos como sem cadastro).",
+        "A presença média por sala e por domingo aparece em Estatísticas.",
+      ]),
+    ],
+  },
+  {
     slug: "admin-secretaria-diaconos",
     title: "Diáconos",
     audience: "admin",
@@ -449,6 +466,22 @@ const membroArticles: HelpArticle[] = [
       p("Na Área do Membro, toque em Ensino (ou no card Minha EBD) para ver as salas da Escola Bíblica Dominical, com professor, horário e local."),
       p("Na sala que você frequenta, toque em \"Esta é a minha sala\". A secretaria confirma o seu pedido, e depois disso a sala aparece em Minha EBD. Se o pedido não for aprovado, você pode pedir de novo."),
       p("Só membros com cadastro validado podem escolher a sala. Para matricular uma criança, fale com a secretaria."),
+    ],
+  },
+  {
+    slug: "membro-professor",
+    title: "Sou Professor(a) da EBD",
+    audience: "membro",
+    category: "Perfil",
+    tags: ["professor", "ebd", "chamada", "alunos", "sala"],
+    blocks: [
+      p("Em Meu Cadastro, no campo Ensino na EBD, escolha \"Sou professor(a) da EBD\" e salve. A Secretaria confere e confirma; até lá, você continua como membro."),
+      p("Depois de confirmado, aparece uma insígnia ao lado do seu nome na Área do Membro e o botão Área do Professor. A Secretaria atribui a você a sala (cada sala tem até 3 professores)."),
+      ul([
+        "Minhas salas: horário, local, professores da sala, número de alunos e a presença média.",
+        "Chamada: escolha a data (o padrão é o último domingo), marque quem esteve presente e salve. Dá para corrigir a mesma data depois.",
+        "Alunos sem cadastro: adicione pelo nome (telefone é opcional). Eles entram direto na sua sala, sem aprovação, e você pode removê-los. Alunos com cadastro entram pedindo a sala em Ensino, e a Secretaria aprova.",
+      ]),
     ],
   },
   {

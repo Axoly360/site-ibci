@@ -832,3 +832,50 @@ create table if not exists ebd_join_requests (
   decided_at timestamptz,
   decided_by uuid references admin_users(id)
 );
+
+-- Professores da EBD: o membro solicita em Meu Cadastro ('solicitado'); a
+-- Secretaria/Admin geral aprovam ('ativo') e podem afastar ('afastado').
+create table if not exists teacher_profiles (
+  member_id uuid primary key references members(id) on delete cascade,
+  status text not null default 'solicitado',
+  notes text,
+  requested_at timestamptz not null default now(),
+  approved_at timestamptz
+);
+
+-- Professores da sala (até 3, limite aplicado na API). teacher_name continua
+-- como texto de exibição: nomes dos professores escolhidos, mais nomes
+-- digitados de professores sem cadastro.
+create table if not exists ebd_class_teachers (
+  class_id uuid not null references ebd_classes(id) on delete cascade,
+  member_id uuid not null references members(id) on delete cascade,
+  primary key (class_id, member_id)
+);
+
+-- Chamada da EBD: uma sessão por sala e data; só os presentes têm linha em
+-- ebd_attendance (quem não aparece na sessão estava ausente).
+create table if not exists ebd_sessions (
+  id uuid primary key default gen_random_uuid(),
+  class_id uuid not null references ebd_classes(id) on delete cascade,
+  session_date date not null,
+  recorded_by uuid references members(id) on delete set null,
+  created_at timestamptz not null default now(),
+  unique (class_id, session_date)
+);
+
+create table if not exists ebd_attendance (
+  session_id uuid not null references ebd_sessions(id) on delete cascade,
+  enrollment_id uuid not null references ebd_enrollments(id) on delete cascade,
+  primary key (session_id, enrollment_id)
+);
+
+-- Aluno sem cadastro no site: o professor da sala o matricula direto (já
+-- entra aprovado), só com nome e telefone opcional. Cada matrícula continua
+-- sendo exatamente UMA das três: membro, criança cadastrada ou aluno avulso.
+alter table ebd_enrollments add column if not exists guest_name text;
+alter table ebd_enrollments add column if not exists guest_phone text;
+alter table ebd_enrollments add column if not exists added_by uuid references members(id) on delete set null;
+alter table ebd_enrollments drop constraint if exists ebd_enrollments_check;
+alter table ebd_enrollments drop constraint if exists ebd_enrollments_one_person;
+alter table ebd_enrollments add constraint ebd_enrollments_one_person
+  check ((member_id is not null)::int + (child_id is not null)::int + (guest_name is not null)::int = 1);
