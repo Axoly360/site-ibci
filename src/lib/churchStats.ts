@@ -35,6 +35,7 @@ export interface ChurchStats {
   };
   groups: Count[];
   ministries: Count[];
+  ebdClasses: Count[];
   deacons: { ativo: number; afastado: number; emerito: number; solicitado: number; board: number };
   finance: null | {
     income: number;
@@ -131,6 +132,7 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     childRows,
     groupRows,
     ministryRows,
+    ebdRows,
     deaconRows,
     boardRow,
     financeRows,
@@ -185,6 +187,16 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
             from volunteer_registrations, unnest(ministries) as m
             group by m
             order by count desc, m asc`,
+      [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    ),
+    safe(
+      "Salas da EBD",
+      () =>
+        sql`select c.name, count(e.id)::int as count
+            from ebd_classes c
+            left join ebd_enrollments e on e.class_id = c.id
+            group by c.id, c.name
+            order by count desc, c.name asc`,
       [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
     ),
     safe(
@@ -365,6 +377,7 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     },
     groups: groupRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
     ministries: ministryRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
+    ebdClasses: ebdRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
     deacons: {
       ativo: deaconByStatus.get("ativo") ?? 0,
       afastado: deaconByStatus.get("afastado") ?? 0,

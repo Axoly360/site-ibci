@@ -33,6 +33,7 @@ const SECTORS: NavSector[] = [
       { href: "/admin/aniversariantes", label: "Aniversariantes", permission: "membros" },
       { href: "/admin/grupos", label: "Grupos", permission: "membros" },
       { href: "/admin/servir", label: "Servir", permission: "membros" },
+      { href: "/admin/ebd", label: "EBD", permission: "membros" },
       { href: "/admin/visitantes", label: "Visitantes", permission: "visitantes" },
       { href: "/admin/diaconos", label: "Diáconos", permission: "diaconos" },
       { href: "/admin/eventos", label: "Eventos", permission: "eventos" },

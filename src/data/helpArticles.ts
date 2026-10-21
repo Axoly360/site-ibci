@@ -172,6 +172,19 @@ const secretariaArticles: HelpArticle[] = [
     ],
   },
   {
+    slug: "admin-secretaria-ebd",
+    title: "EBD (Escola Bíblica Dominical)",
+    audience: "admin",
+    category: "Secretaria",
+    permission: "membros",
+    tags: ["ebd", "escola bíblica", "salas", "classes", "alunos", "professores"],
+    blocks: [
+      p("Em Admin → EBD você cadastra as salas da Escola Bíblica Dominical: nome, professor(a), público (Crianças, Jovens, Adultos…), horário, local e descrição ou tema do trimestre."),
+      p("Em Ver alunos você matricula quem estuda na sala. Dá para escolher um membro validado ou uma criança (filho cadastrado por um responsável em Grupo Familiar). Cada pessoa aparece uma vez por sala, e pode estar em mais de uma."),
+      p("Remover uma sala desvincula os alunos dela, sem apagar os cadastros. O total de alunos por sala aparece nas Estatísticas."),
+    ],
+  },
+  {
     slug: "admin-secretaria-diaconos",
     title: "Diáconos",
     audience: "admin",
@@ -335,7 +348,7 @@ const administracaoArticles: HelpArticle[] = [
         "Sexo: só conta quem preencheu o campo em Meu Cadastro; os demais aparecem como \"Não informado\".",
         "Idade: usa a data de nascimento do cadastro; o card mostra quantos membros têm a data informada.",
         "Se uma seção não carregar, o painel avisa no topo em vez de mostrar zero.",
-        "Presença nos cultos e salas da EBD ainda não são registradas, então não aparecem.",
+        "Alunos por sala da EBD vêm de Admin → EBD. Presença nos cultos ainda não é registrada, então não aparece.",
       ]),
     ],
   },

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
+  BookOpen,
   Camera,
   FileText,
   Menu,
@@ -165,6 +166,13 @@ export default async function AdminPage() {
           icon: HandHeart,
           title: "Servir",
           description: "Membros que se cadastraram para servir em cada ministério.",
+          show: hasPermission(session, "membros"),
+        },
+        {
+          href: "/admin/ebd",
+          icon: BookOpen,
+          title: "EBD",
+          description: "Salas da Escola Bíblica Dominical, professores e alunos.",
           show: hasPermission(session, "membros"),
         },
         {

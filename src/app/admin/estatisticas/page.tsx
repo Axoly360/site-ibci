@@ -186,11 +186,14 @@ export default async function EstatisticasPage({
 
         <StatSection
           title="Grupos e ministérios"
-          description="Ministérios vêm do cadastro de voluntariado (Servir). Salas da EBD entram quando o cadastro de salas existir."
+          description="Ministérios vêm do cadastro de voluntariado (Servir); salas da EBD, do cadastro de salas."
         >
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <ChartCard title="Membros por grupo/célula">
               <BarList items={stats.groups} />
+            </ChartCard>
+            <ChartCard title="Alunos por sala da EBD">
+              <BarList items={stats.ebdClasses} />
             </ChartCard>
             <ChartCard title="Voluntários por ministério">
               <BarList items={stats.ministries} />

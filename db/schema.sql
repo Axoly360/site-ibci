@@ -792,3 +792,31 @@ on conflict (kind, name) do nothing;
 
 -- Sexo do membro ('Feminino' ou 'Masculino'), para as estatísticas da igreja.
 alter table members add column if not exists sex text;
+
+-- Salas/classes da Escola Bíblica Dominical (EBD), geridas pela Secretaria
+-- (permissão "membros"). Cada aluno é um membro validado OU uma criança
+-- cadastrada por um responsável (member_children), nunca os dois.
+create table if not exists ebd_classes (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  teacher_name text,
+  audience text,
+  meeting_time text,
+  location text,
+  description text,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists ebd_enrollments (
+  id uuid primary key default gen_random_uuid(),
+  class_id uuid not null references ebd_classes(id) on delete cascade,
+  member_id uuid references members(id) on delete cascade,
+  child_id uuid references member_children(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  check ((member_id is not null)::int + (child_id is not null)::int = 1)
+);
+
+create unique index if not exists ebd_enrollments_member_uq
+  on ebd_enrollments (class_id, member_id) where member_id is not null;
+create unique index if not exists ebd_enrollments_child_uq
+  on ebd_enrollments (class_id, child_id) where child_id is not null;
