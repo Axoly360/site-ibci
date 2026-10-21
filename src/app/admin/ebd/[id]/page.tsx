@@ -25,7 +25,7 @@ export default async function AdminEbdSalaPage({
   const [room] = await sql`select id, name from ebd_classes where id = ${id}`;
   if (!room) notFound();
 
-  const [students, availableMembers, availableChildren] = await Promise.all([
+  const [students, availableMembers, availableChildren, pendingRequests] = await Promise.all([
     sql`
       select e.id, coalesce(m.name, c.name) as name,
              case when e.member_id is not null then 'Membro' else 'Criança' end as kind,
@@ -54,6 +54,13 @@ export default async function AdminEbdSalaPage({
       )
       order by c.name asc
     `,
+    sql`
+      select r.id, members.name, members.email, r.requested_at
+      from ebd_join_requests r
+      join members on members.id = r.member_id
+      where r.class_id = ${id} and r.status = 'pendente'
+      order by r.requested_at asc
+    `,
   ]);
 
   return (
@@ -69,6 +76,7 @@ export default async function AdminEbdSalaPage({
         </Link>
         <EbdStudentsManager
           classId={id}
+          pendingRequests={pendingRequests as Parameters<typeof EbdStudentsManager>[0]["pendingRequests"]}
           students={students as Parameters<typeof EbdStudentsManager>[0]["students"]}
           availableMembers={availableMembers as Parameters<typeof EbdStudentsManager>[0]["availableMembers"]}
           availableChildren={availableChildren as Parameters<typeof EbdStudentsManager>[0]["availableChildren"]}

@@ -64,6 +64,7 @@ export default async function AdminPage() {
     financeiroPendente,
     congregacoesPendentes,
     diaconosPendentes,
+    ebdPendentes,
   ] =
     await Promise.all([
       hasPermission(session, "membros")
@@ -85,6 +86,11 @@ export default async function AdminPage() {
         : Promise.resolve([{ count: 0 }]),
       hasPermission(session, "diaconos")
         ? sql`select count(*)::int as count from deacon_profiles where status = 'solicitado'`
+        : Promise.resolve([{ count: 0 }]),
+      hasPermission(session, "membros")
+        ? sql`select count(*)::int as count from ebd_join_requests where status = 'pendente'`.catch(
+            () => [{ count: 0 }]
+          )
         : Promise.resolve([{ count: 0 }]),
     ]);
 
@@ -174,6 +180,7 @@ export default async function AdminPage() {
           title: "EBD",
           description: "Salas da Escola Bíblica Dominical, professores e alunos.",
           show: hasPermission(session, "membros"),
+          pendingCount: ebdPendentes[0]?.count ?? 0,
         },
         {
           href: "/admin/visitantes",

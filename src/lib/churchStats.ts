@@ -46,6 +46,7 @@ export interface ChurchStats {
   };
   pendingReceipts: number;
   pendingGroupRequests: number;
+  pendingEbdRequests: number;
   visitors: { total: number; firstVisit: number; byMonth: MonthPoint[] };
   events: { title: string; registered: number; checkedIn: number }[];
   /** Seções cujas consultas falharam — mostradas no painel, nunca preenchidas com zero fingindo dado. */
@@ -139,6 +140,7 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     categoryRows,
     receiptsRow,
     groupReqRow,
+    ebdReqRow,
     visitorRows,
     eventRows,
   ] = await Promise.all([
@@ -245,6 +247,11 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     safe(
       "Pedidos de grupo",
       () => sql`select count(*)::int as count from group_join_requests where status = 'pendente'`,
+      [{ count: 0 }] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    ),
+    safe(
+      "Pedidos de EBD",
+      () => sql`select count(*)::int as count from ebd_join_requests where status = 'pendente'`,
       [{ count: 0 }] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
     ),
     safe(
@@ -388,6 +395,7 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     finance,
     pendingReceipts: Number(receiptsRow[0]?.count ?? 0),
     pendingGroupRequests: Number(groupReqRow[0]?.count ?? 0),
+    pendingEbdRequests: Number(ebdReqRow[0]?.count ?? 0),
     visitors: {
       total: visitorRows.reduce((s, r) => s + Number(r.count), 0),
       firstVisit: visitorRows.reduce((s, r) => s + Number(r.first), 0),

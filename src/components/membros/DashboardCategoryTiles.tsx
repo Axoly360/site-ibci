@@ -43,7 +43,7 @@ export default function DashboardCategoryTiles({
       />
       <FinanceiroTile />
       <Tile
-        href="/para-voce/cursos"
+        href="/central-do-membro/ebd"
         icon={BookOpen}
         iconBg="bg-blue-600"
         borderColor="border-t-blue-600"

@@ -18,9 +18,11 @@ export default async function AdminEbdPage() {
 
   const classes = await sql`
     select c.id, c.name, c.teacher_name, c.audience, c.meeting_time, c.location, c.description,
-           count(e.id)::int as student_count
+           count(distinct e.id)::int as student_count,
+           count(distinct r.id) filter (where r.status = 'pendente')::int as pending_count
     from ebd_classes c
     left join ebd_enrollments e on e.class_id = c.id
+    left join ebd_join_requests r on r.class_id = c.id
     group by c.id
     order by c.name asc
   `;

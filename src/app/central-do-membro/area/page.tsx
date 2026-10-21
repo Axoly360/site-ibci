@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import MemberProfileSummary from "@/components/membros/MemberProfileSummary";
 import MemberGroupsCard from "@/components/membros/MemberGroupsCard";
+import MemberEbdCard, { type MemberEbdView } from "@/components/membros/MemberEbdCard";
 import DashboardCategoryTiles from "@/components/membros/DashboardCategoryTiles";
 import { getSession } from "@/lib/session";
 import { sql } from "@/lib/db";
@@ -38,6 +39,28 @@ export default async function AreaDoMembroPage() {
     order by mg.name asc
   `;
 
+  let ebdClasses: MemberEbdView[] = [];
+  let ebdPending = 0;
+  try {
+    const [rooms, pending] = await Promise.all([
+      sql`
+        select c.id, c.name, c.teacher_name, c.meeting_time
+        from ebd_enrollments e
+        join ebd_classes c on c.id = e.class_id
+        where e.member_id = ${session.memberId}
+        order by c.name asc
+      `,
+      sql`
+        select count(*)::int as count from ebd_join_requests
+        where member_id = ${session.memberId} and status = 'pendente'
+      `,
+    ]);
+    ebdClasses = rooms as MemberEbdView[];
+    ebdPending = Number(pending[0]?.count ?? 0);
+  } catch {
+    // Tabelas da EBD ainda não criadas: a Área do Membro continua funcionando sem o cartão.
+  }
+
   return (
     <div className="bg-bg-light">
       <section className="bg-primary px-4 py-16 text-white sm:px-6 sm:py-20 lg:px-8">
@@ -66,6 +89,7 @@ export default async function AreaDoMembroPage() {
           member={{ id: session.memberId, ...member, photo_url: resolvePrivateFileUrl(member.photo_url) }}
         />
         <MemberGroupsCard groups={groups} />
+        <MemberEbdCard classes={ebdClasses} pendingCount={ebdPending} />
         <DashboardCategoryTiles isLeadership={member.is_leadership} />
       </div>
     </div>

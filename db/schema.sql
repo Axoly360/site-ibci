@@ -820,3 +820,15 @@ create unique index if not exists ebd_enrollments_member_uq
   on ebd_enrollments (class_id, member_id) where member_id is not null;
 create unique index if not exists ebd_enrollments_child_uq
   on ebd_enrollments (class_id, child_id) where child_id is not null;
+
+-- Pedido do próprio membro para entrar numa sala da EBD — a Secretaria ou o
+-- Admin geral aprovam (vira linha em ebd_enrollments) ou recusam.
+create table if not exists ebd_join_requests (
+  id uuid primary key default gen_random_uuid(),
+  class_id uuid not null references ebd_classes(id) on delete cascade,
+  member_id uuid not null references members(id) on delete cascade,
+  status text not null default 'pendente',
+  requested_at timestamptz not null default now(),
+  decided_at timestamptz,
+  decided_by uuid references admin_users(id)
+);

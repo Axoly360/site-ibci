@@ -180,7 +180,8 @@ const secretariaArticles: HelpArticle[] = [
     tags: ["ebd", "escola bíblica", "salas", "classes", "alunos", "professores"],
     blocks: [
       p("Em Admin → EBD você cadastra as salas da Escola Bíblica Dominical: nome, professor(a), público (Crianças, Jovens, Adultos…), horário, local e descrição ou tema do trimestre."),
-      p("Em Ver alunos você matricula quem estuda na sala. Dá para escolher um membro validado ou uma criança (filho cadastrado por um responsável em Grupo Familiar). Cada pessoa aparece uma vez por sala, e pode estar em mais de uma."),
+      p("Os próprios membros escolhem a sala que frequentam na Área do Membro (card Ensino ou Minha EBD). O pedido chega em Ver alunos, em Solicitações pendentes, e a Secretaria ou o Administrador geral só precisa Aprovar ou Recusar. O número de pendentes aparece na lista de salas, no Painel e nas Estatísticas."),
+      p("Também dá para matricular direto, em Adicionar aluno: um membro validado ou uma criança (filho cadastrado por um responsável em Grupo Familiar). Crianças só entram por aqui. Cada pessoa aparece uma vez por sala, e pode estar em mais de uma."),
       p("Remover uma sala desvincula os alunos dela, sem apagar os cadastros. O total de alunos por sala aparece nas Estatísticas."),
     ],
   },
@@ -436,6 +437,18 @@ const membroArticles: HelpArticle[] = [
     blocks: [
       p("Em Meu Cadastro você mantém seus dados atualizados: telefone, CPF, endereço, data de nascimento, sexo, batismo, chegada na igreja, estado civil, naturalidade e profissão."),
       p("A foto de perfil deve ser quadrada, com no mínimo 400 × 400 px, em qualquer formato de imagem comum, até 5 MB."),
+    ],
+  },
+  {
+    slug: "membro-ebd",
+    title: "Minha Sala da EBD",
+    audience: "membro",
+    category: "Grupos",
+    tags: ["ebd", "escola bíblica", "sala", "classe", "ensino"],
+    blocks: [
+      p("Na Área do Membro, toque em Ensino (ou no card Minha EBD) para ver as salas da Escola Bíblica Dominical, com professor, horário e local."),
+      p("Na sala que você frequenta, toque em \"Esta é a minha sala\". A secretaria confirma o seu pedido, e depois disso a sala aparece em Minha EBD. Se o pedido não for aprovado, você pode pedir de novo."),
+      p("Só membros com cadastro validado podem escolher a sala. Para matricular uma criança, fale com a secretaria."),
     ],
   },
   {

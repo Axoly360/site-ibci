@@ -16,6 +16,7 @@ export interface EbdClass {
   location: string | null;
   description: string | null;
   student_count: number;
+  pending_count: number;
 }
 
 interface Fields {
@@ -188,6 +189,11 @@ export default function EbdManager({ classes }: { classes: EbdClass[] }) {
                   <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-primary">
                     <Users className="h-3.5 w-3.5" />
                     {c.student_count} {c.student_count === 1 ? "aluno" : "alunos"}
+                    {c.pending_count > 0 && (
+                      <span className="ml-1 rounded-full bg-secondary px-2 py-0.5 text-primary">
+                        {c.pending_count} pendente{c.pending_count > 1 ? "s" : ""}
+                      </span>
+                    )}
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-4">

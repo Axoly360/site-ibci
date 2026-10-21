@@ -43,6 +43,7 @@ export default async function EstatisticasPage({
   const alerts: { label: string; value: number; href: string }[] = [
     { label: "Cadastros aguardando validação", value: members.pending, href: "/admin/membros" },
     { label: "Pedidos de grupo pendentes", value: stats.pendingGroupRequests, href: "/admin/grupos" },
+    { label: "Pedidos de sala da EBD", value: stats.pendingEbdRequests, href: "/admin/ebd" },
     { label: "Solicitações de diácono", value: stats.deacons.solicitado, href: "/admin/diaconos" },
     ...(finance
       ? [{ label: "Comprovantes aguardando conferência", value: stats.pendingReceipts, href: "/admin/financeiro" }]
