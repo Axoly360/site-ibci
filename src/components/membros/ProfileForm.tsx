@@ -21,6 +21,7 @@ export interface ProfileData {
   marital_status: string | null;
   birthplace: string | null;
   profession: string | null;
+  sex: string | null;
   deacon_kind: string | null;
   deacon_status: string | null;
 }
@@ -50,6 +51,7 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
     maritalStatus: profile.marital_status ?? "",
     birthplace: profile.birthplace ?? "",
     profession: profile.profession ?? "",
+    sex: profile.sex ?? "",
     deaconKind: profile.deacon_kind ?? "",
   });
   const deaconConfirmed = profile.deacon_status && profile.deacon_status !== "solicitado";
@@ -251,6 +253,22 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
           onChange={set("timeAtChurch")}
           className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
+      </div>
+
+      <div>
+        <label htmlFor="pf-sex" className="mb-1.5 block text-sm font-semibold text-text-neutral">
+          Sexo
+        </label>
+        <select
+          id="pf-sex"
+          value={form.sex}
+          onChange={(e) => setForm((prev) => ({ ...prev, sex: e.target.value }))}
+          className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+        >
+          <option value="">Selecione</option>
+          <option value="Feminino">Feminino</option>
+          <option value="Masculino">Masculino</option>
+        </select>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

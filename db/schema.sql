@@ -789,3 +789,6 @@ insert into deacon_catalog (kind, name, position) values
   ('tarefa', 'Direção de culto', 3),
   ('tarefa', 'Pregação', 4)
 on conflict (kind, name) do nothing;
+
+-- Sexo do membro ('Feminino' ou 'Masculino'), para as estatísticas da igreja.
+alter table members add column if not exists sex text;

@@ -125,7 +125,7 @@ export default async function AdminMembroDetalhePage({
   const [member] = await sql`
     select id, name, email, member_number, is_validated_member, is_leadership, church_role,
            phone, cpf, birthdate, address, time_at_church, photo_url, baptism_date, arrival_date,
-           marital_status, birthplace, profession, created_at
+           marital_status, birthplace, profession, sex, created_at
     from members
     where id = ${id}
   `;
@@ -309,6 +309,7 @@ export default async function AdminMembroDetalhePage({
               <Field label="Telefone / WhatsApp" value={member.phone} />
               <Field label="CPF" value={member.cpf} />
               <Field label="Data de nascimento" value={member.birthdate} />
+              <Field label="Sexo" value={member.sex} />
               <Field label="Estado civil" value={member.marital_status} />
               <Field label="Naturalidade" value={member.birthplace} />
               <Field label="Profissão" value={member.profession} />

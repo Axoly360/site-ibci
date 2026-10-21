@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
   const maritalStatus = typeof body?.maritalStatus === "string" ? body.maritalStatus.trim() : "";
   const birthplace = typeof body?.birthplace === "string" ? body.birthplace.trim() : "";
   const profession = typeof body?.profession === "string" ? body.profession.trim() : "";
+  const sex = body?.sex === "Feminino" || body?.sex === "Masculino" ? body.sex : "";
 
   if (!name) {
     return NextResponse.json({ error: "Nome é obrigatório." }, { status: 400 });
@@ -45,7 +46,8 @@ export async function POST(request: NextRequest) {
       arrival_date = ${arrivalDate || null},
       marital_status = ${maritalStatus || null},
       birthplace = ${birthplace || null},
-      profession = ${profession || null}
+      profession = ${profession || null},
+      sex = ${sex || null}
     where id = ${session.memberId}
   `;
 

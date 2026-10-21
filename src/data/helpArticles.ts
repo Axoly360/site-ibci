@@ -403,7 +403,7 @@ const membroArticles: HelpArticle[] = [
     category: "Perfil",
     tags: ["perfil", "foto", "dados pessoais", "cadastro"],
     blocks: [
-      p("Em Meu Cadastro você mantém seus dados atualizados: telefone, CPF, endereço, data de nascimento, batismo, chegada na igreja, estado civil, naturalidade e profissão."),
+      p("Em Meu Cadastro você mantém seus dados atualizados: telefone, CPF, endereço, data de nascimento, sexo, batismo, chegada na igreja, estado civil, naturalidade e profissão."),
       p("A foto de perfil deve ser quadrada, com no mínimo 400 × 400 px, em qualquer formato de imagem comum, até 5 MB."),
     ],
   },
