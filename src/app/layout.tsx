@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { inter, montserrat } from "./fonts";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import InstalarApp from "@/components/layout/InstalarApp";
 
 // Domínio de produção — troque para o domínio próprio (ex.: ibciibura.com.br)
 // assim que ele existir. Enquanto isso, usa a URL padrão da Vercel. Sem
@@ -12,6 +13,10 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://site-ibci.vercel.a
 const SITE_TITLE = "IBCI - Igreja Batista Central do Ibura";
 const SITE_DESCRIPTION =
   "Igreja Batista Central do Ibura (IBCI) - Uma família para pertencer, um lugar para servir. Cultos, mensagens e informações da nossa comunidade em Recife-PE.";
+
+export const viewport: Viewport = {
+  themeColor: "#123b2c",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -46,6 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <InstalarApp />
       </body>
     </html>
   );

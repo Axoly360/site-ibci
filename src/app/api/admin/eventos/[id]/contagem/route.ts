@@ -4,14 +4,15 @@ import { getAdminSession, hasPermission } from "@/lib/admin-session";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getAdminSession();
   if (!hasPermission(session, "eventos")) {
     return NextResponse.json({ error: "Sem permissão." }, { status: 403 });
   }
 
-  const { slug } = await params;
+  // O segmento da URL é o slug do evento (ver nota em ../checkin/route.ts).
+  const { id: slug } = await params;
 
   const [{ total, checkins }] = await sql`
     select count(*)::int as total,

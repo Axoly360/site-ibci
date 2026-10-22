@@ -6,6 +6,20 @@ const nextConfig: NextConfig = {
    * funcionando (nada de link quebrado) enquanto o conteúdo passa a viver
    * nas novas rotas por categoria.
    */
+  // O service worker nunca pode ficar em cache, senão o celular não recebe
+  // versões novas dele.
+  async headers() {
+    return [
+      {
+        source: "/sw.js",
+        headers: [
+          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+        ],
+      },
+    ];
+  },
+
   async redirects() {
     return [
       {
