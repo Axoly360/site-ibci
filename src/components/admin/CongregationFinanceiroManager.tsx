@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FileText, CheckCircle2 } from "lucide-react";
 import Card from "@/components/ui/Card";
+import ApproveButton from "@/components/admin/ApproveButton";
 
 export interface CongregationSubmissionRow {
   id: string;
@@ -39,8 +40,8 @@ export default function CongregationFinanceiroManager({
   return (
     <Card className="p-6">
       <p className="mb-4 text-sm text-text-neutral/60">
-        Marque uma prestação de contas pendente para preencher o lançamento
-        automaticamente — depois é só conferir e clicar em Lançar.
+        Clique em <strong>Aprovar</strong> para lançar direto com os dados enviados, ou marque a
+        prestação de contas para revisar e ajustar no formulário antes de clicar em Lançar.
       </p>
 
       {submissoes.length === 0 ? (
@@ -57,6 +58,7 @@ export default function CongregationFinanceiroManager({
                 <th className="py-2 pr-4">Descrição</th>
                 <th className="py-2 pr-4">Comprovante</th>
                 <th className="py-2 pr-4 text-right">Valor</th>
+                <th className="py-2 pr-4">Ação</th>
               </tr>
             </thead>
             <tbody>
@@ -107,6 +109,13 @@ export default function CongregationFinanceiroManager({
                   </td>
                   <td className="py-3 pr-4 text-right font-semibold text-text-neutral">
                     {formatCurrency(s.amount)}
+                  </td>
+                  <td className="py-3 pr-4">
+                    {s.status === "aprovado" ? (
+                      <span className="text-xs font-semibold text-primary">Lançado</span>
+                    ) : (
+                      <ApproveButton url={`/api/admin/financeiro/congregacao/${s.id}/aprovar`} />
+                    )}
                   </td>
                 </tr>
               ))}

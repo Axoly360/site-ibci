@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FileText, CheckCircle2 } from "lucide-react";
 import Card from "@/components/ui/Card";
+import ApproveButton from "@/components/admin/ApproveButton";
 
 export interface ComprovanteRow {
   id: string;
@@ -50,8 +51,8 @@ export default function ComprovantesManager({ comprovantes }: { comprovantes: Co
         </h2>
       </div>
       <p className="mb-4 text-sm text-text-neutral/60">
-        Marque um comprovante pendente para preencher o lançamento
-        automaticamente — depois é só conferir e clicar em Lançar.
+        Clique em <strong>Aprovar</strong> para lançar direto com os dados enviados, ou marque o
+        comprovante para revisar e ajustar no formulário antes de clicar em Lançar.
       </p>
 
       {comprovantes.length === 0 ? (
@@ -71,6 +72,7 @@ export default function ComprovantesManager({ comprovantes }: { comprovantes: Co
                 <th className="py-2 pr-4 text-right">Valor</th>
                 <th className="py-2 pr-4">Arquivo</th>
                 <th className="py-2 pr-4">Enviado em</th>
+                <th className="py-2 pr-4">Ação</th>
               </tr>
             </thead>
             <tbody>
@@ -130,6 +132,17 @@ export default function ComprovantesManager({ comprovantes }: { comprovantes: Co
                     )}
                   </td>
                   <td className="py-3 pr-4 text-text-neutral/70">{formatDate(c.created_at)}</td>
+                  <td className="py-3 pr-4">
+                    {c.status === "aprovado" ? (
+                      <span className="text-xs font-semibold text-primary">Lançado</span>
+                    ) : (
+                      <ApproveButton
+                        url={`/api/admin/financeiro/comprovantes/${c.id}/aprovar`}
+                        disabled={!c.category || !c.type || !c.amount}
+                        disabledReason="Faltam categoria, tipo ou valor: marque o comprovante para preencher no formulário."
+                      />
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
