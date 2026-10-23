@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Plus, Trash2, UserPlus, X } from "lucide-react";
+import { CheckCircle2, Pencil, Plus, Trash2, UserPlus, X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
@@ -91,6 +91,7 @@ export default function OrgBoardManager({
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
+  const [editingEventId, setEditingEventId] = useState<string | null>(null);
 
   const handleCreateEvent = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -221,31 +222,54 @@ export default function OrgBoardManager({
           <p className="text-sm text-text-neutral/60">Nenhum compromisso na agenda.</p>
         ) : (
           <div className="flex flex-col gap-2">
-            {events.map((ev) => (
-              <Card
-                key={ev.id}
-                className={`flex items-center justify-between gap-4 p-4 ${ev.is_past ? "opacity-60" : ""}`}
-              >
-                <div>
-                  <p className="font-semibold text-text-neutral">{ev.title}</p>
-                  <p className="text-sm text-text-neutral/70">
-                    {[br(ev.event_date), ev.event_time, ev.location].filter(Boolean).join(" · ")}
-                    {ev.is_past ? " · já passou" : ""}
-                  </p>
-                  {ev.description && (
-                    <p className="mt-1 text-sm text-text-neutral/80">{ev.description}</p>
-                  )}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => removeEvent(ev)}
-                  aria-label="Remover compromisso"
-                  className="shrink-0 text-red-600 hover:text-red-700"
+            {events.map((ev) =>
+              editingEventId === ev.id ? (
+                <EditEventCard
+                  key={ev.id}
+                  ev={ev}
+                  url={`${base}/agenda/${ev.id}`}
+                  onCancel={() => setEditingEventId(null)}
+                  onSaved={() => {
+                    setEditingEventId(null);
+                    router.refresh();
+                  }}
+                />
+              ) : (
+                <Card
+                  key={ev.id}
+                  className={`flex items-center justify-between gap-4 p-4 ${ev.is_past ? "opacity-60" : ""}`}
                 >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </Card>
-            ))}
+                  <div>
+                    <p className="font-semibold text-text-neutral">{ev.title}</p>
+                    <p className="text-sm text-text-neutral/70">
+                      {[br(ev.event_date), ev.event_time, ev.location].filter(Boolean).join(" · ")}
+                      {ev.is_past ? " · já passou" : ""}
+                    </p>
+                    {ev.description && (
+                      <p className="mt-1 text-sm text-text-neutral/80">{ev.description}</p>
+                    )}
+                  </div>
+                  <div className="flex shrink-0 items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setEditingEventId(ev.id)}
+                      className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark"
+                    >
+                      <Pencil className="h-4 w-4" />
+                      Editar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeEvent(ev)}
+                      aria-label="Remover compromisso"
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </Card>
+              )
+            )}
           </div>
         )}
       </section>
@@ -292,5 +316,100 @@ export default function OrgBoardManager({
         )}
       </section>
     </div>
+  );
+}
+
+function EditEventCard({
+  ev,
+  url,
+  onCancel,
+  onSaved,
+}: {
+  ev: BoardEvent;
+  url: string;
+  onCancel: () => void;
+  onSaved: () => void;
+}) {
+  const [title, setTitle] = useState(ev.title);
+  const [date, setDate] = useState(ev.event_date);
+  const [time, setTime] = useState(ev.event_time ?? "");
+  const [location, setLocation] = useState(ev.location ?? "");
+  const [description, setDescription] = useState(ev.description ?? "");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setSaving(true);
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, date, time, location, description }),
+    });
+    setSaving(false);
+    if (res.ok) {
+      onSaved();
+    } else {
+      const data = await res.json().catch(() => null);
+      setError(data?.error ?? "Não foi possível salvar.");
+    }
+  };
+
+  return (
+    <Card className="p-5">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-primary">Editar compromisso</h3>
+          <button type="button" onClick={onCancel} className="text-text-neutral/50 hover:text-text-neutral">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <input
+          required
+          maxLength={120}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className={inputClass}
+        />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <input
+            required
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className={inputClass}
+          />
+          <input
+            placeholder="Horário"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className={inputClass}
+          />
+          <input
+            placeholder="Local"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className={inputClass}
+          />
+        </div>
+        <textarea
+          rows={2}
+          placeholder="Detalhes (opcional)"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className={`${inputClass} resize-none`}
+        />
+        <div className="flex items-center gap-3">
+          <Button type="submit" size="sm" disabled={saving}>
+            {saving ? "Salvando..." : "Salvar"}
+          </Button>
+          <button type="button" onClick={onCancel} className="text-sm font-semibold text-text-neutral/60">
+            Cancelar
+          </button>
+        </div>
+        {error && <p className="text-sm text-red-600">{error}</p>}
+      </form>
+    </Card>
   );
 }
