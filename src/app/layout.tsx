@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     siteName: "IBCI - Igreja Batista Central do Ibura",
-    images: [{ url: "/hero-1-desktop.png", width: 1350, height: 460 }],
+    // A imagem vem de src/app/opengraph-image.tsx (marca sobre verde).
     locale: "pt_BR",
     type: "website",
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    images: ["/hero-1-desktop.png"],
+    // A imagem vem de src/app/twitter-image.tsx.
   },
 };
 
