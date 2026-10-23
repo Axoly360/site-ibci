@@ -62,6 +62,22 @@ export default async function AreaDoMembroPage() {
     // Tabelas da EBD ainda não criadas: a Área do Membro continua funcionando sem o cartão.
   }
 
+  let offices: { office: string; org: string }[] = [];
+  try {
+    const rows = await sql`
+      select o.office, g.short_name as org
+      from member_offices o
+      join church_organizations g on g.id = o.organization_id
+      where o.member_id = ${session.memberId}
+        and o.start_date <= current_date
+        and (o.end_date is null or o.end_date >= current_date)
+      order by g.position asc
+    `;
+    offices = rows as { office: string; org: string }[];
+  } catch {
+    // Tabelas de diretoria ainda não criadas: o perfil segue sem as insígnias de cargo.
+  }
+
   return (
     <div className="bg-bg-light">
       <section className="bg-primary px-4 py-16 text-white sm:px-6 sm:py-20 lg:px-8">
@@ -87,7 +103,12 @@ export default async function AreaDoMembroPage() {
 
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
         <MemberProfileSummary
-          member={{ id: session.memberId, ...member, photo_url: resolvePrivateFileUrl(member.photo_url) }}
+          member={{
+            id: session.memberId,
+            ...member,
+            photo_url: resolvePrivateFileUrl(member.photo_url),
+            offices,
+          }}
         />
         <MemberGroupsCard groups={groups} />
         <MemberEbdCard classes={ebdClasses} pendingCount={ebdPending} />

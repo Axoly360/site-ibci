@@ -186,6 +186,24 @@ const secretariaArticles: HelpArticle[] = [
     ],
   },
   {
+    slug: "admin-secretaria-diretorias",
+    title: "Diretorias (Presidente e Vice-presidente)",
+    audience: "admin",
+    category: "Secretaria",
+    permission: "membros",
+    tags: ["diretoria", "presidente", "vice-presidente", "shb", "mm", "ubaci", "unijovem", "mandato", "insígnia"],
+    blocks: [
+      p("Em Admin → Diretorias você lança quem preside cada organização da igreja (SHB, MM, UBACI, Unijovem e as que você acrescentar). Escolha o membro validado, a organização, o cargo (Presidente ou Vice-presidente) e a data de início; a data de fim é opcional."),
+      p("Enquanto hoje estiver dentro do mandato, o membro ganha uma insígnia no perfil, por exemplo \"Presidente · SHB\", e a etiqueta genérica \"Líder\" deixa de aparecer. Quando o mandato termina, a insígnia some sozinha e o cargo vai para o Histórico."),
+      ul([
+        "Datas: use o botão Datas ao lado do cargo para ajustar o início ou registrar o fim do mandato.",
+        "Organizações: no fim da página você edita nome e sigla, adiciona novas e remove. Remover uma organização apaga também os cargos lançados nela.",
+        "A diretoria é só uma insígnia: não libera nenhum acesso extra (a Escala de Serviços continua dependendo da marcação de liderança em Membros).",
+        "Ordem das insígnias no perfil: Pastor, Presidente, Vice-presidente, Diácono, Professor. Passando de 4, o resto vira +N.",
+      ]),
+    ],
+  },
+  {
     slug: "admin-secretaria-professores",
     title: "Professores da EBD",
     audience: "admin",

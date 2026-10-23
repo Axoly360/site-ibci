@@ -1,6 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, HandHeart, Pencil, Phone, ShieldCheck, UserRound, type LucideIcon } from "lucide-react";
+import {
+  BookOpen,
+  HandHeart,
+  Pencil,
+  Phone,
+  ShieldCheck,
+  UserRound,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 
 export interface MemberProfileSummaryData {
   id: string;
@@ -20,6 +29,8 @@ export interface MemberProfileSummaryData {
   deacon_kind?: string | null;
   deacon_status?: string | null;
   teacher_status?: string | null;
+  /** Cargos de diretoria em exercício (mandato vigente), já ordenados por organização. */
+  offices?: { office: string; org: string }[];
 }
 
 function Field({ label, value }: { label: string; value: string | null }) {
@@ -31,12 +42,15 @@ function Field({ label, value }: { label: string; value: string | null }) {
   );
 }
 
-type BadgeKey = "pastor" | "diacono" | "professor";
+type BadgeKey = "pastor" | "presidente" | "vice" | "diacono" | "professor";
 
-// Hierarquia das insígnias, da esquerda para a direita: o ofício mais antigo/
-// de maior autoridade vem primeiro (Pastor, depois Diácono, depois Professor).
-// Ao criar uma insígnia nova, é aqui que ela entra na ordem.
-const BADGE_ORDER: BadgeKey[] = ["pastor", "diacono", "professor"];
+// Hierarquia das insígnias, da esquerda para a direita: o ofício de maior
+// autoridade vem primeiro (Pastor, Presidente, Vice-presidente, Diácono,
+// Professor). Ao criar uma insígnia nova, é aqui que ela entra na ordem.
+const BADGE_ORDER: BadgeKey[] = ["pastor", "presidente", "vice", "diacono", "professor"];
+
+// Acima disso, o resto vira um "+N" para não poluir o perfil de quem acumula cargos.
+const MAX_BADGES = 4;
 
 export default function MemberProfileSummary({ member }: { member: MemberProfileSummaryData }) {
   const deaconApproved = Boolean(member.deacon_kind) && member.deacon_status !== "solicitado" && Boolean(member.deacon_status);
@@ -54,21 +68,38 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
   const isPastor = member.is_leadership && /pastor/i.test(member.church_role ?? "");
   const pastorLabel = /pastora/i.test(member.church_role ?? "") ? "Pastora" : "Pastor";
   // Quando o cargo é só "Pastor(a)", a insígnia já diz isso; a linha de texto some para não repetir.
-  const showRoleText = !(isPastor && /^\s*pastora?\s*$/i.test(member.church_role ?? ""));
+  const pastorOnlyText = isPastor && /^\s*pastora?\s*$/i.test(member.church_role ?? "");
 
-  const badges: { key: BadgeKey; label: string; Icon: LucideIcon }[] = [];
-  if (isPastor) badges.push({ key: "pastor", label: pastorLabel, Icon: HandHeart });
+  const badges: { id: string; rank: BadgeKey; label: string; Icon: LucideIcon }[] = [];
+  if (isPastor) badges.push({ id: "pastor", rank: "pastor", label: pastorLabel, Icon: HandHeart });
+  for (const o of member.offices ?? []) {
+    badges.push({
+      id: `${o.office}-${o.org}`,
+      rank: o.office === "Presidente" ? "presidente" : "vice",
+      label: `${o.office} · ${o.org}`,
+      Icon: Users,
+    });
+  }
   if (deaconApproved) {
-    badges.push({ key: "diacono", label: deaconTag ?? "Diácono", Icon: ShieldCheck });
+    badges.push({ id: "diacono", rank: "diacono", label: deaconTag ?? "Diácono", Icon: ShieldCheck });
   }
   if (teacherApproved) {
     badges.push({
-      key: "professor",
+      id: "professor",
+      rank: "professor",
       label: teacherActive ? "Professor(a)" : "Professor(a) (afastado)",
       Icon: BookOpen,
     });
   }
-  badges.sort((a, b) => BADGE_ORDER.indexOf(a.key) - BADGE_ORDER.indexOf(b.key));
+  badges.sort((a, b) => BADGE_ORDER.indexOf(a.rank) - BADGE_ORDER.indexOf(b.rank));
+  const visibleBadges = badges.slice(0, MAX_BADGES);
+  const hiddenBadges = badges.slice(MAX_BADGES);
+
+  // Com cargo de diretoria, a etiqueta genérica "Líder" é redundante e some.
+  const genericLeader =
+    member.is_leadership && (!member.church_role || /^\s*l[ií]der(an[cç]a)?\s*$/i.test(member.church_role));
+  const hasOffice = (member.offices ?? []).length > 0;
+  const showRoleText = !pastorOnlyText && !(genericLeader && hasOffice);
 
   return (
     <div className="rounded-2xl border-t-4 border-secondary bg-primary-dark p-6 shadow-lg sm:p-8">
@@ -94,15 +125,23 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
           {showRoleText && <p className="text-sm font-semibold text-secondary">{roleText}</p>}
           {badges.length > 0 && (
             <div className="mt-1.5 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-              {badges.map(({ key, label, Icon }) => (
+              {visibleBadges.map(({ id, label, Icon }) => (
                 <span
-                  key={key}
+                  key={id}
                   className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-primary"
                 >
                   <Icon className="h-3.5 w-3.5" />
                   {label}
                 </span>
               ))}
+              {hiddenBadges.length > 0 && (
+                <span
+                  title={hiddenBadges.map((b) => b.label).join(", ")}
+                  className="inline-flex items-center whitespace-nowrap rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-bold text-white"
+                >
+                  +{hiddenBadges.length}
+                </span>
+              )}
             </div>
           )}
         </div>

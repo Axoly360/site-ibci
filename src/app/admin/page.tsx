@@ -189,6 +189,13 @@ export default async function AdminPage() {
           pendingCount: ebdPendentes[0]?.count ?? 0,
         },
         {
+          href: "/admin/diretorias",
+          icon: Users,
+          title: "Diretorias",
+          description: "Presidentes e vice-presidentes da SHB, MM, UBACI, Unijovem e outras, com mandato.",
+          show: hasPermission(session, "membros"),
+        },
+        {
           href: "/admin/professores",
           icon: UserRound,
           title: "Professores",

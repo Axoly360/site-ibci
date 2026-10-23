@@ -879,3 +879,34 @@ alter table ebd_enrollments drop constraint if exists ebd_enrollments_check;
 alter table ebd_enrollments drop constraint if exists ebd_enrollments_one_person;
 alter table ebd_enrollments add constraint ebd_enrollments_one_person
   check ((member_id is not null)::int + (child_id is not null)::int + (guest_name is not null)::int = 1);
+
+-- Organizações da igreja (SHB, MM, UBACI, Unijovem…), editáveis pela Secretaria.
+create table if not exists church_organizations (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  short_name text not null unique,
+  position int not null default 0
+);
+
+insert into church_organizations (name, short_name, position) values
+  ('Sociedade de Homens', 'SHB', 1),
+  ('Mulheres em Ação', 'MM', 2),
+  ('União dos Adolescentes', 'UBACI', 3),
+  ('União da Juventude', 'Unijovem', 4)
+on conflict (short_name) do nothing;
+
+-- Cargo de diretoria de um membro numa organização, com mandato (início e
+-- fim). É "ativo" quando hoje está dentro do mandato; só os ativos viram
+-- insígnia no perfil. Não libera nenhum acesso (a Escala de Serviços segue
+-- dependendo só de members.is_leadership).
+create table if not exists member_offices (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id) on delete cascade,
+  organization_id uuid not null references church_organizations(id) on delete cascade,
+  office text not null check (office in ('Presidente', 'Vice-presidente')),
+  start_date date not null,
+  end_date date,
+  created_at timestamptz not null default now(),
+  check (end_date is null or end_date >= start_date),
+  unique (member_id, organization_id, office, start_date)
+);
