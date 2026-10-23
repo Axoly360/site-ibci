@@ -15,7 +15,7 @@ interface Session {
 
 // Links do menu em pílula com contorno (sistema de design IBCI).
 const pill =
-  "flex items-center gap-1 whitespace-nowrap rounded-full border-[1.5px] border-outline px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-nevoa";
+  "flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-nevoa";
 const plain =
   "flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-nevoa";
 

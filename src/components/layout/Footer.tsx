@@ -103,9 +103,19 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10 py-6 text-center text-xs text-white/50">
-        © {year} Igreja Batista Central do Ibura (IBCI). Todos os direitos
-        reservados.
+      <div className="border-t border-white/10 px-4 py-6 text-center text-xs text-white/60">
+        <p>
+          © {year} Igreja Batista Central do Ibura (IBCI) | Uma família para
+          pertencer.
+        </p>
+        <p className="mt-2">
+          <Link
+            href="/para-voce/privacidade"
+            className="underline underline-offset-2 hover:text-white"
+          >
+            Política de privacidade
+          </Link>
+        </p>
       </div>
     </footer>
   );
