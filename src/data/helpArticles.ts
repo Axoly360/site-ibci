@@ -186,6 +186,23 @@ const secretariaArticles: HelpArticle[] = [
     ],
   },
   {
+    slug: "admin-secretaria-presenca",
+    title: "Presença nos cultos",
+    audience: "admin",
+    category: "Secretaria",
+    permission: "membros",
+    tags: ["presença", "cultos", "frequência", "média", "visitantes", "contagem"],
+    blocks: [
+      p("Em Admin → Presença você lança quantas pessoas estiveram em cada culto: data, qual culto (escolha uma sugestão ou digite), o total de presentes e, se quiser, quantos eram visitantes. O total já inclui os visitantes."),
+      ul([
+        "Lançar de novo o mesmo culto na mesma data atualiza o número (ou use Editar na lista). A lista mostra os 60 lançamentos mais recentes e a média dos últimos 8.",
+        "Não dá para lançar data futura.",
+        "A média de presença por culto, mês a mês e por tipo de culto, aparece em Estatísticas (e no PDF delas). É uma contagem de pessoas, não uma lista de nomes.",
+        "A presença da EBD é separada: vem da chamada que cada professor faz na Área do Professor.",
+      ]),
+    ],
+  },
+  {
     slug: "admin-secretaria-diretorias",
     title: "Diretorias (Presidente e Vice-presidente)",
     audience: "admin",

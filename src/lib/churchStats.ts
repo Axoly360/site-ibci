@@ -37,6 +37,13 @@ export interface ChurchStats {
   ministries: Count[];
   ebdClasses: Count[];
   orgMembers: Count[];
+  servicePresence: {
+    avgOverall: number | null;
+    avgVisitors: number | null;
+    services: number;
+    byService: Count[];
+    byMonth: MonthPoint[];
+  };
   ebdAttendance: { byClass: Count[]; avgOverall: number | null; sessions: number };
   pendingTeacherRequests: number;
   deacons: { ativo: number; afastado: number; emerito: number; solicitado: number; board: number };
@@ -149,6 +156,8 @@ export async function getChurchStats(
     ebdRows,
     attendanceRows,
     orgRows,
+    presenceRows,
+    presenceMonthRows,
     teacherReqRow,
     deaconRows,
     boardRow,
@@ -245,6 +254,27 @@ export async function getChurchStats(
             left join organization_members m on m.organization_id = g.id
             group by g.id, g.short_name, g.position
             order by g.position asc`,
+      [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    ),
+    safe(
+      "Presença nos cultos",
+      () =>
+        sql`select service_label as name, count(*)::int as sessions,
+                   sum(total)::int as total, coalesce(sum(visitors), 0)::int as visitors,
+                   count(visitors)::int as with_visitors
+            from service_attendance
+            where service_date >= ${startMonth}::date
+            group by service_label
+            order by service_label asc`,
+      [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    ),
+    safe(
+      "Presença por mês",
+      () =>
+        sql`select to_char(service_date, 'YYYY-MM') as month, avg(total)::float8 as avg
+            from service_attendance
+            where service_date >= ${startMonth}::date
+            group by 1`,
       [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
     ),
     safe(
@@ -454,6 +484,27 @@ export async function getChurchStats(
     ministries: ministryRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
     ebdClasses: ebdRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
     orgMembers: orgRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
+    servicePresence: (() => {
+      const sessions = presenceRows.reduce((s, r) => s + Number(r.sessions), 0);
+      const total = presenceRows.reduce((s, r) => s + Number(r.total), 0);
+      const visitors = presenceRows.reduce((s, r) => s + Number(r.visitors), 0);
+      const visitorSessions = presenceRows.reduce((s, r) => s + Number(r.with_visitors), 0);
+      const monthMap = new Map<string, number>(
+        presenceMonthRows.map((r) => [r.month as string, Math.round(Number(r.avg) * 10) / 10])
+      );
+      return {
+        avgOverall: sessions ? Math.round((total / sessions) * 10) / 10 : null,
+        avgVisitors: visitorSessions ? Math.round((visitors / visitorSessions) * 10) / 10 : null,
+        services: sessions,
+        byService: presenceRows
+          .map((r) => ({
+            label: String(r.name),
+            value: Math.round((Number(r.total) / Number(r.sessions)) * 10) / 10,
+          }))
+          .sort((a, b) => b.value - a.value),
+        byMonth: fillSeries(keys, monthMap),
+      };
+    })(),
     ebdAttendance: (() => {
       const totalSessions = attendanceRows.reduce((s, r) => s + Number(r.sessions), 0);
       const totalPresent = attendanceRows.reduce((s, r) => s + Number(r.present), 0);

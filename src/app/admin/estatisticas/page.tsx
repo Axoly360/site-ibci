@@ -180,6 +180,15 @@ export default async function EstatisticasPage({
             </>
           )}
           <StatCard
+            label="Presença média nos cultos"
+            value={stats.servicePresence.avgOverall !== null ? String(stats.servicePresence.avgOverall) : "—"}
+            hint={
+              stats.servicePresence.services > 0
+                ? `${stats.servicePresence.services} cultos lançados em ${months} meses`
+                : "Nenhuma presença lançada ainda"
+            }
+          />
+          <StatCard
             label={`Visitantes (${months} meses)`}
             value={String(stats.visitors.total)}
             hint={`${stats.visitors.firstVisit} em primeira visita`}
@@ -306,6 +315,39 @@ export default async function EstatisticasPage({
             </div>
           </StatSection>
         )}
+
+        <StatSection
+          title="Presença nos cultos"
+          description="Média de pessoas por culto, a partir do que a Secretaria lança em Admin → Presença."
+        >
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 print:grid-cols-2">
+            <ChartCard title="Média por culto, mês a mês">
+              {stats.servicePresence.avgOverall !== null && (
+                <p className="mb-4 text-sm text-text-neutral/70">
+                  Média geral:{" "}
+                  <strong className="text-primary">{stats.servicePresence.avgOverall}</strong>{" "}
+                  presentes por culto
+                  {stats.servicePresence.avgVisitors !== null
+                    ? ` · ${stats.servicePresence.avgVisitors} visitantes em média (onde informado)`
+                    : ""}
+                  .
+                </p>
+              )}
+              <MonthBars
+                series={[
+                  {
+                    name: "Média de presentes",
+                    bg: "bg-primary",
+                    points: stats.servicePresence.byMonth,
+                  },
+                ]}
+              />
+            </ChartCard>
+            <ChartCard title="Média por tipo de culto">
+              <BarList items={stats.servicePresence.byService} />
+            </ChartCard>
+          </div>
+        </StatSection>
 
         <StatSection title="Visitantes e eventos">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 print:grid-cols-2">

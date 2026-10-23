@@ -944,3 +944,18 @@ create table if not exists organization_events (
   created_by uuid references members(id) on delete set null,
   created_at timestamptz not null default now()
 );
+
+-- Presença nos cultos: contagem de pessoas por culto, lançada pela Secretaria
+-- (permissão "membros"). total inclui os visitantes; visitors é opcional.
+-- Lançar de novo o mesmo culto na mesma data atualiza o registro.
+create table if not exists service_attendance (
+  id uuid primary key default gen_random_uuid(),
+  service_date date not null,
+  service_label text not null,
+  total int not null check (total >= 0),
+  visitors int check (visitors is null or (visitors >= 0 and visitors <= total)),
+  notes text,
+  recorded_by uuid references admin_users(id),
+  created_at timestamptz not null default now(),
+  unique (service_date, service_label)
+);

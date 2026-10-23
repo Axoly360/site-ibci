@@ -189,6 +189,13 @@ export default async function AdminPage() {
           pendingCount: ebdPendentes[0]?.count ?? 0,
         },
         {
+          href: "/admin/presenca",
+          icon: Clock,
+          title: "Presença nos cultos",
+          description: "Lançar quantas pessoas estiveram em cada culto; a média vai para as Estatísticas.",
+          show: hasPermission(session, "membros"),
+        },
+        {
           href: "/admin/diretorias",
           icon: Users,
           title: "Diretorias",
