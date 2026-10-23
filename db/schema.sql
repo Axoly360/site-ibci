@@ -910,3 +910,11 @@ create table if not exists member_offices (
   check (end_date is null or end_date >= start_date),
   unique (member_id, organization_id, office, start_date)
 );
+
+-- O responsável também pede sala da EBD para um familiar (member_children):
+-- o pedido passa a ter member_id (o próprio membro) OU child_id (o familiar).
+alter table ebd_join_requests alter column member_id drop not null;
+alter table ebd_join_requests add column if not exists child_id uuid references member_children(id) on delete cascade;
+alter table ebd_join_requests drop constraint if exists ebd_join_requests_one_person;
+alter table ebd_join_requests add constraint ebd_join_requests_one_person
+  check ((member_id is not null)::int + (child_id is not null)::int = 1);

@@ -57,9 +57,14 @@ export default async function AdminEbdSalaPage({
       order by c.name asc
     `,
     sql`
-      select r.id, members.name, members.email, r.requested_at
+      select r.id,
+             coalesce(m.name, c.name) as name,
+             coalesce(m.email, 'Familiar de ' || p.name || ' (' || p.email || ')') as email,
+             r.requested_at
       from ebd_join_requests r
-      join members on members.id = r.member_id
+      left join members m on m.id = r.member_id
+      left join member_children c on c.id = r.child_id
+      left join members p on p.id = c.member_id
       where r.class_id = ${id} and r.status = 'pendente'
       order by r.requested_at asc
     `,

@@ -19,7 +19,7 @@ export async function POST(
   }
 
   const [reqRow] = await sql`
-    select class_id, member_id from ebd_join_requests
+    select class_id, member_id, child_id from ebd_join_requests
     where id = ${requestId} and class_id = ${id} and status = 'pendente'
   `;
   if (!reqRow) {
@@ -33,11 +33,19 @@ export async function POST(
   `;
 
   if (decision === "aprovado") {
-    await sql`
-      insert into ebd_enrollments (class_id, member_id)
-      values (${reqRow.class_id}, ${reqRow.member_id})
-      on conflict do nothing
-    `;
+    if (reqRow.member_id) {
+      await sql`
+        insert into ebd_enrollments (class_id, member_id)
+        values (${reqRow.class_id}, ${reqRow.member_id})
+        on conflict do nothing
+      `;
+    } else if (reqRow.child_id) {
+      await sql`
+        insert into ebd_enrollments (class_id, child_id)
+        values (${reqRow.class_id}, ${reqRow.child_id})
+        on conflict do nothing
+      `;
+    }
   }
 
   return NextResponse.json({ ok: true });

@@ -181,7 +181,7 @@ const secretariaArticles: HelpArticle[] = [
     blocks: [
       p("Em Admin → EBD você cadastra as salas da Escola Bíblica Dominical: nome, professor(a), público (Crianças, Jovens, Adultos…), horário, local e descrição ou tema do trimestre."),
       p("Os próprios membros escolhem a sala que frequentam na Área do Membro (card Ensino ou Minha EBD). O pedido chega em Ver alunos, em Solicitações pendentes, e a Secretaria ou o Administrador geral só precisa Aprovar ou Recusar. O número de pendentes aparece na lista de salas, no Painel e nas Estatísticas."),
-      p("Também dá para matricular direto, em Adicionar aluno: um membro validado ou uma criança (filho cadastrado por um responsável em Grupo Familiar). Crianças só entram por aqui. Cada pessoa aparece uma vez por sala, e pode estar em mais de uma."),
+      p("Também dá para matricular direto, em Adicionar aluno: um membro validado ou uma criança (filho cadastrado por um responsável em Grupo Familiar). Os responsáveis também podem pedir a sala dos familiares em Grupo Familiar; esses pedidos chegam em Solicitações pendentes, como os dos membros. Cada pessoa aparece uma vez por sala, e pode estar em mais de uma."),
       p("Remover uma sala desvincula os alunos dela, sem apagar os cadastros. O total de alunos por sala aparece nas Estatísticas."),
     ],
   },
@@ -485,7 +485,8 @@ const membroArticles: HelpArticle[] = [
     blocks: [
       p("Na Área do Membro, toque em Ensino (ou no card Minha EBD) para ver as salas da Escola Bíblica Dominical, com professor, horário e local."),
       p("Na sala que você frequenta, toque em \"Esta é a minha sala\". A secretaria confirma o seu pedido, e depois disso a sala aparece em Minha EBD. Se o pedido não for aprovado, você pode pedir de novo."),
-      p("Só membros com cadastro validado podem escolher a sala. Para matricular uma criança, fale com a secretaria."),
+      p("Só membros com cadastro validado podem escolher a sala."),
+      p("Filhos e outros familiares: em Grupo Familiar, no cartão de cada familiar, escolha a sala em \"Escolher sala da EBD\" e toque em Pedir sala. O pedido também fica aguardando a aprovação da secretaria, e depois aparece \"EBD: nome da sala\" no cartão do familiar."),
     ],
   },
   {

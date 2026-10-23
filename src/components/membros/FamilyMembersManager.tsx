@@ -16,7 +16,26 @@ export interface FamilyMember {
   relationship: string;
 }
 
-export default function FamilyMembersManager({ familiares }: { familiares: FamilyMember[] }) {
+export interface EbdClassOption {
+  id: string;
+  name: string;
+  audience: string | null;
+}
+
+export interface EbdStatus {
+  enrolled: string[];
+  pending: string[];
+}
+
+export default function FamilyMembersManager({
+  familiares,
+  ebdClasses = [],
+  ebdByFamiliar = {},
+}: {
+  familiares: FamilyMember[];
+  ebdClasses?: EbdClassOption[];
+  ebdByFamiliar?: Record<string, EbdStatus>;
+}) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [birthdate, setBirthdate] = useState("");
@@ -132,6 +151,11 @@ export default function FamilyMembersManager({ familiares }: { familiares: Famil
                       .filter(Boolean)
                       .join(" · ") || "—"}
                   </p>
+                  <EbdPicker
+                    childId={familiar.id}
+                    classes={ebdClasses}
+                    status={ebdByFamiliar[familiar.id]}
+                  />
                 </div>
                 <div className="flex shrink-0 items-center gap-4">
                   <button
@@ -156,6 +180,85 @@ export default function FamilyMembersManager({ familiares }: { familiares: Famil
           )
         )}
       </div>
+    </div>
+  );
+}
+
+function EbdPicker({
+  childId,
+  classes,
+  status,
+}: {
+  childId: string;
+  classes: EbdClassOption[];
+  status?: EbdStatus;
+}) {
+  const router = useRouter();
+  const [classId, setClassId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const enrolled = status?.enrolled ?? [];
+  const pending = status?.pending ?? [];
+
+  const handleRequest = async () => {
+    if (!classId) return;
+    setLoading(true);
+    setError("");
+    const res = await fetch(`/api/membros/ebd/${classId}/solicitar-familiar`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ childId }),
+    });
+    setLoading(false);
+    if (res.ok) {
+      setClassId("");
+      router.refresh();
+    } else {
+      const data = await res.json().catch(() => null);
+      setError(data?.error ?? "Não foi possível enviar o pedido.");
+    }
+  };
+
+  if (classes.length === 0 && enrolled.length === 0 && pending.length === 0) return null;
+
+  return (
+    <div className="mt-2 flex flex-col gap-1.5 text-xs">
+      {enrolled.length > 0 && (
+        <p className="font-semibold text-primary">EBD: {enrolled.join(", ")}</p>
+      )}
+      {pending.length > 0 && (
+        <p className="font-semibold text-secondary">
+          EBD: aguardando aprovação ({pending.join(", ")})
+        </p>
+      )}
+      {classes.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            value={classId}
+            onChange={(e) => setClassId(e.target.value)}
+            aria-label="Sala da EBD"
+            className="rounded-lg border border-black/10 bg-bg-light px-2.5 py-1.5 text-xs outline-none focus:border-primary"
+          >
+            <option value="">Escolher sala da EBD</option>
+            {classes.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+                {c.audience ? ` — ${c.audience}` : ""}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={handleRequest}
+            disabled={!classId || loading}
+            className="rounded-full bg-primary px-3 py-1.5 font-bold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {loading ? "Enviando..." : "Pedir sala"}
+          </button>
+        </div>
+      )}
+      {error && <p className="text-red-600">{error}</p>}
     </div>
   );
 }
