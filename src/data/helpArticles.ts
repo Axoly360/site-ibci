@@ -518,7 +518,7 @@ const membroArticles: HelpArticle[] = [
     blocks: [
       p("Na Área do Membro, em Mais → Organizações, você vê as organizações da igreja. Toque em \"Quero participar\" na que for a sua: a diretoria dela recebe o pedido e aprova."),
       p("Depois de aprovado, você passa a ver a agenda da organização (próximos compromissos, com data, horário e local) e pode sair quando quiser. A agenda é visível só para os integrantes e para a diretoria."),
-      p("Se você é presidente ou vice-presidente (mandato em exercício, lançado pela Secretaria), aparece o botão Área da Diretoria no seu perfil. Lá você aprova pedidos, adiciona e remove integrantes e cria ou remove compromissos da agenda."),
+      p("Se você é presidente ou vice-presidente (mandato em exercício, lançado pela Secretaria), aparece o botão Área da Diretoria no seu perfil. Lá você aprova pedidos, adiciona integrantes (buscando o membro pelo nome, sem ver a lista completa da igreja), remove integrantes e cria, edita ou remove compromissos da agenda."),
     ],
   },
   {
@@ -533,7 +533,7 @@ const membroArticles: HelpArticle[] = [
       ul([
         "Minhas salas: horário, local, professores da sala, número de alunos e a presença média.",
         "Chamada: escolha a data (o padrão é o último domingo), marque quem esteve presente e salve. Dá para corrigir a mesma data depois.",
-        "Alunos sem cadastro: adicione pelo nome (telefone é opcional). Eles entram direto na sua sala, sem aprovação, e você pode removê-los. Alunos com cadastro entram pedindo a sala em Ensino, e a Secretaria aprova.",
+        "Alunos sem cadastro: adicione só pelo nome (nenhum outro dado pessoal é pedido). Eles entram direto na sua sala, sem aprovação, e você pode removê-los. Alunos com cadastro entram pedindo a sala em Ensino, e a Secretaria aprova.",
       ]),
     ],
   },

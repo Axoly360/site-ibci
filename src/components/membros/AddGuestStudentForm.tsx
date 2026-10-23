@@ -12,7 +12,6 @@ const inputClass =
 export default function AddGuestStudentForm({ classId }: { classId: string }) {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -23,12 +22,11 @@ export default function AddGuestStudentForm({ classId }: { classId: string }) {
     const res = await fetch("/api/professor/alunos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ classId, name, phone }),
+      body: JSON.stringify({ classId, name }),
     });
     setLoading(false);
     if (res.ok) {
       setName("");
-      setPhone("");
       router.refresh();
     } else {
       const data = await res.json().catch(() => null);
@@ -53,12 +51,6 @@ export default function AddGuestStudentForm({ classId }: { classId: string }) {
           placeholder="Nome completo"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className={inputClass}
-        />
-        <input
-          placeholder="Telefone (opcional)"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
           className={inputClass}
         />
         <Button type="submit" disabled={loading || name.trim().length < 2}>

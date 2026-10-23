@@ -11,7 +11,6 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   const classId = typeof body?.classId === "string" ? body.classId : "";
   const name = typeof body?.name === "string" ? body.name.trim() : "";
-  const phone = typeof body?.phone === "string" ? body.phone.trim() : "";
 
   if (!classId || name.length < 2 || name.length > 120) {
     return NextResponse.json({ error: "Informe o nome do aluno." }, { status: 400 });
@@ -35,8 +34,8 @@ export async function POST(request: NextRequest) {
   }
 
   await sql`
-    insert into ebd_enrollments (class_id, guest_name, guest_phone, added_by)
-    values (${classId}, ${name}, ${phone || null}, ${teacher.memberId})
+    insert into ebd_enrollments (class_id, guest_name, added_by)
+    values (${classId}, ${name}, ${teacher.memberId})
   `;
   return NextResponse.json({ ok: true });
 }

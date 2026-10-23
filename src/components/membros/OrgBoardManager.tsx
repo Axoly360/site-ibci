@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Pencil, Plus, Trash2, UserPlus, X } from "lucide-react";
 import Button from "@/components/ui/Button";
@@ -34,13 +34,11 @@ export default function OrgBoardManager({
   orgId,
   pending,
   members,
-  available,
   events,
 }: {
   orgId: string;
   pending: BoardPerson[];
   members: BoardPerson[];
-  available: BoardPerson[];
   events: BoardEvent[];
 }) {
   const router = useRouter();
@@ -66,18 +64,48 @@ export default function OrgBoardManager({
     if (res.ok) router.refresh();
   };
 
-  const [addId, setAddId] = useState("");
-  const handleAdd = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!addId) return;
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState<BoardPerson[]>([]);
+  const [searching, setSearching] = useState(false);
+
+  useEffect(() => {
+    const q = search.trim();
+    if (q.length < 2) {
+      setResults([]);
+      setSearching(false);
+      return;
+    }
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const res = await fetch(`${base}/membros-busca?q=${encodeURIComponent(q)}`, {
+          signal: controller.signal,
+        });
+        const data = res.ok ? await res.json() : { results: [] };
+        setResults(data.results ?? []);
+      } catch {
+        // Busca cancelada por uma digitação mais nova: nada a fazer.
+      } finally {
+        if (!controller.signal.aborted) setSearching(false);
+      }
+    }, 300);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [search, base]);
+
+  const addMember = async (person: BoardPerson) => {
     setError("");
     const res = await fetch(`${base}/integrantes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ memberId: addId }),
+      body: JSON.stringify({ memberId: person.id }),
     });
     if (res.ok) {
-      setAddId("");
+      setSearch("");
+      setResults([]);
       router.refresh();
     } else {
       const data = await res.json().catch(() => null);
@@ -279,20 +307,43 @@ export default function OrgBoardManager({
           Integrantes ({members.length})
         </h2>
         <Card className="mb-4 p-5">
-          <form onSubmit={handleAdd} className="flex flex-col gap-3 sm:flex-row">
-            <select value={addId} onChange={(e) => setAddId(e.target.value)} className={inputClass}>
-              <option value="">Adicionar um membro validado</option>
-              {available.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.name}
-                </option>
-              ))}
-            </select>
-            <Button type="submit" size="sm" disabled={!addId}>
-              <UserPlus className="h-4 w-4" />
-              Adicionar
-            </Button>
-          </form>
+          <label className="mb-1.5 block text-sm font-semibold text-text-neutral">
+            Adicionar um membro
+          </label>
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Digite pelo menos 2 letras do nome"
+            maxLength={60}
+            className={inputClass}
+          />
+          {search.trim().length >= 2 && (
+            <div className="mt-3">
+              {searching ? (
+                <p className="text-sm text-text-neutral/60">Buscando...</p>
+              ) : results.length === 0 ? (
+                <p className="text-sm text-text-neutral/60">
+                  Nenhum membro validado encontrado (ou já é integrante).
+                </p>
+              ) : (
+                <ul className="divide-y divide-black/5 rounded-xl border border-black/5">
+                  {results.map((r) => (
+                    <li key={r.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
+                      <span className="text-sm font-semibold text-text-neutral">{r.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => addMember(r)}
+                        className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark"
+                      >
+                        <UserPlus className="h-4 w-4" />
+                        Adicionar
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </Card>
 
         {members.length === 0 ? (

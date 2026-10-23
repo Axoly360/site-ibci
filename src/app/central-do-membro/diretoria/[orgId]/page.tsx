@@ -25,7 +25,7 @@ export default async function DiretoriaOrgPage({
   const [orgRow] = await sql`select id from church_organizations where id = ${orgId}`;
   if (!orgRow) notFound();
 
-  const [pending, members, available, events, directors] = await Promise.all([
+  const [pending, members, events, directors] = await Promise.all([
     sql`
       select m.id, m.name, m.email
       from organization_members om join members m on m.id = om.member_id
@@ -36,15 +36,6 @@ export default async function DiretoriaOrgPage({
       select m.id, m.name
       from organization_members om join members m on m.id = om.member_id
       where om.organization_id = ${orgId} and om.status = 'ativo'
-      order by m.name asc
-    `,
-    sql`
-      select m.id, m.name from members m
-      where m.is_validated_member = true
-        and m.id not in (
-          select member_id from organization_members
-          where organization_id = ${orgId} and status = 'ativo'
-        )
       order by m.name asc
     `,
     sql`
@@ -87,7 +78,6 @@ export default async function DiretoriaOrgPage({
           orgId={orgId}
           pending={pending as Parameters<typeof OrgBoardManager>[0]["pending"]}
           members={members as Parameters<typeof OrgBoardManager>[0]["members"]}
-          available={available as Parameters<typeof OrgBoardManager>[0]["available"]}
           events={events as Parameters<typeof OrgBoardManager>[0]["events"]}
         />
       </div>
