@@ -31,7 +31,7 @@ export default function GlobalError({
             <RotateCcw className="h-4 w-4" />
             Tentar de novo
           </Button>
-          <Button href="/" variant="ghost" size="md" className="border-2 border-primary/20">
+          <Button href="/" variant="ghost" size="md">
             <Home className="h-4 w-4" />
             Voltar para a home
           </Button>

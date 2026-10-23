@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { churchInfo, footerLinks } from "@/data/churchInfo";
+import Logo from "@/components/brand/Logo";
 
 function YoutubeIcon({ className }: { className?: string }) {
   return (
@@ -30,19 +31,11 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-dark-accent text-white/80">
+    <footer className="border-t border-gold-line bg-dark-accent text-white/80">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
-          <div className="flex items-center gap-3">
-            <img
-              src="/logo-ibci.svg"
-              alt="Logo IBCI"
-              className="h-12 w-12 shrink-0"
-            />
-            <h3 className="font-heading text-lg font-bold text-white">
-              IBCI - {churchInfo.fullName}
-            </h3>
-          </div>
+          <Logo variant="horizontal" tone="sobre-verde" height={64} />
+          <p className="sr-only">{churchInfo.fullName}</p>
           <p className="mt-3 text-sm leading-relaxed">
             Uma família para pertencer, um lugar para servir. Venha fazer
             parte da nossa comunidade de fé em Recife.

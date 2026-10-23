@@ -15,7 +15,7 @@ const SITE_DESCRIPTION =
   "Igreja Batista Central do Ibura (IBCI) - Uma família para pertencer, um lugar para servir. Cultos, mensagens e informações da nossa comunidade em Recife-PE.";
 
 export const viewport: Viewport = {
-  themeColor: "#123b2c",
+  themeColor: "#f5efe1",
 };
 
 export const metadata: Metadata = {

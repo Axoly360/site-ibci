@@ -5,12 +5,19 @@ import Link from "next/link";
 import { Menu, X, PlayCircle, ChevronDown, UserRound } from "lucide-react";
 import { navLinks as staticNavLinks, churchInfo } from "@/data/churchInfo";
 import Button from "@/components/ui/Button";
+import Logo from "@/components/brand/Logo";
 import type { NavLink } from "@/types";
 
 interface Session {
   name: string;
   email: string;
 }
+
+// Links do menu em pílula com contorno (sistema de design IBCI).
+const pill =
+  "flex items-center gap-1 whitespace-nowrap rounded-full border-[1.5px] border-outline px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-nevoa";
+const plain =
+  "flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-nevoa";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -48,47 +55,52 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-primary shadow-md">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3" onClick={closeAll}>
-          <img
-            src="/logo-ibci.svg"
-            alt="Logo IBCI"
-            className="h-11 w-11 shrink-0 sm:h-12 sm:w-12"
-          />
-          <span className="font-heading text-xs font-bold leading-tight text-white sm:text-sm md:text-base">
-            {churchInfo.fullName}
+    <header className="sticky top-0 z-50 border-b border-hairline bg-page">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6 lg:px-8">
+        <Link
+          href="/"
+          className="flex shrink-0 items-center"
+          onClick={closeAll}
+          aria-label="Igreja Batista Central do Ibura — início"
+        >
+          {/* Celular: só a marca com o nome ao lado. Do tablet para cima: logo horizontal. */}
+          <span className="flex items-center gap-2.5 sm:hidden">
+            <Logo variant="marca" tone="cores" height={44} alt="" />
+            <span className="font-heading text-sm font-semibold leading-tight text-ink">
+              Igreja Batista
+              <br />
+              Central do Ibura
+            </span>
+          </span>
+          <span className="hidden sm:block">
+            <Logo variant="horizontal" tone="cores" height={60} />
           </span>
         </Link>
 
         {/* Menu desktop */}
-        <div className="hidden items-center gap-1 xl:flex">
+        <div className="hidden items-center gap-1.5 xl:flex">
           {navLinks.map((link) =>
             link.children ? (
               <div key={link.href} className="group relative">
-                <Link
-                  href={link.href}
-                  className="flex items-center gap-1 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-white/90 transition-colors hover:text-secondary"
-                  aria-haspopup="true"
-                >
+                <Link href={link.href} className={pill} aria-haspopup="true">
                   {link.label}
                   <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
                 </Link>
 
                 <div
-                  className="invisible absolute left-0 top-full z-20 min-w-[240px] rounded-xl border border-black/5 bg-white p-2 opacity-0 shadow-lg transition-opacity duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100"
+                  className="invisible absolute left-0 top-full z-20 min-w-[240px] rounded-2xl border border-hairline bg-marfim p-2 opacity-0 shadow-[var(--shadow-soft)] transition-opacity duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100"
                   role="menu"
                 >
                   {link.children.map((child) => (
                     <Link
                       key={child.href}
                       href={child.href}
-                      className="block rounded-lg px-3 py-2 text-sm font-medium text-text-neutral hover:bg-primary/5 hover:text-primary"
+                      className="block rounded-lg px-3 py-2 text-sm font-semibold text-ink hover:bg-nevoa"
                       role="menuitem"
                     >
                       {child.label}
                       {child.value && (
-                        <span className="mt-0.5 block text-xs font-normal italic text-text-neutral/60">
+                        <span className="mt-0.5 block text-xs font-normal italic text-ink-muted">
                           {child.value}
                         </span>
                       )}
@@ -97,11 +109,7 @@ export default function Navbar() {
                 </div>
               </div>
             ) : (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-white/90 transition-colors hover:text-secondary"
-              >
+              <Link key={link.href} href={link.href} className={pill}>
                 {link.label}
               </Link>
             )
@@ -109,28 +117,20 @@ export default function Navbar() {
           <Button
             href={churchInfo.social.youtube}
             external
-            variant="primary"
+            variant="sun"
             size="sm"
-            className="ml-2"
+            className="ml-1.5"
           >
             <PlayCircle className="h-4 w-4" />
             Culto Ao Vivo
           </Button>
           {session ? (
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="ml-2 flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-white/90 hover:text-secondary"
-              title={session.email}
-            >
+            <button type="button" onClick={handleLogout} className={`ml-1 ${plain}`} title={session.email}>
               <UserRound className="h-4 w-4" />
               Sair
             </button>
           ) : (
-            <Link
-              href="/central-do-membro"
-              className="ml-2 flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-white/90 hover:text-secondary"
-            >
+            <Link href="/central-do-membro" className={`ml-1 ${plain}`}>
               <UserRound className="h-4 w-4" />
               Entrar
             </Link>
@@ -139,7 +139,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="text-white xl:hidden"
+          className="rounded-full p-1.5 text-ink hover:bg-nevoa xl:hidden"
           onClick={() => setOpen((prev) => !prev)}
           aria-label={open ? "Fechar menu" : "Abrir menu"}
           aria-expanded={open}
@@ -150,7 +150,7 @@ export default function Navbar() {
 
       {/* Menu mobile */}
       {open && (
-        <div className="border-t border-white/10 bg-primary xl:hidden">
+        <div className="border-t border-hairline bg-page xl:hidden">
           <div className="flex flex-col gap-1 px-4 py-4">
             {navLinks.map((link) =>
               link.children ? (
@@ -158,7 +158,7 @@ export default function Navbar() {
                   <div className="flex items-center justify-between rounded-lg px-1">
                     <Link
                       href={link.href}
-                      className="flex-1 rounded-lg px-2 py-2 text-sm font-medium text-white/90 hover:bg-white/5"
+                      className="flex-1 rounded-lg px-2 py-2 text-sm font-semibold text-ink hover:bg-nevoa"
                       onClick={closeAll}
                     >
                       {link.label}
@@ -168,7 +168,7 @@ export default function Navbar() {
                       onClick={() => toggleSection(link.label)}
                       aria-label={`${openSections[link.label] ? "Recolher" : "Expandir"} ${link.label}`}
                       aria-expanded={!!openSections[link.label]}
-                      className="p-2 text-white/80"
+                      className="p-2 text-ink-soft"
                     >
                       <ChevronDown
                         className={`h-4 w-4 transition-transform ${
@@ -178,17 +178,17 @@ export default function Navbar() {
                     </button>
                   </div>
                   {openSections[link.label] && (
-                    <div className="ml-3 flex flex-col gap-1 border-l border-white/10 pl-3">
+                    <div className="ml-3 flex flex-col gap-1 border-l border-hairline pl-3">
                       {link.children.map((child) => (
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="rounded-lg px-3 py-2 text-sm text-white/80 hover:bg-white/5"
+                          className="rounded-lg px-3 py-2 text-sm text-ink-soft hover:bg-nevoa"
                           onClick={closeAll}
                         >
                           {child.label}
                           {child.value && (
-                            <span className="mt-0.5 block text-xs italic text-white/50">
+                            <span className="mt-0.5 block text-xs italic text-ink-muted">
                               {child.value}
                             </span>
                           )}
@@ -201,7 +201,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-white/90 hover:bg-white/5"
+                  className="rounded-lg px-3 py-2 text-sm font-semibold text-ink hover:bg-nevoa"
                   onClick={closeAll}
                 >
                   {link.label}
@@ -211,7 +211,7 @@ export default function Navbar() {
             <Button
               href={churchInfo.social.youtube}
               external
-              variant="primary"
+              variant="sun"
               size="sm"
               className="mt-2 w-full"
             >
@@ -222,7 +222,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-white/90 hover:bg-white/5"
+                className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-semibold text-ink hover:bg-nevoa"
               >
                 <UserRound className="h-4 w-4" />
                 Sair ({session.email})
@@ -231,7 +231,7 @@ export default function Navbar() {
               <Link
                 href="/central-do-membro"
                 onClick={closeAll}
-                className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium text-white/90 hover:bg-white/5"
+                className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-semibold text-ink hover:bg-nevoa"
               >
                 <UserRound className="h-4 w-4" />
                 Entrar

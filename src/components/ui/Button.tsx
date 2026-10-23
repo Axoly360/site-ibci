@@ -1,7 +1,13 @@
 import Link from "next/link";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type Variant = "primary" | "secondary" | "outline" | "ghost";
+// Sistema de design IBCI: botão em pílula com contorno de 2px.
+//  - primary: ação principal (verde-floresta com texto linho)
+//  - sun: a ÚNICA chamada de destaque da tela (sol com sombra dura em sálvia)
+//  - ghost: ação secundária (só contorno)
+//  - outline: sobre fundo verde (contorno e texto claros)
+// "secondary" é apelido antigo de primary.
+type Variant = "primary" | "sun" | "ghost" | "outline" | "secondary";
 type Size = "sm" | "md" | "lg";
 
 interface CommonProps {
@@ -27,23 +33,25 @@ interface ButtonAsButton
 
 type ButtonProps = ButtonAsLink | ButtonAsButton;
 
+const primary = "border-outline bg-action text-action-ink hover:bg-action-hover";
+
 const variantClasses: Record<Variant, string> = {
-  primary:
-    "bg-secondary text-primary hover:bg-secondary-light shadow-sm hover:shadow-md",
-  secondary: "bg-primary text-white hover:bg-primary-dark shadow-sm hover:shadow-md",
-  outline:
-    "border-2 border-white text-white hover:bg-white hover:text-primary",
-  ghost: "text-primary hover:bg-primary/5",
+  primary,
+  secondary: primary,
+  sun:
+    "border-outline bg-sol text-on-accent shadow-[var(--shadow-hard)] hover:-translate-x-px hover:-translate-y-px motion-reduce:hover:transform-none",
+  ghost: "border-outline bg-transparent text-ink hover:bg-nevoa",
+  outline: "border-white bg-transparent text-white hover:bg-white hover:text-primary",
 };
 
 const sizeClasses: Record<Size, string> = {
   sm: "px-4 py-2 text-sm",
-  md: "px-6 py-3 text-base",
-  lg: "px-8 py-4 text-lg",
+  md: "px-[22px] py-3 text-[15px]",
+  lg: "px-7 py-4 text-[17px]",
 };
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 cursor-pointer";
+  "inline-flex items-center justify-center gap-2 rounded-full border-2 font-bold tracking-[0.01em] transition-[transform,background-color,box-shadow] duration-150 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none";
 
 export default function Button(props: ButtonProps) {
   const { children, variant = "primary", size = "md", className = "" } = props;

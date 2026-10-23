@@ -88,7 +88,7 @@ export default function ProjetosPage() {
             Senhor com seus dons, fale com a nossa equipe de atendimento e
             venha ser voluntário.
           </p>
-          <Button href={churchInfo.social.whatsapp} external variant="primary" size="lg">
+          <Button href={churchInfo.social.whatsapp} external variant="sun" size="lg">
             <MessageCircle className="h-5 w-5" />
             Quero Ser Voluntário
           </Button>

@@ -28,8 +28,18 @@ export function renderOgImage() {
         <img src={markDataUri()} width={Math.round(markHeight * MARK_ASPECT)} height={markHeight} alt="" />
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 150, fontWeight: 800, letterSpacing: 6, lineHeight: 1 }}>IBCI</div>
-          <div style={{ fontSize: 34, letterSpacing: 5, marginTop: 14, opacity: 0.9 }}>
-            IGREJA BATISTA CENTRAL DO IBURA
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              fontSize: 32,
+              letterSpacing: 5,
+              marginTop: 14,
+              opacity: 0.9,
+            }}
+          >
+            <div>IGREJA BATISTA</div>
+            <div>CENTRAL DO IBURA</div>
           </div>
           <div style={{ width: 120, height: 5, background: BRAND_SOL, marginTop: 34, borderRadius: 3 }} />
           <div style={{ fontSize: 38, marginTop: 28, maxWidth: 560, lineHeight: 1.3 }}>

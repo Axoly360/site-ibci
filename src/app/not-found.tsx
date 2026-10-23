@@ -24,7 +24,7 @@ export default function NotFound() {
             <Home className="h-4 w-4" />
             Voltar para a home
           </Button>
-          <Button href="/contato" variant="ghost" size="md" className="border-2 border-primary/20">
+          <Button href="/contato" variant="ghost" size="md">
             <MessageCircle className="h-4 w-4" />
             Falar com a igreja
           </Button>

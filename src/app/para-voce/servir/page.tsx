@@ -59,7 +59,7 @@ export default function ServirPage() {
             com a nossa equipe de atendimento.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button href="/central-do-membro/servir" variant="primary" size="lg">
+            <Button href="/central-do-membro/servir" variant="sun" size="lg">
               Cadastrar Voluntariado
             </Button>
             <Button href={churchInfo.social.whatsapp} external variant="outline" size="lg">

@@ -22,6 +22,7 @@ export default function Logo({
   height,
   className = "",
   style,
+  alt = "Igreja Batista Central do Ibura",
 }: {
   variant?: Variant;
   tone?: Tone;
@@ -29,12 +30,14 @@ export default function Logo({
   height: number;
   className?: string;
   style?: CSSProperties;
+  /** Use alt="" quando o nome da igreja já aparece em texto ao lado. */
+  alt?: string;
 }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={`/brand/ibci-${variant === "marca" ? "marca" : `logo-${variant}`}-${tone}.svg`}
-      alt="Igreja Batista Central do Ibura"
+      alt={alt}
       height={height}
       width={Math.round(height * ASPECT[variant])}
       className={className}
