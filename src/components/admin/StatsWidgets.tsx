@@ -21,8 +21,8 @@ export function StatSection({
   children: ReactNode;
 }) {
   return (
-    <section className="mt-10">
-      <h2 className="font-heading text-xl font-bold text-primary">{title}</h2>
+    <section className="mt-10 print:mt-6">
+      <h2 className="font-heading text-xl font-bold text-primary print:break-after-avoid">{title}</h2>
       {description && <p className="mt-1 text-sm text-text-neutral/60">{description}</p>}
       <div className="mt-4">{children}</div>
     </section>
@@ -41,7 +41,7 @@ export function StatCard({
   tone?: "default" | "alert";
 }) {
   return (
-    <Card className={`p-5 ${tone === "alert" ? "border-l-4 border-l-secondary" : ""}`}>
+    <Card className={`p-5 print:break-inside-avoid ${tone === "alert" ? "border-l-4 border-l-secondary" : ""}`}>
       <p className="text-xs font-bold uppercase tracking-wide text-text-neutral/60">{label}</p>
       <p className="mt-1 font-heading text-3xl font-bold text-primary">{value}</p>
       {hint && <p className="mt-1 text-xs text-text-neutral/60">{hint}</p>}
@@ -51,7 +51,7 @@ export function StatCard({
 
 export function ChartCard({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <Card className="p-5">
+    <Card className="p-5 print:break-inside-avoid">
       <h3 className="mb-4 font-heading text-base font-semibold text-primary">{title}</h3>
       {children}
     </Card>

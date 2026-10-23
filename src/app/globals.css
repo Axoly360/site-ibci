@@ -32,3 +32,29 @@ h5,
 h6 {
   font-family: var(--font-heading), Georgia, serif;
 }
+
+/* Impressão/PDF de relatórios (ex.: Estatísticas): esconde cabeçalho, rodapé e
+   avisos do site e mantém as cores dos gráficos. Só vale em páginas com a
+   classe .print-report. */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  body:has(.print-report) {
+    background: #fff;
+  }
+
+  body:has(.print-report) > header,
+  body:has(.print-report) > footer,
+  body:has(.print-report) > div.fixed {
+    display: none !important;
+  }
+
+  .print-report,
+  .print-report * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

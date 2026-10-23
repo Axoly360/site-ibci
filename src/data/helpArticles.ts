@@ -383,6 +383,8 @@ const administracaoArticles: HelpArticle[] = [
     blocks: [
       p("Em Admin → Estatísticas o Administrador geral vê a igreja em números, num só lugar: membros ativos, idade média e faixa etária, sexo, estado civil, batismos por ano, crianças e média por família, grupos, voluntários por ministério, diáconos, visitantes, eventos e, para quem tem acesso ao Financeiro, entradas, saídas e saldo."),
       p("Os botões 3, 6 e 12 meses mudam o período dos gráficos mensais. Só aparecem números agregados, nunca listas de pessoas."),
+      p("Congregação: use os botões Igreja toda, Sede ou o nome de uma congregação. O filtro vale para o que o sistema separa por congregação (Financeiro, Voluntários por ministério e Diáconos); as outras seções continuam mostrando a igreja toda, e a página avisa isso."),
+      p("Exportar PDF: o botão abre a impressão do navegador com uma versão limpa do relatório (sem menu, com título, período, congregação e data de geração). Em \"Destino\", escolha \"Salvar como PDF\" e salve. O PDF reflete o período e a congregação que estiverem selecionados."),
       ul([
         "Sexo: só conta quem preencheu o campo em Meu Cadastro; os demais aparecem como \"Não informado\".",
         "Idade: usa a data de nascimento do cadastro; o card mostra quantos membros têm a data informada.",

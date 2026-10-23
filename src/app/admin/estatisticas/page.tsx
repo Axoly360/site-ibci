@@ -12,8 +12,10 @@ import {
   StatCard,
   StatSection,
 } from "@/components/admin/StatsWidgets";
+import PrintButton from "@/components/admin/PrintButton";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { getChurchStats } from "@/lib/churchStats";
+import { sql } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Estatísticas | Painel IBCI",
@@ -28,16 +30,36 @@ const brl = (n: number) =>
 export default async function EstatisticasPage({
   searchParams,
 }: {
-  searchParams: Promise<{ periodo?: string }>;
+  searchParams: Promise<{ periodo?: string; congregacao?: string }>;
 }) {
   const session = await getAdminSession();
   if (!session) redirect("/admin/entrar");
   if (!hasPermission(session, "admins")) redirect("/admin");
 
-  const { periodo } = await searchParams;
+  const { periodo, congregacao } = await searchParams;
   const months = PERIODS.includes(Number(periodo)) ? Number(periodo) : 12;
 
-  const stats = await getChurchStats(months, hasPermission(session, "financeiro"));
+  let congregations: { id: string; slug: string; name: string }[] = [];
+  try {
+    congregations = (await sql`select id, slug, name from congregations order by name asc`) as typeof congregations;
+  } catch {
+    congregations = [];
+  }
+  const selected = congregations.find((c) => c.slug === congregacao) ?? null;
+  const filterSlug = congregacao === "sede" ? "sede" : selected ? selected.slug : "";
+  const congregationFilter = filterSlug === "sede" ? "sede" : (selected?.id ?? "");
+  const filterLabel = filterSlug === "sede" ? "Sede" : (selected?.name ?? "Igreja toda");
+
+  const href = (p: number, slug: string) =>
+    `/admin/estatisticas?periodo=${p}${slug ? `&congregacao=${slug}` : ""}`;
+
+  const generatedAt = new Date().toLocaleString("pt-BR", {
+    timeZone: "America/Recife",
+    dateStyle: "short",
+    timeStyle: "short",
+  });
+
+  const stats = await getChurchStats(months, hasPermission(session, "financeiro"), congregationFilter);
   const { members, children, finance } = stats;
 
   const alerts: { label: string; value: number; href: string }[] = [
@@ -52,22 +74,33 @@ export default async function EstatisticasPage({
   ].filter((a) => a.value > 0);
 
   return (
-    <div className="bg-bg-light">
-      <AdminNav session={session} />
-      <PageBanner
-        title="Estatísticas"
-        description="Visão geral da igreja em números: membros, famílias, ministérios, finanças e mais."
-      />
-      <div className="mx-auto max-w-5xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="print-report bg-bg-light print:bg-white">
+      <div className="print:hidden">
+        <AdminNav session={session} />
+        <PageBanner
+          title="Estatísticas"
+          description="Visão geral da igreja em números: membros, famílias, ministérios, finanças e mais."
+        />
+      </div>
+      <div className="mx-auto max-w-5xl px-4 pb-16 pt-10 sm:px-6 lg:px-8 print:max-w-none print:px-0 print:pb-0 print:pt-0">
+        <div className="mb-4 hidden border-b-2 border-secondary pb-3 print:block">
+          <h1 className="font-heading text-2xl font-bold text-primary">
+            IBCI — Estatísticas da igreja
+          </h1>
+          <p className="mt-1 text-sm text-text-neutral/80">
+            Período: últimos {months} meses · Congregação: {filterLabel} · Gerado em {generatedAt}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
           <p className="text-sm text-text-neutral/70">
             Números agregados — sem listas de pessoas. Séries mostram os últimos {months} meses.
           </p>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {PERIODS.map((p) => (
               <Link
                 key={p}
-                href={`/admin/estatisticas?periodo=${p}`}
+                href={href(p, filterSlug)}
                 className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
                   p === months ? "bg-primary text-white" : "bg-white text-text-neutral/70"
                 }`}
@@ -75,8 +108,37 @@ export default async function EstatisticasPage({
                 {p} meses
               </Link>
             ))}
+            <PrintButton />
           </div>
         </div>
+
+        <div className="mt-4 flex flex-wrap items-center gap-2 print:hidden">
+          <span className="text-xs font-bold uppercase tracking-wide text-text-neutral/50">
+            Congregação
+          </span>
+          {[
+            { slug: "", name: "Igreja toda" },
+            { slug: "sede", name: "Sede" },
+            ...congregations.map((c) => ({ slug: c.slug, name: c.name })),
+          ].map((opt) => (
+            <Link
+              key={opt.slug || "todas"}
+              href={href(months, opt.slug)}
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                opt.slug === filterSlug ? "bg-primary text-white" : "bg-white text-text-neutral/70"
+              }`}
+            >
+              {opt.name}
+            </Link>
+          ))}
+        </div>
+        {filterSlug !== "" && (
+          <p className="mt-3 rounded-xl bg-white px-4 py-3 text-xs text-text-neutral/80 shadow-sm print:shadow-none">
+            Filtro <strong>{filterLabel}</strong>: vale para Financeiro, Voluntários por ministério
+            e Diáconos, que o sistema separa por congregação. As demais seções (membros, crianças,
+            grupos, EBD, organizações, visitantes e eventos) continuam mostrando a igreja toda.
+          </p>
+        )}
 
         {stats.unavailable.length > 0 && (
           <p className="mt-4 rounded-xl bg-secondary/20 px-4 py-3 text-sm text-text-neutral">
@@ -85,7 +147,7 @@ export default async function EstatisticasPage({
           </p>
         )}
 
-        <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4 print:grid-cols-4">
           <StatCard label="Membros ativos" value={String(members.total)} hint="Cadastros validados" />
           <StatCard
             label="Idade média"
@@ -151,7 +213,7 @@ export default async function EstatisticasPage({
         </StatSection>
 
         <StatSection title="Membros">
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 print:grid-cols-2">
             <ChartCard title="Novos membros aprovados por mês">
               <MonthBars series={[{ name: "Novos membros", bg: "bg-primary", points: members.newByMonth }]} />
             </ChartCard>
@@ -176,7 +238,7 @@ export default async function EstatisticasPage({
         </StatSection>
 
         <StatSection title="Famílias e crianças">
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 print:grid-cols-2">
             <ChartCard title="Crianças por faixa etária">
               <BarList items={children.ageBuckets} />
             </ChartCard>
@@ -190,7 +252,7 @@ export default async function EstatisticasPage({
           title="Grupos e ministérios"
           description="Ministérios vêm do cadastro de voluntariado (Servir); salas da EBD, do cadastro de salas."
         >
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 print:grid-cols-2">
             <ChartCard title="Membros por grupo/célula">
               <BarList items={stats.groups} />
             </ChartCard>
@@ -228,7 +290,7 @@ export default async function EstatisticasPage({
 
         {finance && (
           <StatSection title="Financeiro" description="Lançamentos registrados no painel Financeiro.">
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 print:grid-cols-2">
               <ChartCard title="Entradas e saídas por mês">
                 <MonthBars
                   format={brl}
@@ -246,7 +308,7 @@ export default async function EstatisticasPage({
         )}
 
         <StatSection title="Visitantes e eventos">
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 print:grid-cols-2">
             <ChartCard title="Visitantes por mês">
               <MonthBars series={[{ name: "Visitantes", bg: "bg-sky-500", points: stats.visitors.byMonth }]} />
             </ChartCard>

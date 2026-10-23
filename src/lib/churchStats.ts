@@ -114,7 +114,17 @@ function countBy(values: unknown[], emptyLabel: string): Count[] {
   return Array.from(map, ([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
 }
 
-export async function getChurchStats(months: number, includeFinance: boolean): Promise<ChurchStats> {
+/**
+ * congregationFilter: "" = igreja toda, "sede" = só lançamentos/cadastros sem
+ * congregação, ou o id de uma congregação. Só vale para o que o banco separa
+ * por congregação (financeiro, voluntários por ministério e diáconos).
+ */
+export async function getChurchStats(
+  months: number,
+  includeFinance: boolean,
+  congregationFilter = ""
+): Promise<ChurchStats> {
+  const cf = congregationFilter;
   const unavailable: string[] = [];
   const today = recifeToday();
   const keys = monthKeys(months);
@@ -193,6 +203,9 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
       () =>
         sql`select m as name, count(*)::int as count
             from volunteer_registrations, unnest(ministries) as m
+            where (${cf}::text = ''
+                   or (${cf}::text = 'sede' and congregation_id is null)
+                   or congregation_id::text = ${cf}::text)
             group by m
             order by count desc, m asc`,
       [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -241,13 +254,24 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     ),
     safe(
       "Diáconos",
-      () => sql`select status, count(*)::int as count from deacon_profiles group by status`,
+      () =>
+        sql`select status, count(*)::int as count
+            from deacon_profiles
+            where (${cf}::text = ''
+                   or (${cf}::text = 'sede' and congregation_id is null)
+                   or congregation_id::text = ${cf}::text)
+            group by status`,
       [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
     ),
     safe(
       "Diretoria diaconal",
       () =>
-        sql`select count(*)::int as count from deacon_profiles where is_board = true and status = 'ativo'`,
+        sql`select count(*)::int as count
+            from deacon_profiles
+            where is_board = true and status = 'ativo'
+              and (${cf}::text = ''
+                   or (${cf}::text = 'sede' and congregation_id is null)
+                   or congregation_id::text = ${cf}::text)`,
       [{ count: 0 }] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
     ),
     includeFinance
@@ -257,6 +281,9 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
             sql`select substring(entry_date from 1 for 7) as month, type, sum(amount)::float8 as total
                 from financial_entries
                 where entry_date >= ${startMonth}
+                  and (${cf}::text = ''
+                       or (${cf}::text = 'sede' and congregation_id is null)
+                       or congregation_id::text = ${cf}::text)
                 group by 1, 2`,
           [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
         )
@@ -268,6 +295,9 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
             sql`select category, sum(amount)::float8 as total
                 from financial_entries
                 where type = 'entrada' and entry_date >= ${startMonth}
+                  and (${cf}::text = ''
+                       or (${cf}::text = 'sede' and congregation_id is null)
+                       or congregation_id::text = ${cf}::text)
                 group by category
                 order by total desc`,
           [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
