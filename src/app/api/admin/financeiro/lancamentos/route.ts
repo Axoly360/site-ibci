@@ -3,6 +3,7 @@ import { put } from "@vercel/blob";
 import { sql } from "@/lib/db";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
 import { isImageOrPdfFile, sanitizeFileName } from "@/lib/fileValidation";
+import { MAX_AMOUNT } from "@/lib/money";
 
 const TYPES = ["entrada", "saida"];
 
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
   if (!category) {
     return NextResponse.json({ error: "Informe a categoria." }, { status: 400 });
   }
-  if (!Number.isFinite(amount) || amount <= 0) {
+  if (!Number.isFinite(amount) || amount <= 0 || amount > MAX_AMOUNT) {
     return NextResponse.json({ error: "Informe um valor válido." }, { status: 400 });
   }
   if (!entryDate) {

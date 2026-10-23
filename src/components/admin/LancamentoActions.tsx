@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil, Trash2, X } from "lucide-react";
+import { parseBrAmount } from "@/lib/money";
 
 const CATEGORIES = ["Dízimo", "Oferta", "Doação avulsa", "Despesa", "Outro"];
 const REQUESTED_BY_OPTIONS = ["Pastor", "Tesouraria", "Secretaria", "Zelador"];
@@ -100,7 +101,7 @@ function EditModal({
       body: JSON.stringify({
         type,
         category,
-        amount: Number(amount.replace(",", ".")),
+        amount: parseBrAmount(amount),
         entryDate,
         description,
         requestedBy,

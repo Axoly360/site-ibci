@@ -6,6 +6,7 @@ import { CheckCircle2, FileText, Send } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { resolvePrivateFileUrl } from "@/lib/privateFiles";
+import { MAX_AMOUNT, parseBrAmount } from "@/lib/money";
 
 export interface MemberOption {
   id: string;
@@ -119,13 +120,17 @@ export default function LancamentoForm({
     setError("");
     setDone(false);
 
-    const numericAmount = Number(amount.replace(",", "."));
+    const numericAmount = parseBrAmount(amount);
     if (!category) {
       setError("Escolha uma categoria.");
       return;
     }
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-      setError("Informe um valor válido.");
+      setError("Informe um valor válido, por exemplo 150,00.");
+      return;
+    }
+    if (numericAmount > MAX_AMOUNT) {
+      setError("Esse valor parece alto demais. Confira se digitou corretamente.");
       return;
     }
     if (!entryDate) {

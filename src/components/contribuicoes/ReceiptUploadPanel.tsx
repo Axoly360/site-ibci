@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, FileText, Send } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import { MAX_AMOUNT, parseBrAmount } from "@/lib/money";
 
 interface Receipt {
   id: string;
@@ -63,9 +64,13 @@ export default function ReceiptUploadPanel() {
       setError("Escolha um arquivo antes de enviar.");
       return;
     }
-    const numericAmount = Number(amount.replace(",", "."));
+    const numericAmount = parseBrAmount(amount);
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-      setError("Informe o valor do comprovante.");
+      setError("Informe o valor do comprovante, por exemplo 150,00.");
+      return;
+    }
+    if (numericAmount > MAX_AMOUNT) {
+      setError("Esse valor parece alto demais. Confira se digitou corretamente.");
       return;
     }
 
@@ -174,14 +179,16 @@ export default function ReceiptUploadPanel() {
 
         <div>
           <label className="mb-1 block text-sm font-semibold text-text-neutral">
-            Valor (R$)
+            Valor (R$) <span className="text-red-600">*</span>
           </label>
           <input
             type="text"
             inputMode="decimal"
+            required
+            aria-required="true"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="0,00"
+            placeholder="Ex.: 150,00"
             className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-text-neutral placeholder:text-text-neutral/40"
           />
         </div>

@@ -4,6 +4,7 @@ import { sql } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { isImageOrPdfFile, sanitizeFileName } from "@/lib/fileValidation";
 import { resolvePrivateFileUrl } from "@/lib/privateFiles";
+import { MAX_AMOUNT } from "@/lib/money";
 
 const TYPES = ["entrada", "saida"];
 
@@ -68,6 +69,9 @@ export async function POST(request: NextRequest) {
   }
   if (!Number.isFinite(amount) || amount <= 0) {
     return NextResponse.json({ error: "Informe um valor válido." }, { status: 400 });
+  }
+  if (amount > MAX_AMOUNT) {
+    return NextResponse.json({ error: "Valor acima do limite permitido." }, { status: 400 });
   }
 
   let blob;

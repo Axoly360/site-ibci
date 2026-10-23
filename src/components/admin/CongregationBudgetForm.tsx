@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2, Save } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import { parseBrAmount } from "@/lib/money";
 
 function formatCurrency(value: number) {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -26,7 +27,7 @@ export default function CongregationBudgetForm({
   const handleSave = async () => {
     setError("");
     setDone(false);
-    const numericValue = Number(value.replace(",", "."));
+    const numericValue = value.trim() === "" ? 0 : parseBrAmount(value);
     if (!Number.isFinite(numericValue) || numericValue < 0) {
       setError("Informe um valor válido.");
       return;

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2, Send } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import { parseBrAmount } from "@/lib/money";
 
 const CATEGORIES = ["Verba", "Material", "Evento", "Visita Pastoral", "Outro"];
 
@@ -32,7 +33,7 @@ export default function SolicitacaoForm({ slug }: { slug: string }) {
       body: JSON.stringify({
         category,
         description,
-        estimatedAmount: estimatedAmount ? Number(estimatedAmount.replace(",", ".")) : "",
+        estimatedAmount: estimatedAmount ? parseBrAmount(estimatedAmount) : "",
       }),
     });
     setLoading(false);

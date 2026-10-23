@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2, FileText, Send } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import { parseBrAmount } from "@/lib/money";
 
 const CATEGORIES = ["Dízimo", "Oferta", "Doação avulsa", "Despesa", "Outro"];
 
@@ -29,7 +30,7 @@ export default function CongregacaoLancamentoForm({ slug }: { slug: string }) {
     setError("");
     setDone(false);
 
-    const numericAmount = Number(amount.replace(",", "."));
+    const numericAmount = parseBrAmount(amount);
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
       setError("Informe um valor válido.");
       return;
