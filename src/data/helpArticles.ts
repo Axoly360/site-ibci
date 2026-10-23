@@ -304,9 +304,9 @@ const financeiroArticles: HelpArticle[] = [
     tags: ["comprovantes", "dízimo", "oferta"],
     blocks: [
       p("Em Admin → Financeiro ficam os comprovantes de dízimo/oferta que os próprios membros enviam pela Central do Membro, em PDF, PNG ou JPEG."),
-      p("Aprovar com um clique: o botão Aprovar, na linha do comprovante, cria o lançamento direto com os dados enviados (membro, categoria, tipo e valor), usando como data o dia do envio, e marca o comprovante como lançado. Vale também para as prestações de contas das congregações, em Admin → Congregações → Financeiro, onde a data é a informada pela congregação."),
-      p("Para conferir ou corrigir antes de lançar, marque a caixinha do comprovante: você é levado para a tela de Lançamentos com os dados já preenchidos, ajusta o que precisar e confirma. Nos dois caminhos o sistema impede lançar o mesmo comprovante duas vezes."),
-      p("Se aprovar por engano, o lançamento pode ser editado ou removido em Lançamentos. O botão fica desabilitado quando o comprovante não tem categoria, tipo ou valor; nesse caso use a caixinha."),
+      p("Aprovar com um clique: o botão Aprovar, na primeira coluna da linha do comprovante, cria o lançamento direto com os dados enviados (membro, categoria, tipo e valor), usando como data o dia do envio, e marca o comprovante como lançado. Vale também para as prestações de contas das congregações, em Admin → Congregações → Financeiro, onde a data é a informada pela congregação."),
+      p("Para conferir ou corrigir antes de lançar, marque Revisar antes, logo abaixo do botão: você é levado para a tela de Lançamentos com os dados já preenchidos, ajusta o que precisar e confirma. Nos dois caminhos o sistema impede lançar o mesmo comprovante duas vezes."),
+      p("Se aprovar por engano, o lançamento pode ser editado ou removido em Lançamentos. O botão fica desabilitado quando o comprovante não tem categoria, tipo ou valor; nesse caso use Revisar antes."),
     ],
   },
   {

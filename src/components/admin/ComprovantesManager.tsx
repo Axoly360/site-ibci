@@ -64,7 +64,7 @@ export default function ComprovantesManager({ comprovantes }: { comprovantes: Co
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-black/10 text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
-                <th className="py-2 pr-4"></th>
+                <th className="py-2 pr-4">Ação</th>
                 <th className="py-2 pr-4">Membro</th>
                 <th className="py-2 pr-4">Categoria</th>
                 <th className="py-2 pr-4">Quem enviou</th>
@@ -72,7 +72,6 @@ export default function ComprovantesManager({ comprovantes }: { comprovantes: Co
                 <th className="py-2 pr-4 text-right">Valor</th>
                 <th className="py-2 pr-4">Arquivo</th>
                 <th className="py-2 pr-4">Enviado em</th>
-                <th className="py-2 pr-4">Ação</th>
               </tr>
             </thead>
             <tbody>
@@ -80,19 +79,32 @@ export default function ComprovantesManager({ comprovantes }: { comprovantes: Co
                 <tr key={c.id} className="border-b border-black/5 align-top">
                   <td className="py-3 pr-4">
                     {c.status === "aprovado" ? (
-                      <span title="Já lançado">
-                        <CheckCircle2 className="h-5 w-5 text-primary" />
+                      <span
+                        title="Já lançado"
+                        className="flex items-center gap-1 whitespace-nowrap text-xs font-semibold text-primary"
+                      >
+                        <CheckCircle2 className="h-5 w-5" />
+                        Lançado
                       </span>
                     ) : (
-                      <input
-                        type="checkbox"
-                        aria-label="Selecionar para lançar"
-                        disabled={!c.category || !c.type || !c.amount}
-                        onChange={(e) => {
-                          if (e.target.checked) selecionar(c.id);
-                        }}
-                        className="h-5 w-5 accent-secondary disabled:cursor-not-allowed disabled:opacity-40"
-                      />
+                      <div className="flex flex-col items-start gap-2">
+                        <ApproveButton
+                          url={`/api/admin/financeiro/comprovantes/${c.id}/aprovar`}
+                          disabled={!c.category || !c.type || !c.amount}
+                          disabledReason="Faltam categoria, tipo ou valor: marque Revisar antes para preencher no formulário."
+                        />
+                        <label className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-xs text-text-neutral/70">
+                          <input
+                            type="checkbox"
+                            aria-label="Revisar antes de lançar"
+                            onChange={(e) => {
+                              if (e.target.checked) selecionar(c.id);
+                            }}
+                            className="h-4 w-4 accent-secondary"
+                          />
+                          Revisar antes
+                        </label>
+                      </div>
                     )}
                   </td>
                   <td className="py-3 pr-4">
@@ -132,17 +144,6 @@ export default function ComprovantesManager({ comprovantes }: { comprovantes: Co
                     )}
                   </td>
                   <td className="py-3 pr-4 text-text-neutral/70">{formatDate(c.created_at)}</td>
-                  <td className="py-3 pr-4">
-                    {c.status === "aprovado" ? (
-                      <span className="text-xs font-semibold text-primary">Lançado</span>
-                    ) : (
-                      <ApproveButton
-                        url={`/api/admin/financeiro/comprovantes/${c.id}/aprovar`}
-                        disabled={!c.category || !c.type || !c.amount}
-                        disabledReason="Faltam categoria, tipo ou valor: marque o comprovante para preencher no formulário."
-                      />
-                    )}
-                  </td>
                 </tr>
               ))}
             </tbody>

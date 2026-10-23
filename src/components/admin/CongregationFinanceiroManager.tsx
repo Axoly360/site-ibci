@@ -51,14 +51,13 @@ export default function CongregationFinanceiroManager({
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-black/10 text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
-                <th className="py-2 pr-4"></th>
+                <th className="py-2 pr-4">Ação</th>
                 <th className="py-2 pr-4">Data</th>
                 <th className="py-2 pr-4">Tipo</th>
                 <th className="py-2 pr-4">Categoria</th>
                 <th className="py-2 pr-4">Descrição</th>
                 <th className="py-2 pr-4">Comprovante</th>
                 <th className="py-2 pr-4 text-right">Valor</th>
-                <th className="py-2 pr-4">Ação</th>
               </tr>
             </thead>
             <tbody>
@@ -66,18 +65,28 @@ export default function CongregationFinanceiroManager({
                 <tr key={s.id} className="border-b border-black/5 align-top">
                   <td className="py-3 pr-4">
                     {s.status === "aprovado" ? (
-                      <span title="Já lançado">
-                        <CheckCircle2 className="h-5 w-5 text-primary" />
+                      <span
+                        title="Já lançado"
+                        className="flex items-center gap-1 whitespace-nowrap text-xs font-semibold text-primary"
+                      >
+                        <CheckCircle2 className="h-5 w-5" />
+                        Lançado
                       </span>
                     ) : (
-                      <input
-                        type="checkbox"
-                        aria-label="Selecionar para lançar"
-                        onChange={(e) => {
-                          if (e.target.checked) selecionar(s.id);
-                        }}
-                        className="h-5 w-5 accent-secondary"
-                      />
+                      <div className="flex flex-col items-start gap-2">
+                        <ApproveButton url={`/api/admin/financeiro/congregacao/${s.id}/aprovar`} />
+                        <label className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-xs text-text-neutral/70">
+                          <input
+                            type="checkbox"
+                            aria-label="Revisar antes de lançar"
+                            onChange={(e) => {
+                              if (e.target.checked) selecionar(s.id);
+                            }}
+                            className="h-4 w-4 accent-secondary"
+                          />
+                          Revisar antes
+                        </label>
+                      </div>
                     )}
                   </td>
                   <td className="py-3 pr-4 text-text-neutral/80">{formatDate(s.entry_date)}</td>
@@ -109,13 +118,6 @@ export default function CongregationFinanceiroManager({
                   </td>
                   <td className="py-3 pr-4 text-right font-semibold text-text-neutral">
                     {formatCurrency(s.amount)}
-                  </td>
-                  <td className="py-3 pr-4">
-                    {s.status === "aprovado" ? (
-                      <span className="text-xs font-semibold text-primary">Lançado</span>
-                    ) : (
-                      <ApproveButton url={`/api/admin/financeiro/congregacao/${s.id}/aprovar`} />
-                    )}
                   </td>
                 </tr>
               ))}
