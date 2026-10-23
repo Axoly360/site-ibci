@@ -259,6 +259,12 @@ function MaisTile({ isLeadership }: { isLeadership: boolean }) {
       external: false,
     },
     {
+      label: "Organizações (SHB, MM…)",
+      icon: Users,
+      href: "/central-do-membro/organizacoes",
+      external: false,
+    },
+    {
       label: "Ajuda",
       icon: BookOpen,
       href: "/central-do-membro/ajuda",

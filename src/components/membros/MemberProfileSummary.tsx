@@ -150,7 +150,7 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
           <span className="whitespace-nowrap rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white">
             # ID: IBCI{String(member.member_number).padStart(4, "0")}
           </span>
-          {(deaconActive || teacherActive) && (
+          {(deaconActive || teacherActive || hasOffice) && (
             <div className="flex flex-col gap-2">
               {deaconActive && (
                 <Link
@@ -168,6 +168,15 @@ export default function MemberProfileSummary({ member }: { member: MemberProfile
                 >
                   <BookOpen className="h-4 w-4" />
                   Área do Professor
+                </Link>
+              )}
+              {hasOffice && (
+                <Link
+                  href="/central-do-membro/diretoria"
+                  className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-secondary px-5 py-2.5 text-sm font-bold text-secondary transition-colors hover:bg-secondary hover:text-primary"
+                >
+                  <Users className="h-4 w-4" />
+                  Área da Diretoria
                 </Link>
               )}
             </div>

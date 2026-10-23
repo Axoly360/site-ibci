@@ -918,3 +918,29 @@ alter table ebd_join_requests add column if not exists child_id uuid references 
 alter table ebd_join_requests drop constraint if exists ebd_join_requests_one_person;
 alter table ebd_join_requests add constraint ebd_join_requests_one_person
   check ((member_id is not null)::int + (child_id is not null)::int = 1);
+
+-- Integrantes de cada organização (SHB, MM, UBACI, Unijovem…). O membro pede
+-- para participar ('pendente'); a diretoria da organização aprova ('ativo')
+-- ou recusa (a linha é apagada). A diretoria também pode adicionar direto.
+create table if not exists organization_members (
+  organization_id uuid not null references church_organizations(id) on delete cascade,
+  member_id uuid not null references members(id) on delete cascade,
+  status text not null default 'pendente',
+  requested_at timestamptz not null default now(),
+  decided_at timestamptz,
+  primary key (organization_id, member_id)
+);
+
+-- Agenda da organização, mantida pela diretoria; vista só pelos integrantes
+-- ativos e pela própria diretoria.
+create table if not exists organization_events (
+  id uuid primary key default gen_random_uuid(),
+  organization_id uuid not null references church_organizations(id) on delete cascade,
+  title text not null,
+  event_date date not null,
+  event_time text,
+  location text,
+  description text,
+  created_by uuid references members(id) on delete set null,
+  created_at timestamptz not null default now()
+);

@@ -197,6 +197,9 @@ export default async function EstatisticasPage({
             <ChartCard title="Alunos por sala da EBD">
               <BarList items={stats.ebdClasses} />
             </ChartCard>
+            <ChartCard title="Integrantes por organização">
+              <BarList items={stats.orgMembers} />
+            </ChartCard>
             <ChartCard title="Presença média por domingo na EBD">
               {stats.ebdAttendance.avgOverall !== null && (
                 <p className="mb-4 text-sm text-text-neutral/70">

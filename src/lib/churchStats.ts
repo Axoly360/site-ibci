@@ -36,6 +36,7 @@ export interface ChurchStats {
   groups: Count[];
   ministries: Count[];
   ebdClasses: Count[];
+  orgMembers: Count[];
   ebdAttendance: { byClass: Count[]; avgOverall: number | null; sessions: number };
   pendingTeacherRequests: number;
   deacons: { ativo: number; afastado: number; emerito: number; solicitado: number; board: number };
@@ -137,6 +138,7 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     ministryRows,
     ebdRows,
     attendanceRows,
+    orgRows,
     teacherReqRow,
     deaconRows,
     boardRow,
@@ -219,6 +221,17 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
             ) s on s.class_id = c.id
             group by c.id, c.name
             order by c.name asc`,
+      [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+    ),
+    safe(
+      "Organizações",
+      () =>
+        sql`select g.short_name as name,
+                   count(m.member_id) filter (where m.status = 'ativo')::int as count
+            from church_organizations g
+            left join organization_members m on m.organization_id = g.id
+            group by g.id, g.short_name, g.position
+            order by g.position asc`,
       [] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
     ),
     safe(
@@ -410,6 +423,7 @@ export async function getChurchStats(months: number, includeFinance: boolean): P
     groups: groupRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
     ministries: ministryRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
     ebdClasses: ebdRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
+    orgMembers: orgRows.map((r) => ({ label: String(r.name), value: Number(r.count) })),
     ebdAttendance: (() => {
       const totalSessions = attendanceRows.reduce((s, r) => s + Number(r.sessions), 0);
       const totalPresent = attendanceRows.reduce((s, r) => s + Number(r.present), 0);

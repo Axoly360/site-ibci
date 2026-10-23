@@ -198,7 +198,8 @@ const secretariaArticles: HelpArticle[] = [
       ul([
         "Datas: use o botão Datas ao lado do cargo para ajustar o início ou registrar o fim do mandato.",
         "Organizações: no fim da página você edita nome e sigla, adiciona novas e remove. Remover uma organização apaga também os cargos lançados nela.",
-        "A diretoria é só uma insígnia: não libera nenhum acesso extra (a Escala de Serviços continua dependendo da marcação de liderança em Membros).",
+        "Quem tem cargo em exercício ganha, no perfil, o botão Área da Diretoria: lá a diretoria aprova os pedidos para participar, adiciona e remove integrantes e mantém a agenda da organização. O total de integrantes por organização aparece em Estatísticas.",
+        "Fora isso, a diretoria não libera nenhum acesso extra (a Escala de Serviços continua dependendo da marcação de liderança em Membros).",
         "Ordem das insígnias no perfil: Pastor, Presidente, Vice-presidente, Diácono, Professor. Passando de 4, o resto vira +N.",
       ]),
     ],
@@ -487,6 +488,18 @@ const membroArticles: HelpArticle[] = [
       p("Na sala que você frequenta, toque em \"Esta é a minha sala\". A secretaria confirma o seu pedido, e depois disso a sala aparece em Minha EBD. Se o pedido não for aprovado, você pode pedir de novo."),
       p("Só membros com cadastro validado podem escolher a sala."),
       p("Filhos e outros familiares: em Grupo Familiar, no cartão de cada familiar, escolha a sala em \"Escolher sala da EBD\" e toque em Pedir sala. O pedido também fica aguardando a aprovação da secretaria, e depois aparece \"EBD: nome da sala\" no cartão do familiar."),
+    ],
+  },
+  {
+    slug: "membro-organizacoes",
+    title: "Organizações (SHB, MM, UBACI, Unijovem)",
+    audience: "membro",
+    category: "Grupos",
+    tags: ["organizações", "shb", "mm", "ubaci", "unijovem", "agenda", "diretoria", "participar"],
+    blocks: [
+      p("Na Área do Membro, em Mais → Organizações, você vê as organizações da igreja. Toque em \"Quero participar\" na que for a sua: a diretoria dela recebe o pedido e aprova."),
+      p("Depois de aprovado, você passa a ver a agenda da organização (próximos compromissos, com data, horário e local) e pode sair quando quiser. A agenda é visível só para os integrantes e para a diretoria."),
+      p("Se você é presidente ou vice-presidente (mandato em exercício, lançado pela Secretaria), aparece o botão Área da Diretoria no seu perfil. Lá você aprova pedidos, adiciona e remove integrantes e cria ou remove compromissos da agenda."),
     ],
   },
   {
