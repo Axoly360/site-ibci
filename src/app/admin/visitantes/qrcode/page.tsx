@@ -78,7 +78,7 @@ export default async function AdminVisitantesQrCodePage({
           <p className="text-sm font-semibold text-text-neutral/70">
             {evento ? `Evento: ${visitorEventLabel(evento)}` : "Visita geral (entrada da igreja)"}
           </p>
-          <div className="mx-auto w-fit rounded-xl bg-white p-3 shadow-sm">
+          <div className="mx-auto w-fit rounded-xl border border-hairline bg-white p-3">
             <Image
               src={qrCodeDataUrl}
               alt="QR Code de cadastro de visitante"

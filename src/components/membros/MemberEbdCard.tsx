@@ -18,7 +18,7 @@ export default function MemberEbdCard({
   return (
     <Link
       href="/central-do-membro/ebd"
-      className="mt-4 flex items-center gap-2 rounded-2xl border-l-4 border-secondary bg-white px-5 py-4 shadow-sm transition-shadow hover:shadow-md"
+      className="mt-4 flex items-center gap-2 rounded-2xl border border-hairline border-l-4 border-l-secondary bg-white px-5 py-4 transition-colors hover:border-outline/40"
     >
       <BookOpen className="h-5 w-5 shrink-0 text-primary" />
       <p className="flex-1 text-sm text-text-neutral">

@@ -143,7 +143,7 @@ export default function MembershipQueueManager({
                 </div>
 
                 {r.cpf_duplicado_de && (
-                  <div className="mt-3 flex items-start gap-2 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                  <div className="mt-3 flex items-start gap-2 rounded-xl bg-secondary/20 px-3 py-2 text-sm text-primary">
                     <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
                     <span>
                       Este CPF já está cadastrado em outra conta:{" "}

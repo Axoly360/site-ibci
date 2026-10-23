@@ -133,7 +133,7 @@ export default async function EstatisticasPage({
           ))}
         </div>
         {filterSlug !== "" && (
-          <p className="mt-3 rounded-xl bg-white px-4 py-3 text-xs text-text-neutral/80 shadow-sm print:shadow-none">
+          <p className="mt-3 rounded-xl border border-hairline bg-white px-4 py-3 text-xs text-text-neutral/80 print:shadow-none">
             Filtro <strong>{filterLabel}</strong>: vale para Financeiro, Voluntários por ministério
             e Diáconos, que o sistema separa por congregação. As demais seções (membros, crianças,
             grupos, EBD, organizações, visitantes e eventos) continuam mostrando a igreja toda.
@@ -204,7 +204,7 @@ export default async function EstatisticasPage({
                 <Link
                   key={a.label}
                   href={a.href}
-                  className="flex items-center justify-between rounded-xl bg-white px-5 py-4 shadow-sm transition-shadow hover:shadow-md"
+                  className="flex items-center justify-between rounded-xl border border-hairline bg-white px-5 py-4"
                 >
                   <span className="text-sm text-text-neutral">{a.label}</span>
                   <span className="rounded-full bg-secondary px-3 py-1 text-sm font-bold text-primary">
@@ -304,7 +304,7 @@ export default async function EstatisticasPage({
                 <MonthBars
                   format={brl}
                   series={[
-                    { name: "Entradas", bg: "bg-emerald-600", points: finance.incomeByMonth },
+                    { name: "Entradas", bg: "bg-primary", points: finance.incomeByMonth },
                     { name: "Saídas", bg: "bg-secondary", points: finance.expenseByMonth },
                   ]}
                 />
@@ -352,7 +352,7 @@ export default async function EstatisticasPage({
         <StatSection title="Visitantes e eventos">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 print:grid-cols-2">
             <ChartCard title="Visitantes por mês">
-              <MonthBars series={[{ name: "Visitantes", bg: "bg-sky-500", points: stats.visitors.byMonth }]} />
+              <MonthBars series={[{ name: "Visitantes", bg: "bg-ink-soft", points: stats.visitors.byMonth }]} />
             </ChartCard>
             <ChartCard title="Eventos recentes: inscritos e presentes">
               {stats.events.length === 0 ? (

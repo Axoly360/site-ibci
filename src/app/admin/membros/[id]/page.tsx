@@ -90,7 +90,7 @@ function Field({ label, value }: { label: string; value: string | null }) {
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
     aprovado: "bg-primary/10 text-primary",
-    pendente: "bg-amber-50 text-amber-700",
+    pendente: "bg-secondary/20 text-primary",
     recusado: "bg-red-50 text-red-600",
   };
   const labels: Record<string, string> = {
@@ -281,13 +281,13 @@ export default async function AdminMembroDetalhePage({
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
                       member.is_validated_member
                         ? "bg-primary/10 text-primary"
-                        : "bg-amber-50 text-amber-700"
+                        : "bg-secondary/20 text-primary"
                     }`}
                   >
                     {member.is_validated_member ? "Validado" : "Não validado"}
                   </span>
                   {podeVerFinanceiro && comprovantesPendentes > 0 && (
-                    <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+                    <span className="rounded-full bg-secondary/20 px-3 py-1 text-xs font-semibold text-primary">
                       {comprovantesPendentes} comprovante(s) pendente(s)
                     </span>
                   )}
@@ -335,7 +335,7 @@ export default async function AdminMembroDetalhePage({
                     <div
                       key={f.id}
                       className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm ${
-                        isChild ? "border-sky-200 bg-sky-50/60" : "border-black/5"
+                        isChild ? "border-salvia bg-nevoa" : "border-black/5"
                       }`}
                     >
                       <div>
@@ -350,7 +350,7 @@ export default async function AdminMembroDetalhePage({
                       </div>
                       <span
                         className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-                          isChild ? "bg-sky-100 text-sky-700" : "bg-black/5 text-text-neutral/70"
+                          isChild ? "bg-nevoa text-primary" : "bg-black/5 text-text-neutral/70"
                         }`}
                       >
                         {f.relationship}
@@ -389,10 +389,10 @@ export default async function AdminMembroDetalhePage({
                 {gruposPendentes.map((g) => (
                   <div
                     key={g.id}
-                    className="flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50/60 px-4 py-3 text-sm"
+                    className="flex items-center justify-between rounded-xl border border-secondary/50 bg-secondary/10 px-4 py-3 text-sm"
                   >
                     <p className="font-semibold text-text-neutral">{g.name}</p>
-                    <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                    <span className="rounded-full bg-secondary/30 px-3 py-1 text-xs font-semibold text-primary">
                       Pedido pendente
                     </span>
                   </div>

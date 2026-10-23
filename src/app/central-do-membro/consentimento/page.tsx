@@ -52,7 +52,7 @@ export default async function ConsentimentoPage() {
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <BackToMemberArea />
         {hasPending && (
-          <div className="mb-6 flex items-start gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <div className="mb-6 flex items-start gap-2 rounded-xl bg-secondary/20 px-4 py-3 text-sm text-primary">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
               Você precisa aceitar os termos abaixo para continuar usando a Central do

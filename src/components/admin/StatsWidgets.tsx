@@ -5,10 +5,10 @@ import type { Count, MonthPoint } from "@/lib/churchStats";
 const PALETTE = [
   { stroke: "stroke-primary", bg: "bg-primary" },
   { stroke: "stroke-secondary", bg: "bg-secondary" },
-  { stroke: "stroke-emerald-600", bg: "bg-emerald-600" },
-  { stroke: "stroke-sky-500", bg: "bg-sky-500" },
-  { stroke: "stroke-violet-600", bg: "bg-violet-600" },
-  { stroke: "stroke-amber-500", bg: "bg-amber-500" },
+  { stroke: "stroke-ink-soft", bg: "bg-ink-soft" },
+  { stroke: "stroke-sol", bg: "bg-sol" },
+  { stroke: "stroke-gold-line", bg: "bg-gold-line" },
+  { stroke: "stroke-sol-profundo", bg: "bg-sol-profundo" },
 ];
 
 export function StatSection({

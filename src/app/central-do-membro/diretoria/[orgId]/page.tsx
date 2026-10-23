@@ -68,7 +68,7 @@ export default async function DiretoriaOrgPage({
         </Link>
 
         {directors.length > 0 && (
-          <p className="mb-8 rounded-xl bg-white px-5 py-4 text-sm text-text-neutral/80 shadow-sm">
+          <p className="mb-8 rounded-xl border border-hairline bg-white px-5 py-4 text-sm text-text-neutral/80">
             <span className="font-bold text-primary">Diretoria em exercício: </span>
             {directors.map((d) => `${d.office}: ${d.name}`).join(" · ")}
           </p>

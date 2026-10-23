@@ -96,7 +96,7 @@ export default async function DizimosEOfertasPage() {
           </div>
 
           <div className="mx-auto max-w-md space-y-6 rounded-xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur-md">
-            <div className="mx-auto w-fit rounded-xl bg-white p-3 shadow-sm">
+            <div className="mx-auto w-fit rounded-xl border border-hairline bg-white p-3">
               <Image
                 src={qrCodeDataUrl}
                 alt={`QR Code PIX - ${churchInfo.pix.key}`}

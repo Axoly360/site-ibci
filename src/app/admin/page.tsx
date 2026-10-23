@@ -104,8 +104,8 @@ export default async function AdminPage() {
     {
       name: "Mídias",
       icon: Camera,
-      iconBg: "bg-blue-600",
-      titleColor: "text-blue-700",
+      iconBg: "bg-primary",
+      titleColor: "text-primary",
       links: [
         {
           href: "/admin/banners",
@@ -154,8 +154,8 @@ export default async function AdminPage() {
     {
       name: "Secretaria",
       icon: UserRound,
-      iconBg: "bg-amber-500",
-      titleColor: "text-amber-700",
+      iconBg: "bg-primary",
+      titleColor: "text-primary",
       links: [
         {
           href: "/admin/membros",
@@ -251,8 +251,8 @@ export default async function AdminPage() {
     {
       name: "Financeiro",
       icon: Building2,
-      iconBg: "bg-emerald-600",
-      titleColor: "text-emerald-700",
+      iconBg: "bg-primary",
+      titleColor: "text-primary",
       links: [
         {
           href: "/admin/financeiro",
@@ -267,8 +267,8 @@ export default async function AdminPage() {
     {
       name: "Congregações",
       icon: MapPin,
-      iconBg: "bg-violet-600",
-      titleColor: "text-violet-700",
+      iconBg: "bg-primary",
+      titleColor: "text-primary",
       links: [
         {
           href: "/admin/congregacoes",
@@ -283,8 +283,8 @@ export default async function AdminPage() {
     {
       name: "Administração",
       icon: Lock,
-      iconBg: "bg-slate-600",
-      titleColor: "text-slate-700",
+      iconBg: "bg-primary",
+      titleColor: "text-primary",
       links: [
         {
           href: "/admin/estatisticas",
@@ -340,7 +340,7 @@ export default async function AdminPage() {
                     <Link key={link.href} href={link.href}>
                       <Card className="relative flex h-full flex-col items-start gap-3 p-6">
                         {!!link.pendingCount && (
-                          <span className="absolute right-4 top-4 flex min-w-[1.5rem] items-center justify-center rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">
+                          <span className="absolute right-4 top-4 flex min-w-[1.5rem] items-center justify-center rounded-full border border-on-accent bg-sol px-2 py-0.5 text-xs font-bold text-on-accent">
                             {link.pendingCount}
                           </span>
                         )}
@@ -352,7 +352,7 @@ export default async function AdminPage() {
                         </h3>
                         <p className="text-sm text-text-neutral/70">{link.description}</p>
                         {!!link.pendingCount && (
-                          <p className="text-xs font-semibold text-amber-700">
+                          <p className="text-xs font-semibold text-primary">
                             {link.pendingCount === 1
                               ? "1 pendência aguardando"
                               : `${link.pendingCount} pendências aguardando`}

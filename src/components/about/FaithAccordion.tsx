@@ -58,7 +58,7 @@ export default function FaithAccordion() {
   };
 
   return (
-    <div className="divide-y divide-black/5 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
+    <div className="divide-y divide-black/5 overflow-hidden rounded-2xl border border-black/5 bg-white">
       {faithItems.map((item, index) => {
         const Icon = item.icon;
         const isOpen = openIndex === index;

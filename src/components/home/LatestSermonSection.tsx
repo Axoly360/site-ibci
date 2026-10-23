@@ -34,7 +34,7 @@ export default function LatestSermonSection({
                     href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-64 shrink-0 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm sm:w-72"
+                    className="block w-64 shrink-0 overflow-hidden rounded-2xl border border-black/5 bg-white sm:w-72"
                   >
                     <div className="aspect-video bg-black/80">
                       <img

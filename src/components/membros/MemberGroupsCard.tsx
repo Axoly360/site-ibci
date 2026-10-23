@@ -15,7 +15,7 @@ export default function MemberGroupsCard({ groups }: { groups: MemberGroupView[]
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mt-4 overflow-hidden rounded-2xl border-l-4 border-secondary bg-white shadow-sm">
+    <div className="mt-4 overflow-hidden rounded-2xl border border-hairline border-l-4 border-l-secondary bg-white">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

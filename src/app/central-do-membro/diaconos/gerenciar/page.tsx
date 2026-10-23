@@ -80,7 +80,7 @@ export default async function GerenciarEscalaDiaconosPage({
         <div className="mb-8 flex items-center justify-between gap-4">
           <Link
             href={`/central-do-membro/diaconos/gerenciar?mes=${shiftMonth(month, -1)}`}
-            className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-primary shadow-sm"
+            className="rounded-full border border-hairline bg-white px-4 py-1.5 text-sm font-semibold text-primary"
           >
             ← Mês anterior
           </Link>
@@ -89,7 +89,7 @@ export default async function GerenciarEscalaDiaconosPage({
           </h2>
           <Link
             href={`/central-do-membro/diaconos/gerenciar?mes=${shiftMonth(month, 1)}`}
-            className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-primary shadow-sm"
+            className="rounded-full border border-hairline bg-white px-4 py-1.5 text-sm font-semibold text-primary"
           >
             Próximo mês →
           </Link>

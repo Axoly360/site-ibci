@@ -56,7 +56,7 @@ export default async function InscricaoSucessoPage({ params, searchParams }: Pag
             pode ser informado na recepção:
           </p>
 
-          <div className="mx-auto w-fit rounded-xl bg-white p-3 shadow-sm">
+          <div className="mx-auto w-fit rounded-xl border border-hairline bg-white p-3">
             <Image
               src={qrCodeDataUrl}
               alt={`QR Code de check-in - ${code}`}

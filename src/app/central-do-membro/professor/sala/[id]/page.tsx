@@ -105,7 +105,7 @@ export default async function SalaProfessorPage({
           </div>
           <button
             type="submit"
-            className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-primary shadow-sm hover:shadow-md"
+            className="rounded-full border border-hairline bg-white px-5 py-2.5 text-sm font-semibold text-primary"
           >
             Ver essa data
           </button>
