@@ -33,7 +33,7 @@ export default async function AreaDaDiretoriaPage() {
                   <p className="font-heading text-lg font-semibold text-primary">{org.short_name}</p>
                   <p className="text-sm text-text-neutral/70">{org.name}</p>
                 </div>
-                <ArrowRight className="h-5 w-5 text-secondary" />
+                <ArrowRight className="h-5 w-5 text-primary" />
               </Card>
             </Link>
           ))}

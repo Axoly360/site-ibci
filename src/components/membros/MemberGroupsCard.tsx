@@ -22,7 +22,7 @@ export default function MemberGroupsCard({ groups }: { groups: MemberGroupView[]
         disabled={groups.length === 0}
         className="flex w-full items-center gap-2 px-5 py-4 text-left disabled:cursor-default"
       >
-        <Users className="h-5 w-5 shrink-0 text-secondary" />
+        <Users className="h-5 w-5 shrink-0 text-primary" />
         <p className="flex-1 text-sm text-text-neutral">
           <span className="font-bold text-primary">Meus Grupos:</span>{" "}
           {groups.length === 0 ? "Nenhum" : `${groups.length} grupo${groups.length > 1 ? "s" : ""}`}

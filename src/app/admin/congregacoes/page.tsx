@@ -40,7 +40,7 @@ export default async function AdminCongregacoesPage() {
           {congregacoes.map((c) => (
             <Card key={c.id} className="p-6">
               <div className="mb-4 flex items-center gap-3 text-primary">
-                <Building2 className="h-6 w-6 text-secondary" />
+                <Building2 className="h-6 w-6 text-primary" />
                 <h2 className="font-heading text-lg font-semibold">{c.name}</h2>
                 {c.pendentes_solicitacoes > 0 && (
                   <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold text-primary">
@@ -59,21 +59,21 @@ export default async function AdminCongregacoesPage() {
               <div className="flex flex-wrap gap-4">
                 <Link
                   href={`/admin/congregacoes/${c.slug}/solicitacoes`}
-                  className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+                  className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
                 >
                   <Send className="h-4 w-4" />
                   Solicitações
                 </Link>
                 <Link
                   href={`/admin/congregacoes/${c.slug}/responsaveis`}
-                  className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+                  className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
                 >
                   <UserRound className="h-4 w-4" />
                   Responsáveis
                 </Link>
                 <Link
                   href={`/admin/congregacoes/${c.slug}/financeiro`}
-                  className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+                  className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
                 >
                   <Building2 className="h-4 w-4" />
                   Financeiro

@@ -32,7 +32,7 @@ export default function ServirPage() {
                 {link ? (
                   <Link
                     href={link}
-                    className="mt-auto inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+                    className="mt-auto inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
                   >
                     Saiba mais
                     <ArrowRight className="h-4 w-4" />

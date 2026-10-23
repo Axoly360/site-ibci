@@ -56,7 +56,7 @@ export default function QuickAccessSection({
                 {card.description}
               </p>
               {card.ctaLabel && (
-                <span className="text-sm font-semibold text-secondary">
+                <span className="text-sm font-semibold text-primary">
                   {card.ctaLabel} →
                 </span>
               )}

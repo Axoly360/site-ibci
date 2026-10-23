@@ -100,7 +100,7 @@ export default function TeacherManager({
                 <div>
                   <p className="font-semibold text-text-neutral">
                     {t.name}{" "}
-                    <span className="text-xs font-semibold text-secondary">
+                    <span className="text-xs font-semibold text-primary">
                       {t.status === "ativo" ? "Ativo" : "Afastado"}
                     </span>
                   </p>

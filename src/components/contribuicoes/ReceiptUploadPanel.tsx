@@ -206,7 +206,7 @@ export default function ReceiptUploadPanel() {
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+          className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
         >
           <FileText className="h-4 w-4" />
           {fileName || "Escolher arquivo"}
@@ -236,7 +236,7 @@ export default function ReceiptUploadPanel() {
                   href={receipt.file_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-secondary hover:underline"
+                  className="flex items-center gap-2 text-sm text-primary hover:underline"
                 >
                   <FileText className="h-4 w-4 shrink-0" />
                   {receipt.category || receipt.file_name}

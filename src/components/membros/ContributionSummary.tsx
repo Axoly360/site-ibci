@@ -52,7 +52,7 @@ imposto de renda.`;
   return (
     <Card className="space-y-4 p-6">
       <div>
-        <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
+        <span className="text-xs font-semibold uppercase tracking-wider text-primary">
           Resumo anual — {year}
         </span>
         <p className="mt-1 font-heading text-2xl font-bold text-primary">{totalLabel}</p>
@@ -68,7 +68,7 @@ imposto de renda.`;
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+          className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
         >
           {copied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           {copied ? "Copiado!" : "Copiar resumo"}
@@ -76,7 +76,7 @@ imposto de renda.`;
         <button
           type="button"
           onClick={handleDownload}
-          className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+          className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
         >
           Baixar resumo (.txt)
         </button>

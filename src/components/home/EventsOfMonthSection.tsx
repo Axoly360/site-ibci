@@ -64,14 +64,14 @@ export default function EventsOfMonthSection({
                         {event.title}
                       </h3>
                       <p className="flex items-center gap-2 text-sm text-text-neutral/80">
-                        <CalendarDays className="h-4 w-4 shrink-0 text-secondary" />
+                        <CalendarDays className="h-4 w-4 shrink-0 text-primary" />
                         {event.dateLabel}
                       </p>
                       <p className="flex items-center gap-2 text-sm text-text-neutral/80">
-                        <MapPin className="h-4 w-4 shrink-0 text-secondary" />
+                        <MapPin className="h-4 w-4 shrink-0 text-primary" />
                         {event.location}
                       </p>
-                      <span className="mt-auto text-sm font-semibold text-secondary">
+                      <span className="mt-auto text-sm font-semibold text-primary">
                         Saiba mais →
                       </span>
                     </div>

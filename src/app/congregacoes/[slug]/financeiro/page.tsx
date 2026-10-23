@@ -89,7 +89,7 @@ export default async function CongregacaoFinanceiroPage({
       <div className="mx-auto max-w-3xl space-y-8 px-4 py-16 sm:px-6 lg:px-8">
         <Link
           href={`/congregacoes/${slug}/painel`}
-          className="inline-block text-sm font-semibold text-secondary hover:underline"
+          className="inline-block text-sm font-semibold text-primary hover:underline"
         >
           ← Voltar para o painel
         </Link>
@@ -127,7 +127,7 @@ export default async function CongregacaoFinanceiroPage({
             <span className="text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
               Orçamento Disponível
             </span>
-            <p className="mt-2 font-heading text-xl font-bold text-secondary">
+            <p className="mt-2 font-heading text-xl font-bold text-primary">
               {orcamentoDisponivel !== null ? formatCurrency(orcamentoDisponivel) : "—"}
             </p>
             {annualBudget === null && (
@@ -185,7 +185,7 @@ export default async function CongregacaoFinanceiroPage({
                             href={entry.receipt_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-1.5 font-semibold text-secondary hover:underline"
+                            className="flex items-center gap-1.5 font-semibold text-primary hover:underline"
                           >
                             <FileText className="h-4 w-4 shrink-0" />
                             Ver
@@ -200,7 +200,7 @@ export default async function CongregacaoFinanceiroPage({
                       <td className="py-3 pr-4">
                         <span
                           className={`text-xs font-semibold ${
-                            entry.status === "aprovado" ? "text-primary" : "text-secondary"
+                            entry.status === "aprovado" ? "text-primary" : "text-ink-muted"
                           }`}
                         >
                           {STATUS_LABEL[entry.status] ?? entry.status}

@@ -36,7 +36,7 @@ export default async function ValidarCheckinPage({
           </p>
           <Link
             href="/admin/entrar"
-            className="inline-block font-semibold text-secondary hover:underline"
+            className="inline-block font-semibold text-primary hover:underline"
           >
             Entrar no painel
           </Link>
@@ -62,7 +62,7 @@ export default async function ValidarCheckinPage({
         )}
         {result.status === "already" && (
           <>
-            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-secondary/10 text-primary">
               <CheckCircle2 className="h-7 w-7" />
             </span>
             <h1 className="font-heading text-xl font-bold text-primary">

@@ -27,7 +27,7 @@ export default function WeeklyScheduleSection({
         <Carousel>
           {items.map((item) => (
             <Card key={item.id} className="w-64 shrink-0 p-6 sm:w-72">
-              <div className="flex items-center gap-2 text-secondary">
+              <div className="flex items-center gap-2 text-primary">
                 <CalendarDays className="h-5 w-5" />
                 <span className="text-xs font-semibold uppercase tracking-wide">
                   {item.day}

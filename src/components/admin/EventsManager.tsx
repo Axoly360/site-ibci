@@ -100,7 +100,7 @@ export default function EventsManager({ events }: { events: EventRow[] }) {
               <div className="flex shrink-0 items-center gap-4">
                 <Link
                   href={`/admin/eventos/${event.slug}/checkin`}
-                  className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+                  className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
                 >
                   <CalendarDays className="h-4 w-4" />
                   Check-in
@@ -327,7 +327,7 @@ function EventFormCard({
               href={event.image_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 inline-block text-xs font-semibold text-secondary hover:underline"
+              className="mt-1 inline-block text-xs font-semibold text-primary hover:underline"
             >
               Ver imagem atual
             </a>

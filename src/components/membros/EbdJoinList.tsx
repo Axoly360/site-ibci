@@ -87,7 +87,7 @@ function EbdCard({ item }: { item: EbdToJoin }) {
           Você faz parte desta sala
         </span>
       ) : item.status === "pendente" ? (
-        <span className="flex items-center gap-1.5 text-sm font-semibold text-secondary">
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-ink-muted">
           <Clock className="h-4 w-4" />
           Solicitação enviada — aguardando aprovação
         </span>

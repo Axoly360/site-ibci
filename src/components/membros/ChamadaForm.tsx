@@ -82,7 +82,7 @@ export default function ChamadaForm({
           <button
             type="button"
             onClick={() => setPresent(new Set(students.map((s) => s.enrollmentId)))}
-            className="font-semibold text-secondary hover:underline"
+            className="font-semibold text-primary hover:underline"
           >
             Marcar todos
           </button>

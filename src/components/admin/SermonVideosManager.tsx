@@ -81,7 +81,7 @@ export default function SermonVideosManager({ videos }: { videos: SermonVideoRow
                     href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm text-secondary hover:underline"
+                    className="flex items-center gap-1 text-sm text-primary hover:underline"
                   >
                     <Tv className="h-3.5 w-3.5" />
                     Ver no YouTube

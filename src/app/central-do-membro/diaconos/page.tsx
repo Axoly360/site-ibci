@@ -143,7 +143,7 @@ export default async function AreaDosDiaconosPage() {
             <div className="flex flex-col gap-3">
               {upcoming.map((s, i) => (
                 <Card key={`${s.service_date}-${s.service_label}-${i}`} className="p-4">
-                  <p className="text-sm font-semibold text-secondary">
+                  <p className="text-sm font-semibold text-primary">
                     {formatDate(s.service_date)} · {s.service_label}
                   </p>
                   <p className="text-text-neutral">

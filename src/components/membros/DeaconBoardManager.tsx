@@ -178,7 +178,7 @@ export default function DeaconBoardManager({
         <div className="flex flex-col gap-5">
           {Object.entries(grouped).map(([date, items]) => (
             <div key={date}>
-              <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-secondary">
+              <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-primary">
                 {formatDate(date)}
               </h3>
               <div className="flex flex-col gap-2">

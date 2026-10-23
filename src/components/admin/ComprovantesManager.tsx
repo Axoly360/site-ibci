@@ -45,7 +45,7 @@ export default function ComprovantesManager({ comprovantes }: { comprovantes: Co
   return (
     <Card className="p-6">
       <div className="mb-4 flex items-center gap-3 text-primary">
-        <FileText className="h-6 w-6 text-secondary" />
+        <FileText className="h-6 w-6 text-primary" />
         <h2 className="font-heading text-lg font-semibold">
           Comprovantes recebidos ({comprovantes.length})
         </h2>
@@ -134,7 +134,7 @@ export default function ComprovantesManager({ comprovantes }: { comprovantes: Co
                       href={c.file_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 font-semibold text-secondary hover:underline"
+                      className="flex items-center gap-1.5 font-semibold text-primary hover:underline"
                     >
                       <FileText className="h-4 w-4 shrink-0" />
                       Ver

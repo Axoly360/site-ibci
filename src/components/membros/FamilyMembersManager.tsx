@@ -228,7 +228,7 @@ function EbdPicker({
         <p className="font-semibold text-primary">EBD: {enrolled.join(", ")}</p>
       )}
       {pending.length > 0 && (
-        <p className="font-semibold text-secondary">
+        <p className="font-semibold text-ink-muted">
           EBD: aguardando aprovação ({pending.join(", ")})
         </p>
       )}

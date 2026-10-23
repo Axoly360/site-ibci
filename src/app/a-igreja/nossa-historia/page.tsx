@@ -21,7 +21,7 @@ export default function NossaHistoriaPage() {
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
         <Card className="grid items-center gap-8 p-8 md:grid-cols-3 md:p-12">
           <div className="space-y-4 md:col-span-2">
-            <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 px-3 py-1 text-sm font-medium text-secondary">
+            <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 px-3 py-1 text-sm font-medium text-primary">
               <Church className="h-4 w-4" />
               Presente no bairro do Ibura
             </span>

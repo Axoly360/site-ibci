@@ -78,7 +78,7 @@ export default function FaithAccordion() {
                 {item.title}
               </span>
               <ChevronDown
-                className={`h-5 w-5 shrink-0 text-secondary transition-transform duration-200 ${
+                className={`h-5 w-5 shrink-0 text-primary transition-transform duration-200 ${
                   isOpen ? "rotate-180" : ""
                 }`}
               />

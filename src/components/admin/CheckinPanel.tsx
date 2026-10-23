@@ -78,7 +78,7 @@ export default function CheckinPanel({ eventSlug }: { eventSlug: string }) {
           <span className="text-xs font-semibold uppercase tracking-wider text-text-neutral/50">
             Check-ins
           </span>
-          <p className="mt-2 font-heading text-4xl font-bold text-secondary">
+          <p className="mt-2 font-heading text-4xl font-bold text-primary">
             {counts?.checkins ?? "—"}
           </p>
         </Card>
@@ -121,7 +121,7 @@ export default function CheckinPanel({ eventSlug }: { eventSlug: string }) {
           </div>
         )}
         {feedback?.kind === "already" && (
-          <div className="mt-4 flex items-center gap-2 rounded-lg bg-secondary/10 px-4 py-3 font-semibold text-secondary">
+          <div className="mt-4 flex items-center gap-2 rounded-lg bg-secondary/10 px-4 py-3 font-semibold text-primary">
             <CheckCircle2 className="h-5 w-5 shrink-0" />
             {feedback.name} já fez check-in às {feedback.checkedInAt}
           </div>

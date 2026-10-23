@@ -40,7 +40,7 @@ export default function MenuManager({ items }: { items: NavItemRow[] }) {
               <button
                 type="button"
                 onClick={() => setAddingChildTo(cat.id)}
-                className="flex w-fit items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+                className="flex w-fit items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
               >
                 <Plus className="h-4 w-4" />
                 Adicionar subcategoria

@@ -184,7 +184,7 @@ export default function GroupsManager({ groups }: { groups: Group[] }) {
                 <div className="flex shrink-0 items-center gap-4">
                   <Link
                     href={`/admin/grupos/${group.id}`}
-                    className="text-sm font-semibold text-secondary hover:underline"
+                    className="text-sm font-semibold text-primary hover:underline"
                   >
                     Ver membros
                   </Link>

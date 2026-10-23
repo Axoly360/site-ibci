@@ -27,7 +27,7 @@ export default async function EsqueciSenhaPage({
         <EsqueciSenhaForm scope={scope} />
         <Link
           href={voltarHref}
-          className="mt-6 block text-center text-sm font-semibold text-secondary hover:underline"
+          className="mt-6 block text-center text-sm font-semibold text-primary hover:underline"
         >
           ← Voltar para o login
         </Link>

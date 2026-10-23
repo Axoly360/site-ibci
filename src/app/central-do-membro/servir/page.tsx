@@ -49,7 +49,7 @@ export default async function ServirCadastroPage() {
         {missingTerms.length > 0 ? (
           <Card className="flex flex-col gap-3 p-6">
             <p className="flex items-center gap-2 font-heading text-lg font-semibold text-primary">
-              <ShieldCheck className="h-5 w-5 shrink-0 text-secondary" />
+              <ShieldCheck className="h-5 w-5 shrink-0 text-primary" />
               Antes de se voluntariar, aceite os termos abaixo
             </p>
             <ul className="list-inside list-disc text-sm text-text-neutral/80">
@@ -59,7 +59,7 @@ export default async function ServirCadastroPage() {
             </ul>
             <Link
               href="/central-do-membro/consentimento"
-              className="mt-2 inline-flex w-fit items-center gap-1.5 font-semibold text-secondary hover:underline"
+              className="mt-2 inline-flex w-fit items-center gap-1.5 font-semibold text-primary hover:underline"
             >
               Ir para Consentimento
               <ArrowRight className="h-4 w-4" />

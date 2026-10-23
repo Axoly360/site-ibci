@@ -129,7 +129,7 @@ export default function VolunteerForm({
                 <Link
                   href={link}
                   target="_blank"
-                  className="shrink-0 text-xs font-semibold text-secondary hover:underline"
+                  className="shrink-0 text-xs font-semibold text-primary hover:underline"
                 >
                   Conhecer
                 </Link>

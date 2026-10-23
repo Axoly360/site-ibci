@@ -84,7 +84,7 @@ export default async function AdminServirPage({
                 <p className="text-sm text-text-neutral/60">
                   {[r.email, r.phone].filter(Boolean).join(" · ")}
                 </p>
-                <p className="mt-1 text-xs font-semibold text-secondary">
+                <p className="mt-1 text-xs font-semibold text-primary">
                   {r.congregation_name ? `Congregação ${r.congregation_name}` : "Sede"}
                 </p>
                 <p className="mt-2 flex flex-wrap gap-1.5">

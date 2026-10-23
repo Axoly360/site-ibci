@@ -30,7 +30,7 @@ export default function EducacaoCristaPage() {
           </p>
           <Link
             href="/projetos"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-secondary"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-primary"
           >
             Ver todos os projetos da IBCI
             <ArrowRight className="h-4 w-4" />

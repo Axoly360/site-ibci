@@ -111,7 +111,7 @@ export default async function AdminMembrosPage({
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <Link
           href="/admin/membros/criancas"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
         >
           Ver crianças cadastradas (Ministério Infantil) →
         </Link>

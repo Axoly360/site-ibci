@@ -58,7 +58,7 @@ export default async function AdminGrupoDetalhePage({
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <Link
           href="/admin/grupos"
-          className="mb-6 inline-block text-sm font-semibold text-secondary hover:underline"
+          className="mb-6 inline-block text-sm font-semibold text-primary hover:underline"
         >
           ← Voltar para Grupos
         </Link>

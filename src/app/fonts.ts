@@ -1,16 +1,17 @@
-import localFont from "next/font/local";
+import { Fraunces, Nunito_Sans } from "next/font/google";
 
-// Self-hosted via @fontsource-variable (no external requests at build time).
-export const inter = localFont({
-  src: "../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
-  variable: "--font-inter",
+// Tipografia do sistema de design da IBCI: Fraunces nos títulos (itálico nos
+// versículos) e Nunito Sans no texto. O next/font baixa e hospeda as fontes
+// junto do site no build, sem requisição externa em tempo de uso.
+export const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
   display: "swap",
-  weight: "100 900",
+  style: ["normal", "italic"],
 });
 
-export const montserrat = localFont({
-  src: "../../node_modules/@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2",
-  variable: "--font-montserrat",
+export const nunitoSans = Nunito_Sans({
+  subsets: ["latin"],
+  variable: "--font-nunito",
   display: "swap",
-  weight: "100 900",
 });

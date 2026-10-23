@@ -60,7 +60,7 @@ export default async function CongregacaoSolicitacoesPage({
       <div className="mx-auto max-w-3xl space-y-8 px-4 py-16 sm:px-6 lg:px-8">
         <Link
           href={`/congregacoes/${slug}/painel`}
-          className="inline-block text-sm font-semibold text-secondary hover:underline"
+          className="inline-block text-sm font-semibold text-primary hover:underline"
         >
           ← Voltar para o painel
         </Link>
@@ -103,7 +103,7 @@ export default async function CongregacaoSolicitacoesPage({
                               ? "text-primary"
                               : s.status === "recusado"
                                 ? "text-red-600"
-                                : "text-secondary"
+                                : "text-ink-muted"
                           }`}
                         >
                           {STATUS_LABEL[s.status] ?? s.status}

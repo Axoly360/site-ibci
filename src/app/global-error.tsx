@@ -21,20 +21,27 @@ export default function GlobalError({
 
   return (
     <html lang="pt-BR">
-      <body className="flex min-h-screen items-center justify-center bg-[#F5F2EA] px-4 font-sans">
+      <body className="flex min-h-screen items-center justify-center bg-[#F5EFE1] px-4 font-sans">
+        {/* Esta tela substitui o layout inteiro, então não pode depender do
+            globals.css: usa a paleta do sistema (linho, verde-floresta, sol) em hex. */}
         <div className="mx-auto max-w-md text-center">
-          <p className="text-6xl font-bold text-[#123B2C]">Ops!</p>
-          <h1 className="mt-4 text-2xl font-bold text-[#123B2C] sm:text-3xl">
+          <p className="text-6xl font-bold text-[#123B2C]" style={{ fontFamily: "Georgia, serif" }}>
+            Ops!
+          </p>
+          <h1
+            className="mt-4 text-2xl font-bold text-[#123B2C] sm:text-3xl"
+            style={{ fontFamily: "Georgia, serif" }}
+          >
             Algo deu errado
           </h1>
-          <p className="mt-3 text-sm text-[#123B2C]/70">
+          <p className="mt-3 text-sm text-[#3F5A4E]">
             Não conseguimos carregar o site agora. Tente de novo em alguns
             instantes.
           </p>
           <button
             type="button"
             onClick={reset}
-            className="mt-8 rounded-full bg-[#D4AF37] px-6 py-3 text-sm font-bold text-[#123B2C]"
+            className="mt-8 rounded-full border-2 border-[#123B2C] bg-[#F6D55C] px-6 py-3 text-sm font-bold text-[#123B2C]"
           >
             Tentar de novo
           </button>

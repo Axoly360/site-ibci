@@ -71,7 +71,7 @@ export default function MemberLoginForm() {
       )}
       <Link
         href="/esqueci-senha?tipo=membro"
-        className="text-center text-sm font-semibold text-secondary hover:underline"
+        className="text-center text-sm font-semibold text-primary hover:underline"
       >
         Esqueci minha senha
       </Link>

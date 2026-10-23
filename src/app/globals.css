@@ -1,27 +1,133 @@
 @import "tailwindcss";
 
-@theme {
-  --color-primary: #123b2c;
-  --color-primary-dark: #0a2620;
-  --color-secondary: #d4af37;
-  --color-secondary-light: #e5ba73;
-  --color-bg-light: #fafafa;
-  --color-dark-accent: #0a2117;
-  --color-text-neutral: #333333;
+/* ---------------------------------------------------------------------------
+   Sistema de design IBCI — tokens (fonte: ibci-design-system/tokens.css).
+   Duas famílias: as da marca (fixas) e as semânticas (trocam entre claro e
+   escuro). Por enquanto só o tema claro está ativo; o bloco escuro fica pronto
+   para a etapa do tema escuro. Nunca use hex solto: use sempre estas variáveis.
+   --------------------------------------------------------------------------- */
+:root,
+[data-theme="light"] {
+  --surface-page: #f5efe1;
+  --surface-card: #fbf8f0;
+  --surface-tint: #e3ede6;
+  --ink: #123b2c;
+  --ink-soft: #3f5a4e;
+  --ink-muted: #6b6a5f;
+  --outline: #123b2c;
+  --hairline: #d8cfb6;
+  --gold-line: #c6a15b;
+  --verde-floresta: #123b2c;
+  --salvia: #a9c9b6;
+  --sol: #f6d55c;
+  --sol-profundo: #d9a21b;
+  --on-accent: #123b2c;
+  --action-bg: #123b2c;
+  --action-ink: #f5efe1;
+  --action-hover: #1d5240;
+  --focus-ring: #1f6b4f;
+  --danger: #a6392b;
+  --shadow-hard: 4px 4px 0 #a9c9b6;
+  --shadow-soft: 0 10px 30px rgba(18, 59, 44, 0.14);
+}
 
-  --font-heading: var(--font-montserrat);
-  --font-body: var(--font-inter);
+[data-theme="dark"] {
+  --surface-page: #0a2117;
+  --surface-card: #123b2c;
+  --surface-tint: #1b4a38;
+  --ink: #f5efe1;
+  --ink-soft: #cbd8cf;
+  --ink-muted: #a9b8ae;
+  --outline: #f5efe1;
+  --hairline: #2d5744;
+  --gold-line: #c6a15b;
+  --verde-floresta: #123b2c;
+  --salvia: #a9c9b6;
+  --sol: #f6d55c;
+  --sol-profundo: #e8c458;
+  --on-accent: #123b2c;
+  --action-bg: #f6d55c;
+  --action-ink: #0a2117;
+  --action-hover: #ffe585;
+  --focus-ring: #f6d55c;
+  --danger: #f08a7a;
+  --shadow-hard: 4px 4px 0 #1f5a42;
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.45);
 }
 
 :root {
-  --background: var(--color-bg-light);
-  --foreground: var(--color-text-neutral);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-nunito), system-ui, sans-serif;
+}
+
+/* Utilitários do Tailwind a partir dos tokens. Os nomes antigos (primary,
+   secondary, bg-light, text-neutral…) continuam existindo e agora apontam para
+   o sistema novo, então o site inteiro herda o visual sem trocar milhares de
+   classes de uma vez. */
+@theme inline {
+  /* nomes novos do sistema */
+  --color-page: var(--surface-page);
+  --color-marfim: var(--surface-card);
+  --color-nevoa: var(--surface-tint);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-muted: var(--ink-muted);
+  --color-hairline: var(--hairline);
+  --color-gold-line: var(--gold-line);
+  --color-salvia: var(--salvia);
+  --color-sol: var(--sol);
+  --color-sol-profundo: var(--sol-profundo);
+  --color-on-accent: var(--on-accent);
+  --color-action: var(--action-bg);
+  --color-action-ink: var(--action-ink);
+  --color-action-hover: var(--action-hover);
+  --color-danger: var(--danger);
+
+  /* nomes antigos, remapeados */
+  --color-primary: var(--verde-floresta);
+  --color-primary-dark: #0a2117;
+  --color-secondary: var(--sol);
+  --color-secondary-light: #ffe585;
+  --color-bg-light: var(--surface-page);
+  --color-dark-accent: #0a2117;
+  --color-text-neutral: var(--ink);
+
+  /* "branco" e "preto" do Tailwind viram marfim e verde-noite: cartões,
+     campos e textos sobre verde ficam quentes, e as bordas e fundos
+     escurecidos (border-black/10, bg-black/50) ficam esverdeados. */
+  --color-white: #fbf8f0;
+  --color-black: #0a2117;
+
+  /* vermelho de erro/ação destrutiva do sistema */
+  --color-red-50: #fbeeeb;
+  --color-red-600: var(--danger);
+  --color-red-700: #8a2e22;
+
+  --font-heading: var(--font-display);
+  --font-sans: var(--font-nunito), system-ui, sans-serif;
+}
+
+:root {
+  --background: var(--surface-page);
+  --foreground: var(--ink);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
 }
 
 h1,
@@ -30,7 +136,35 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: var(--font-display);
+}
+
+/* Foco visível em tudo que se clica (anel de 3px do sistema). Campos de
+   formulário mantêm o próprio realce de foco. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* Versículos: Fraunces itálico, sempre com a referência embaixo. */
+.verse {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Legenda em caixa alta com espaçamento largo (kicker/label do sistema). */
+.kicker {
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
 }
 
 /* Impressão/PDF de relatórios (ex.: Estatísticas): esconde cabeçalho, rodapé e

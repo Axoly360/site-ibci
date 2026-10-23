@@ -70,7 +70,7 @@ export default function LoginAdminForm() {
       )}
       <Link
         href="/esqueci-senha?tipo=admin"
-        className="text-center text-sm font-semibold text-secondary hover:underline"
+        className="text-center text-sm font-semibold text-primary hover:underline"
       >
         Esqueci minha senha
       </Link>

@@ -57,7 +57,7 @@ export default async function DizimosEOfertasPage() {
             tristeza ou por necessidade; porque Deus ama ao que dá com
             alegria.&rdquo;
           </p>
-          <span className="block text-sm font-semibold text-secondary">
+          <span className="block text-sm font-semibold text-primary">
             — 2 Coríntios 9:7
           </span>
         </div>
@@ -66,7 +66,7 @@ export default async function DizimosEOfertasPage() {
       <div className="mx-auto max-w-4xl space-y-12 px-4 py-16 sm:px-6 lg:px-8">
         {/* Por que Contribuir */}
         <Card className="space-y-4 p-8 text-center">
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary/10 text-primary">
             <Heart className="h-6 w-6" />
           </span>
           <h2 className="font-heading text-2xl font-bold text-primary">
@@ -123,14 +123,14 @@ export default async function DizimosEOfertasPage() {
               <ReceiptUploadPanel />
             ) : (
               <div className="space-y-3 rounded-xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur-md">
-                <FileText className="mx-auto h-6 w-6 text-secondary" />
+                <FileText className="mx-auto h-6 w-6 text-primary" />
                 <p className="text-sm text-white/80">
                   Já contribuiu? Membros validados podem enviar o comprovante
                   em PDF, PNG ou JPEG pela Central do Membro.
                 </p>
                 <Link
                   href="/central-do-membro"
-                  className="inline-block text-sm font-semibold text-secondary hover:underline"
+                  className="inline-block text-sm font-semibold text-primary hover:underline"
                 >
                   Entrar na Central do Membro
                 </Link>
@@ -143,7 +143,7 @@ export default async function DizimosEOfertasPage() {
         <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card className="space-y-3 p-6">
             <div className="flex items-center gap-3 text-primary">
-              <Building2 className="h-6 w-6 text-secondary" />
+              <Building2 className="h-6 w-6 text-primary" />
               <h4 className="font-heading text-lg font-bold">
                 Dados Institucionais
               </h4>
@@ -182,7 +182,7 @@ export default async function DizimosEOfertasPage() {
 
           <Card className="space-y-3 p-6">
             <div className="flex items-center gap-3 text-primary">
-              <ShieldCheck className="h-6 w-6 text-secondary" />
+              <ShieldCheck className="h-6 w-6 text-primary" />
               <h4 className="font-heading text-lg font-bold">
                 Transparência &amp; Zelo
               </h4>

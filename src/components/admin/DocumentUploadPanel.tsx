@@ -60,7 +60,7 @@ export default function DocumentUploadPanel({
             href={currentUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-semibold text-secondary hover:underline"
+            className="text-sm font-semibold text-primary hover:underline"
           >
             Ver documento atual
           </a>

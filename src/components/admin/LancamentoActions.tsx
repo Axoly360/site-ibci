@@ -49,7 +49,7 @@ export default function LancamentoActions({ entry }: { entry: LancamentoParaEdit
       <button
         type="button"
         onClick={() => setEditing(true)}
-        className="flex items-center gap-1 text-xs font-semibold text-secondary hover:underline"
+        className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
       >
         <Pencil className="h-3.5 w-3.5" />
         Editar

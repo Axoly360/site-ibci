@@ -272,7 +272,7 @@ export default function EbdManager({
                 <div className="flex shrink-0 items-center gap-4">
                   <Link
                     href={`/admin/ebd/${c.id}`}
-                    className="text-sm font-semibold text-secondary hover:underline"
+                    className="text-sm font-semibold text-primary hover:underline"
                   >
                     Ver alunos
                   </Link>

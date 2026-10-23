@@ -20,7 +20,7 @@ export default function MemberEbdCard({
       href="/central-do-membro/ebd"
       className="mt-4 flex items-center gap-2 rounded-2xl border-l-4 border-secondary bg-white px-5 py-4 shadow-sm transition-shadow hover:shadow-md"
     >
-      <BookOpen className="h-5 w-5 shrink-0 text-secondary" />
+      <BookOpen className="h-5 w-5 shrink-0 text-primary" />
       <p className="flex-1 text-sm text-text-neutral">
         <span className="font-bold text-primary">Minha EBD:</span>{" "}
         {classes.length > 0

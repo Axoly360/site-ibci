@@ -48,13 +48,13 @@ export default async function AdminCongregacaoFinanceiroPage({
         <div className="mb-6 flex flex-wrap gap-4">
           <Link
             href="/admin/congregacoes"
-            className="text-sm font-semibold text-secondary hover:underline"
+            className="text-sm font-semibold text-primary hover:underline"
           >
             ← Voltar para Congregações
           </Link>
           <Link
             href={`/admin/financeiro/relatorio?congregacao=${slug}`}
-            className="text-sm font-semibold text-secondary hover:underline"
+            className="text-sm font-semibold text-primary hover:underline"
           >
             Ver relatório consolidado
           </Link>

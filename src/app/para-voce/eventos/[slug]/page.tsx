@@ -69,11 +69,11 @@ export default async function EventoPage({ params, searchParams }: EventoPagePro
 
           <div className="mx-auto flex max-w-md flex-col gap-2 text-left sm:flex-row sm:justify-center sm:gap-8">
             <p className="flex items-center gap-2 text-sm text-text-neutral/80">
-              <CalendarDays className="h-4 w-4 shrink-0 text-secondary" />
+              <CalendarDays className="h-4 w-4 shrink-0 text-primary" />
               {event.dateLabel}
             </p>
             <p className="flex items-center gap-2 text-sm text-text-neutral/80">
-              <MapPin className="h-4 w-4 shrink-0 text-secondary" />
+              <MapPin className="h-4 w-4 shrink-0 text-primary" />
               {event.location}
             </p>
           </div>
@@ -99,7 +99,7 @@ export default async function EventoPage({ params, searchParams }: EventoPagePro
             Já garantiu sua vaga?{" "}
             <Link
               href={`/para-voce/eventos/${event.slug}/inscricao`}
-              className="font-semibold text-secondary hover:underline"
+              className="font-semibold text-primary hover:underline"
             >
               Gere seu QR Code de entrada
             </Link>
@@ -146,11 +146,11 @@ export default async function EventoPage({ params, searchParams }: EventoPagePro
 
         <div className="mx-auto flex max-w-md flex-col gap-2 text-left sm:flex-row sm:justify-center sm:gap-8">
           <p className="flex items-center gap-2 text-sm text-text-neutral/80">
-            <CalendarDays className="h-4 w-4 shrink-0 text-secondary" />
+            <CalendarDays className="h-4 w-4 shrink-0 text-primary" />
             {event.dateLabel}
           </p>
           <p className="flex items-center gap-2 text-sm text-text-neutral/80">
-            <MapPin className="h-4 w-4 shrink-0 text-secondary" />
+            <MapPin className="h-4 w-4 shrink-0 text-primary" />
             {event.location}
           </p>
         </div>

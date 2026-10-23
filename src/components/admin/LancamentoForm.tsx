@@ -206,7 +206,7 @@ export default function LancamentoForm({
               href={resolvePrivateFileUrl(existingReceiptUrl) ?? undefined}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 font-semibold text-secondary hover:underline"
+              className="flex items-center gap-1.5 font-semibold text-primary hover:underline"
             >
               <FileText className="h-4 w-4 shrink-0" />
               Ver comprovante
@@ -327,7 +327,7 @@ export default function LancamentoForm({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex w-full items-center gap-1.5 rounded-lg border border-black/10 px-3 py-2 text-left text-sm text-secondary hover:bg-primary/5"
+                className="flex w-full items-center gap-1.5 rounded-lg border border-black/10 px-3 py-2 text-left text-sm text-primary hover:bg-primary/5"
               >
                 <FileText className="h-4 w-4 shrink-0" />
                 {fileName || "Escolher arquivo (PDF, PNG ou JPEG)"}
@@ -348,7 +348,7 @@ export default function LancamentoForm({
                     setMemberId(null);
                     setMemberQuery("");
                   }}
-                  className="text-xs font-semibold text-secondary hover:underline"
+                  className="text-xs font-semibold text-primary hover:underline"
                 >
                   Trocar
                 </button>

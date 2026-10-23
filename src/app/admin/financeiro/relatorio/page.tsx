@@ -144,7 +144,7 @@ export default async function AdminFinanceiroRelatorioPage({
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <Link
           href="/admin/financeiro"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
         >
           ← Voltar para Financeiro
         </Link>
@@ -280,7 +280,7 @@ export default async function AdminFinanceiroRelatorioPage({
             </h2>
             <a
               href={`/api/admin/financeiro/relatorio/csv?${csvQuery}`}
-              className="text-sm font-semibold text-secondary hover:underline"
+              className="text-sm font-semibold text-primary hover:underline"
             >
               Exportar CSV
             </a>

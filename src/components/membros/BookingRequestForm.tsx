@@ -151,7 +151,7 @@ export default function BookingRequestForm() {
                   {booking.event_type}
                   {booking.desired_date ? ` — ${booking.desired_date}` : ""}
                 </span>
-                <span className="shrink-0 text-xs font-semibold text-secondary">
+                <span className="shrink-0 text-xs font-semibold text-primary">
                   {STATUS_LABEL[booking.status] ?? booking.status}
                 </span>
               </li>

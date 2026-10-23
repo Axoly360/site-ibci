@@ -81,7 +81,7 @@ function GroupCard({ group }: { group: GroupToJoin }) {
           Você já faz parte deste grupo
         </span>
       ) : group.status === "pendente" ? (
-        <span className="flex items-center gap-1.5 text-sm font-semibold text-secondary">
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-ink-muted">
           <Clock className="h-4 w-4" />
           Solicitação enviada — aguardando aprovação
         </span>

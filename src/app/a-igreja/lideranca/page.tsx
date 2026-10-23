@@ -33,7 +33,7 @@ export default function DiretoriaEstatutariaPage() {
                 <UserRound className="h-7 w-7" />
               </span>
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
+                <span className="text-xs font-semibold uppercase tracking-wider text-primary">
                   {membro.role}
                 </span>
                 <h3 className="font-heading text-lg font-bold text-primary">

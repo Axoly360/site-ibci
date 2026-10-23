@@ -91,7 +91,7 @@ export default function AccessCardsManager({ cards }: { cards: AccessCardRow[] }
                   <p className="line-clamp-1 text-sm text-text-neutral/60">
                     {card.description}
                   </p>
-                  <p className="text-xs font-semibold text-secondary">
+                  <p className="text-xs font-semibold text-primary">
                     {ACTION_TYPE_LABELS[card.actionType]}
                   </p>
                 </div>

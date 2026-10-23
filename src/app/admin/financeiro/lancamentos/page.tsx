@@ -196,7 +196,7 @@ export default async function AdminLancamentosPage({
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
         <Link
           href="/admin/financeiro"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
         >
           ← Voltar para Financeiro
         </Link>
@@ -357,7 +357,7 @@ export default async function AdminLancamentosPage({
                             href={entry.receipt_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-1.5 font-semibold text-secondary hover:underline"
+                            className="flex items-center gap-1.5 font-semibold text-primary hover:underline"
                           >
                             <FileText className="h-4 w-4 shrink-0" />
                             Ver

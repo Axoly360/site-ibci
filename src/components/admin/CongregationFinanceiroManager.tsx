@@ -107,7 +107,7 @@ export default function CongregationFinanceiroManager({
                         href={s.receipt_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 font-semibold text-secondary hover:underline"
+                        className="flex items-center gap-1.5 font-semibold text-primary hover:underline"
                       >
                         <FileText className="h-4 w-4 shrink-0" />
                         Ver

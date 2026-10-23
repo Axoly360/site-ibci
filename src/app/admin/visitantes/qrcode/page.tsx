@@ -41,7 +41,7 @@ export default async function AdminVisitantesQrCodePage({
       <div className="mx-auto max-w-md px-4 py-16 sm:px-6 lg:px-8">
         <Link
           href="/admin/visitantes"
-          className="mb-6 inline-block text-sm font-semibold text-secondary hover:underline"
+          className="mb-6 inline-block text-sm font-semibold text-primary hover:underline"
         >
           ← Voltar para Visitantes
         </Link>

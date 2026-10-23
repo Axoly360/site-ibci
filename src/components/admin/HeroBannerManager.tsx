@@ -215,7 +215,7 @@ function HeroBannerFormCard({
                 href={banner.srcDesktop}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mb-1 block text-xs font-semibold text-secondary hover:underline"
+                className="mb-1 block text-xs font-semibold text-primary hover:underline"
               >
                 Ver imagem atual
               </a>
@@ -231,7 +231,7 @@ function HeroBannerFormCard({
                 href={banner.srcMobile}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mb-1 block text-xs font-semibold text-secondary hover:underline"
+                className="mb-1 block text-xs font-semibold text-primary hover:underline"
               >
                 Ver imagem atual
               </a>

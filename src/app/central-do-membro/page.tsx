@@ -27,7 +27,7 @@ function AdminAccessCard() {
             Acesse o painel administrativo com seu e-mail e senha.
           </p>
         </div>
-        <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-secondary" />
+        <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-primary" />
       </Card>
     </Link>
   );
@@ -48,7 +48,7 @@ function CongregationAccessCard() {
             Acesse a área da Vila dos Milagres com seu e-mail e senha.
           </p>
         </div>
-        <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-secondary" />
+        <ArrowRight className="ml-auto h-5 w-5 shrink-0 text-primary" />
       </Card>
     </Link>
   );
@@ -166,7 +166,7 @@ export default async function CentralDoMembroPage() {
           Ainda não é membro?{" "}
           <Link
             href="/central-do-membro/cadastro"
-            className="inline-flex items-center gap-1 font-semibold text-secondary hover:underline"
+            className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
           >
             Faça seu cadastro
             <ArrowRight className="h-4 w-4" />

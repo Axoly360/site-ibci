@@ -45,7 +45,7 @@ export default function MemorialIbciPage() {
               <span className="flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <UserRound className="h-11 w-11" />
               </span>
-              <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
+              <span className="text-xs font-semibold uppercase tracking-wider text-primary">
                 {pastor.highlight}
               </span>
               <h3 className="font-heading text-xl font-bold text-primary">{pastor.name}</h3>

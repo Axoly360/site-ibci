@@ -41,7 +41,7 @@ export default function ContatoPage() {
               </h2>
 
               <div className="flex items-start gap-4">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-primary">
                   <MapPin className="h-5 w-5" />
                 </span>
                 <div>
@@ -62,7 +62,7 @@ export default function ContatoPage() {
               </div>
 
               <div id="telefone" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-primary">
                   <Phone className="h-5 w-5" />
                 </span>
                 <div>
@@ -77,7 +77,7 @@ export default function ContatoPage() {
 
               <div id="whatsapp" className="border-t border-black/5 pt-6 scroll-mt-24">
                 <div className="flex items-start gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-primary">
                     <Phone className="h-5 w-5" />
                   </span>
                   <div>
@@ -100,7 +100,7 @@ export default function ContatoPage() {
               </div>
 
               <div id="email" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-primary">
                   <Mail className="h-5 w-5" />
                 </span>
                 <div>
@@ -112,7 +112,7 @@ export default function ContatoPage() {
               </div>
 
               <div id="horario" className="flex items-start gap-4 border-t border-black/5 pt-6 scroll-mt-24">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-primary">
                   <Clock className="h-5 w-5" />
                 </span>
                 <div>

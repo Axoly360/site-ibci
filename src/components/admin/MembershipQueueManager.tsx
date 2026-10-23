@@ -334,7 +334,7 @@ function ValidatedMemberCard({
         <div className="flex shrink-0 items-center gap-4">
           <Link
             href={`/admin/membros/${member.id}`}
-            className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
+            className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
           >
             <UserRound className="h-4 w-4" />
             Ver perfil
@@ -412,7 +412,7 @@ function ValidatedMemberCard({
                   href={f.file_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 truncate text-secondary hover:underline"
+                  className="flex items-center gap-1.5 truncate text-primary hover:underline"
                 >
                   <FileText className="h-4 w-4 shrink-0" />
                   <span className="truncate">{f.file_name}</span>

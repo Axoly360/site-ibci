@@ -242,7 +242,7 @@ export default async function AdminMembroDetalhePage({
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <Link
           href="/admin/membros"
-          className="mb-6 inline-block text-sm font-semibold text-secondary hover:underline"
+          className="mb-6 inline-block text-sm font-semibold text-primary hover:underline"
         >
           ← Voltar para Membros
         </Link>
@@ -529,7 +529,7 @@ export default async function AdminMembroDetalhePage({
                                 href={c.file_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-secondary hover:underline"
+                                className="text-primary hover:underline"
                                 aria-label="Ver comprovante"
                               >
                                 <FileText className="h-4 w-4" />
@@ -624,7 +624,7 @@ export default async function AdminMembroDetalhePage({
                         href={f.file_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-sm text-secondary hover:underline"
+                        className="flex items-center gap-1.5 text-sm text-primary hover:underline"
                       >
                         <FileText className="h-4 w-4 shrink-0" />
                         {f.file_name}

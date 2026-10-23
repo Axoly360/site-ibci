@@ -26,7 +26,7 @@ export default function HubGrid({ items }: HubGridProps) {
               <p className="flex-1 text-sm leading-relaxed text-text-neutral/80">
                 {item.description}
               </p>
-              <span className="inline-flex items-center gap-1 text-sm font-semibold text-secondary">
+              <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
                 Ver mais
                 <ArrowRight className="h-4 w-4" />
               </span>

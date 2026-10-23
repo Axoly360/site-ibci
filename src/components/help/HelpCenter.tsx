@@ -189,7 +189,7 @@ export default function HelpCenter({ articles }: HelpCenterProps) {
           {selectedArticle ? (
             <div className="flex flex-col gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-secondary">
+                <p className="text-xs font-bold uppercase tracking-wide text-primary">
                   {selectedArticle.category}
                 </p>
                 <h2 className="mt-1 font-heading text-2xl font-bold text-primary">

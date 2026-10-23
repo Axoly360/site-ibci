@@ -162,7 +162,7 @@ function DeaconList({
             <div>
               <p className="font-semibold text-text-neutral">
                 {row.name}{" "}
-                <span className="text-xs font-semibold text-secondary">
+                <span className="text-xs font-semibold text-primary">
                   {row.kind} · {STATUS_LABEL[row.status] ?? row.status}
                   {row.isBoard ? " · Diretoria" : ""}
                 </span>

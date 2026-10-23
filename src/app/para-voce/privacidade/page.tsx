@@ -26,7 +26,7 @@ export default function PrivacidadePage() {
             Dúvidas sobre privacidade podem ser enviadas para{" "}
             <a
               href={`mailto:${churchInfo.contact.email}`}
-              className="font-semibold text-secondary"
+              className="font-semibold text-primary"
             >
               {churchInfo.contact.email}
             </a>

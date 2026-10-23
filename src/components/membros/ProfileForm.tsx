@@ -132,7 +132,7 @@ export default function ProfileForm({ profile }: { profile: ProfileData }) {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={photoUploading}
-          className="flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline disabled:opacity-50"
+          className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline disabled:opacity-50"
         >
           <Camera className="h-4 w-4" />
           {photoUploading ? "Enviando..." : "Trocar foto"}
