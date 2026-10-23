@@ -69,9 +69,11 @@ export default async function AdminLancamentosPage({
     if (receipt && receipt.status !== "aprovado") {
       initialComprovante = {
         id: receipt.id,
-        type: receipt.type as "entrada" | "saida",
-        category: receipt.category as string,
-        amount: String(receipt.amount),
+        // Comprovantes antigos podem não ter tipo, categoria ou valor: o
+        // formulário usa o padrão dele e quem lança completa o que faltar.
+        type: (receipt.type === "saida" ? "saida" : "entrada") as "entrada" | "saida",
+        category: (receipt.category ?? "") as string,
+        amount: receipt.amount == null ? "" : String(receipt.amount),
         description: [
           receipt.sender_type && receipt.sender_type !== "Membro"
             ? `Enviado como: ${receipt.sender_type}`

@@ -78,7 +78,7 @@ export default function LancamentoForm({
     if (!initialComprovante) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza o formulário quando outro comprovante é selecionado na mesma instância
     setType(initialComprovante.type);
-    setCategory(initialComprovante.category);
+    setCategory(initialComprovante.category || CATEGORIES[0]);
     setAmount(initialComprovante.amount);
     setDescription(initialComprovante.description);
     setMemberId(initialComprovante.memberId);
