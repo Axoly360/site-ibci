@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Logo from "@/components/brand/Logo";
 import { redirect } from "next/navigation";
 import TornarMembroForm from "@/components/membros/TornarMembroForm";
 import { getSession } from "@/lib/session";
@@ -22,7 +22,7 @@ export default async function SejaMembroPage() {
   return (
     <div className="bg-primary px-4 py-16 sm:py-24">
       <div className="mx-auto mb-8 flex justify-center">
-        <Image src="/logo-ibci.svg" alt="Logo IBCI" width={160} height={64} />
+        <Logo variant="principal" tone="sobre-verde" height={120} />
       </div>
       <TornarMembroForm initialName={member?.name ?? ""} />
     </div>

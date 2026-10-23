@@ -48,7 +48,7 @@ export async function sendConfirmationEmail({
         <h2 style="color: #123B2C;">Olá, ${name}!</h2>
         <p>${intro}</p>
         <p style="margin: 24px 0;">
-          <a href="${confirmUrl}" style="background: #D4AF37; color: #123B2C; padding: 12px 24px; border-radius: 999px; text-decoration: none; font-weight: bold;">
+          <a href="${confirmUrl}" style="background: #F6D55C; color: #123B2C; border: 2px solid #123B2C; padding: 12px 24px; border-radius: 999px; text-decoration: none; font-weight: bold;">
             Confirmar e-mail
           </a>
         </p>
@@ -82,7 +82,7 @@ export async function sendPasswordResetEmail({ to, name, resetUrl }: SendPasswor
         <h2 style="color: #123B2C;">Olá, ${name}!</h2>
         <p>Recebemos um pedido para redefinir sua senha. Se foi você, clique no botão abaixo — o link vale por 30 minutos.</p>
         <p style="margin: 24px 0;">
-          <a href="${resetUrl}" style="background: #D4AF37; color: #123B2C; padding: 12px 24px; border-radius: 999px; text-decoration: none; font-weight: bold;">
+          <a href="${resetUrl}" style="background: #F6D55C; color: #123B2C; border: 2px solid #123B2C; padding: 12px 24px; border-radius: 999px; text-decoration: none; font-weight: bold;">
             Redefinir senha
           </a>
         </p>
