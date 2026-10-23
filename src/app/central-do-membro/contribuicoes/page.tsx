@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import PageBanner from "@/components/layout/PageBanner";
 import Card from "@/components/ui/Card";
 import BackToMemberArea from "@/components/membros/BackToMemberArea";
 import ContributionSummary from "@/components/membros/ContributionSummary";

@@ -4,11 +4,16 @@ import { sql } from "@/lib/db";
 import { getEventBySlug } from "@/lib/events";
 import { generateCheckinCode } from "@/lib/checkinCode";
 import { sendCheckinQrEmail } from "@/lib/email";
+import { getClientIp, isFormRateLimited, LOGIN_RATE_LIMIT_MESSAGE } from "@/lib/rateLimit";
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  if (await isFormRateLimited("form-inscricao-evento", getClientIp(request), 60)) {
+    return NextResponse.json({ error: LOGIN_RATE_LIMIT_MESSAGE }, { status: 429 });
+  }
+
   const { slug } = await params;
   const event = await getEventBySlug(slug);
   if (!event) {

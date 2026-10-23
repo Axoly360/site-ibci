@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
+import { getClientIp, isFormRateLimited, LOGIN_RATE_LIMIT_MESSAGE } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
+  if (await isFormRateLimited("form-visitante", getClientIp(request), 60)) {
+    return NextResponse.json({ error: LOGIN_RATE_LIMIT_MESSAGE }, { status: 429 });
+  }
+
   const body = await request.json().catch(() => null);
 
   const name = typeof body?.name === "string" ? body.name.trim() : "";

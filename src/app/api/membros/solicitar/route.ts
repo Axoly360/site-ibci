@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { hashPassword } from "@/lib/password";
+import { getClientIp, isFormRateLimited, LOGIN_RATE_LIMIT_MESSAGE } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
+  // O cadastro faz hash de senha (custo de CPU) e grava no banco: limita por IP.
+  if (await isFormRateLimited("form-cadastro-membro", getClientIp(request), 20)) {
+    return NextResponse.json({ error: LOGIN_RATE_LIMIT_MESSAGE }, { status: 429 });
+  }
+
   const body = await request.json().catch(() => null);
   const name = typeof body?.name === "string" ? body.name.trim() : "";
   const email =
@@ -36,11 +42,25 @@ export async function POST(request: NextRequest) {
   // qualquer pessoa que soubesse o e-mail de um membro validado conseguia
   // trocar a senha dele e logar na conta (sequestro de conta).
   const [existente] = await sql`
-    select is_validated_member from members where email = ${email}
+    select is_validated_member, (password_hash is not null) as has_password
+    from members where email = ${email}
   `;
   if (existente?.is_validated_member) {
     return NextResponse.json(
       { error: "Este e-mail já é de um membro validado." },
+      { status: 409 }
+    );
+  }
+  // Mesma ideia para contas ainda não validadas que já têm senha: sem
+  // verificar o e-mail, quem digitar o endereço de outra pessoa trocaria a
+  // senha dela. Quem já se cadastrou entra com a própria senha ou usa
+  // "Esqueci a senha" (que confirma por e-mail).
+  if (existente?.has_password) {
+    return NextResponse.json(
+      {
+        error:
+          "Este e-mail já tem cadastro. Entre com a sua senha ou use \"Esqueci a senha\" para criar uma nova.",
+      },
       { status: 409 }
     );
   }

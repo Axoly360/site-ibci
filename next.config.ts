@@ -11,6 +11,20 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Proteções básicas em todas as páginas: impede embutir o site/painel em
+        // outro domínio (clickjacking), adivinhação de tipo de arquivo e vazamento
+        // do endereço completo de origem. Sem CSP de propósito: o site usa
+        // iframes (YouTube, mapas) e imagens de vários domínios, e uma CSP
+        // incompleta quebraria páginas.
+        source: "/:path*",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+      {
         source: "/sw.js",
         headers: [
           { key: "Content-Type", value: "application/javascript; charset=utf-8" },

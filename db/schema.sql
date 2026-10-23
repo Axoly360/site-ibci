@@ -959,3 +959,28 @@ create table if not exists service_attendance (
   created_at timestamptz not null default now(),
   unique (service_date, service_label)
 );
+
+-- Índices de desempenho (idempotentes). O banco quase não tinha índices nas
+-- colunas usadas em filtros e junções; as telas de Estatísticas, EBD,
+-- diretorias e financeiro consultam estas colunas a cada abertura.
+create index if not exists member_children_member_idx on member_children (member_id);
+create index if not exists member_group_members_member_idx on member_group_members (member_id);
+create index if not exists contribution_receipts_status_idx on contribution_receipts (status, created_at desc);
+create index if not exists contribution_receipts_member_idx on contribution_receipts (member_id);
+create index if not exists financial_entries_date_idx on financial_entries (entry_date);
+create index if not exists financial_entries_congregation_idx on financial_entries (congregation_id);
+create index if not exists membership_requests_status_idx on membership_requests (status, requested_at);
+create index if not exists visitor_registrations_created_idx on visitor_registrations (created_at);
+create index if not exists event_attendees_event_idx on event_attendees (event_slug);
+create index if not exists ebd_enrollments_member_idx on ebd_enrollments (member_id) where member_id is not null;
+create index if not exists ebd_enrollments_child_idx on ebd_enrollments (child_id) where child_id is not null;
+create index if not exists ebd_join_requests_class_idx on ebd_join_requests (class_id, status);
+create index if not exists ebd_join_requests_member_idx on ebd_join_requests (member_id) where member_id is not null;
+create index if not exists ebd_join_requests_child_idx on ebd_join_requests (child_id) where child_id is not null;
+create index if not exists ebd_attendance_enrollment_idx on ebd_attendance (enrollment_id);
+create index if not exists ebd_class_teachers_member_idx on ebd_class_teachers (member_id);
+create index if not exists organization_members_member_idx on organization_members (member_id);
+create index if not exists organization_events_org_date_idx on organization_events (organization_id, event_date);
+create index if not exists member_offices_org_idx on member_offices (organization_id);
+create index if not exists deacon_schedule_date_idx on deacon_schedule (service_date);
+create index if not exists deacon_profiles_status_idx on deacon_profiles (status);
