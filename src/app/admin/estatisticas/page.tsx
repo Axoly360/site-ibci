@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
+import IbiEmpty from "@/components/brand/IbiEmpty";
 import AdminNav from "@/components/admin/AdminNav";
 import {
   BarList,
@@ -197,7 +198,7 @@ export default async function EstatisticasPage({
 
         <StatSection title="Atenção" description="O que está esperando uma decisão da diretoria.">
           {alerts.length === 0 && members.pendingOld === 0 ? (
-            <Empty text="Nada pendente no momento." />
+            <IbiEmpty>Nada pendente no momento.</IbiEmpty>
           ) : (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {alerts.map((a) => (

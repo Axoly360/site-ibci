@@ -6,6 +6,7 @@ import EventsOfMonthSection from "@/components/home/EventsOfMonthSection";
 import MainBannerSection from "@/components/home/MainBannerSection";
 import WeeklyScheduleSection from "@/components/home/WeeklyScheduleSection";
 import InstitutionalVideoSection from "@/components/home/InstitutionalVideoSection";
+import VisitInviteSection from "@/components/home/VisitInviteSection";
 import { getAllContent } from "@/lib/content";
 import { getContentBlocks } from "@/lib/contentBlocks";
 import { getEvents } from "@/lib/events";
@@ -113,6 +114,7 @@ export default async function Home() {
       <MainBannerSection {...mainBanner} />
       {slot4}
       {slot5}
+      <VisitInviteSection />
     </>
   );
 }

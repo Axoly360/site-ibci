@@ -6,6 +6,7 @@ import QRCode from "qrcode";
 import { CheckCircle2 } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
 import Card from "@/components/ui/Card";
+import Ibi from "@/components/brand/Ibi";
 import PrintButton from "@/components/eventos/PrintButton";
 import { getEventBySlug } from "@/lib/events";
 import { sql } from "@/lib/db";
@@ -47,6 +48,7 @@ export default async function InscricaoSucessoPage({ params, searchParams }: Pag
       <PageBanner title="Inscrição confirmada!" description={event.title} />
       <div className="mx-auto max-w-md px-4 py-16 text-center sm:px-6 lg:px-8">
         <Card className="space-y-4 p-8">
+          <Ibi pose="celebrar" size={110} animado className="mx-auto" />
           <p className="flex items-center justify-center gap-2 font-semibold text-primary">
             <CheckCircle2 className="h-5 w-5" />
             {attendee.name}

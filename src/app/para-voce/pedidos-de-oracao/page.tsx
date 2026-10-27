@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Heart } from "lucide-react";
+import Ibi from "@/components/brand/Ibi";
 import { churchInfo } from "@/data/churchInfo";
 import PageBanner from "@/components/layout/PageBanner";
 import Card from "@/components/ui/Card";
@@ -22,9 +22,7 @@ export default function PedidosDeOracaoPage() {
 
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
         <Card className="flex flex-col items-center gap-4 p-10 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <Heart className="h-7 w-7" />
-          </span>
+          <Ibi pose="orar" size={130} animado />
           <h2 className="font-heading text-xl font-bold text-primary">
             Pedido de Oração
           </h2>

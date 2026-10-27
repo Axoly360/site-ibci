@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { CheckCircle2, Send } from "lucide-react";
+import { Send } from "lucide-react";
+import Ibi from "@/components/brand/Ibi";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
@@ -60,9 +61,7 @@ export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string
   if (done) {
     return (
       <Card className="mx-auto max-w-md space-y-2 p-8 text-center">
-        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <CheckCircle2 className="h-7 w-7" />
-        </span>
+        <Ibi pose="celebrar" size={120} animado className="mx-auto" />
         <h2 className="font-heading text-xl font-bold text-primary">
           Que alegria ter você aqui!
         </h2>
@@ -76,6 +75,7 @@ export default function VisitanteCadastroForm({ eventSlug }: { eventSlug: string
 
   return (
     <Card className="mx-auto max-w-md space-y-4 p-6">
+      <Ibi pose="acenar" size={110} animado className="mx-auto" />
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="visitante-nome" className="mb-1 block text-sm font-semibold text-text-neutral">

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { QrCode } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
+import IbiEmpty from "@/components/brand/IbiEmpty";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
@@ -176,9 +177,7 @@ export default async function AdminVisitantesPage({
           </div>
 
           {visitantes.length === 0 ? (
-            <p className="text-sm text-text-neutral/60">
-              Nenhum visitante cadastrado no período selecionado.
-            </p>
+            <IbiEmpty>Nenhum visitante cadastrado no período selecionado.</IbiEmpty>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">

@@ -2,7 +2,8 @@
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, CheckCircle2, FileText, MessageCircle, UserRound } from "lucide-react";
+import Ibi from "@/components/brand/Ibi";
+import { ArrowRight, FileText, MessageCircle, UserRound } from "lucide-react";
 import { formatCPF } from "@/lib/masks";
 
 export default function TornarMembroForm({ initialName }: { initialName: string }) {
@@ -36,7 +37,7 @@ export default function TornarMembroForm({ initialName }: { initialName: string 
   if (status === "done") {
     return (
       <div className="mx-auto flex max-w-lg flex-col items-center gap-3 rounded-3xl bg-primary-dark p-10 text-center shadow-xl">
-        <CheckCircle2 className="h-10 w-10 text-secondary" />
+        <Ibi pose="celebrar" size={120} animado />
         <p className="font-heading text-xl font-bold text-white">Dados enviados!</p>
         <p className="text-sm text-white/70">
           A diretoria vai analisar seu cadastro. Você será avisado(a) quando for validado(a).

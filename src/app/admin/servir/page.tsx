@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PageBanner from "@/components/layout/PageBanner";
+import IbiEmpty from "@/components/brand/IbiEmpty";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
 import { getAdminSession, hasPermission } from "@/lib/admin-session";
@@ -76,7 +77,7 @@ export default async function AdminServirPage({
 
         <div className="flex flex-col gap-3">
           {rows.length === 0 ? (
-            <p className="text-sm text-text-neutral/60">Nenhum voluntário cadastrado ainda.</p>
+            <IbiEmpty>Nenhum voluntário cadastrado ainda.</IbiEmpty>
           ) : (
             rows.map((r) => (
               <Card key={r.id} className="p-4">

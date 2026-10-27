@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Cake } from "lucide-react";
 import PageBanner from "@/components/layout/PageBanner";
+import IbiEmpty from "@/components/brand/IbiEmpty";
 import AdminNav from "@/components/admin/AdminNav";
 import Card from "@/components/ui/Card";
 import CopyTextButton from "@/components/admin/CopyTextButton";
@@ -205,9 +206,7 @@ export default async function AdminAniversariantesPage({
           </h2>
 
           {aniversariantes.length === 0 ? (
-            <p className="text-sm text-text-neutral/60">
-              Nenhum aniversariante no período selecionado.
-            </p>
+            <IbiEmpty>Nenhum aniversariante no período selecionado.</IbiEmpty>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">

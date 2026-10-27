@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, X } from "lucide-react";
 import Card from "@/components/ui/Card";
+import Ibi from "@/components/brand/Ibi";
 import type { HelpArticle, HelpBlock } from "@/data/helpArticles";
 
 function ArticleBlock({ block }: { block: HelpBlock }) {
@@ -95,6 +96,7 @@ export default function HelpCenter({ articles }: HelpCenterProps) {
   return (
     <div>
       <div className="mx-auto max-w-md">
+        <Ibi pose="ler" size={110} className="mx-auto mb-3" />
         <div className="relative">
           <input
             value={query}

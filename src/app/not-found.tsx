@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Home, MessageCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
+import Ibi from "@/components/brand/Ibi";
 
 export const metadata: Metadata = {
   title: "Página não encontrada | IBCI",
@@ -11,7 +12,8 @@ export default function NotFound() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center bg-bg-light px-4 py-16">
       <div className="mx-auto max-w-md text-center">
-        <p className="font-heading text-6xl font-bold text-primary">404</p>
+        <Ibi pose="acenar" size={140} animado className="mx-auto" />
+        <p className="mt-2 font-heading text-6xl font-bold text-primary">404</p>
         <h1 className="mt-4 font-heading text-2xl font-bold text-primary sm:text-3xl">
           Essa página não existe
         </h1>
