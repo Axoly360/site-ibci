@@ -4,6 +4,7 @@ import { fraunces, nunitoSans } from "./fonts";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import InstalarApp from "@/components/layout/InstalarApp";
+import AssistenteIbi from "@/components/layout/AssistenteIbi";
 
 // Domínio de produção — troque para o domínio próprio (ex.: ibciibura.com.br)
 // assim que ele existir. Enquanto isso, usa a URL padrão da Vercel. Sem
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="flex-1">{children}</main>
         <Footer />
         <InstalarApp />
+        <AssistenteIbi />
       </body>
     </html>
   );
