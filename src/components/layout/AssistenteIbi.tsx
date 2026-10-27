@@ -141,7 +141,7 @@ export default function AssistenteIbi() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-3 print:hidden">
+    <div className="assistente-ibi fixed bottom-4 right-4 z-40 flex flex-col items-end gap-3 print:hidden">
       {aberto && (
         <section
           role="dialog"

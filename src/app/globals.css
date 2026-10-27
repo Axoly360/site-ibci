@@ -192,3 +192,16 @@ summary:focus-visible,
     print-color-adjust: exact;
   }
 }
+
+/* Sobe o botão do Ibi enquanto o banner de instalar o app está na tela. */
+.assistente-ibi {
+  transition: bottom 150ms ease;
+}
+html[data-instalar] .assistente-ibi {
+  bottom: 5.5rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .assistente-ibi {
+    transition: none;
+  }
+}

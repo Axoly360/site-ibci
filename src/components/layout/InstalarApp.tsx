@@ -40,6 +40,14 @@ export default function InstalarApp() {
     };
   }, []);
 
+  // Avisa o resto da página (ex.: botão do Ibi) que o banner está na tela.
+  useEffect(() => {
+    const raiz = document.documentElement;
+    if (evento) raiz.setAttribute("data-instalar", "");
+    else raiz.removeAttribute("data-instalar");
+    return () => raiz.removeAttribute("data-instalar");
+  }, [evento]);
+
   if (!evento) return null;
 
   async function instalar() {
